@@ -313,13 +313,14 @@ public class Bootstrap extends Peer {
 	 * @param imageName
 	 * @return Message, if image is deleted, or not
 	 */
-	public String deleteImage(String username, String imageName) {
+	public static String deleteImage(String username, String imageName) {
 		User user = getUser(username);
 		//TODO: routing
 		try {
 			user.deleteFromImageList(imageName);
 			exportUserList();							//Updates the UserList, incl Link to new Image
-			deleteImageContainer(username, imageName);					//TODO: temporary (routing)
+			deleteImageContainer(username, imageName);
+			//TODO: temporary (routing)
 		} catch (IOException e) {
 			return "Some errors have occured.";
 		}
@@ -366,7 +367,7 @@ public class Bootstrap extends Peer {
 	 * @throws IOException 
 	 * @throws ClassNotFoundException 
 	 */
-	public ArrayList<ImageContainer> getAllImageContainers(String username) throws ClassNotFoundException, IOException {
+	public static ArrayList<ImageContainer> getAllImageContainers(String username) throws ClassNotFoundException, IOException {
 		ArrayList<ImageContainer> ics = new ArrayList<ImageContainer>();
 		HashSet<String> imageNames = getListOfImages(username);
 		

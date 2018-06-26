@@ -32,12 +32,14 @@ public class ImageResource {
 	/**
 	 * this method returns all images that are actually in the database
 	 * @return
-	 * @throws UnknownHostException 
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 * */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	//funktioniert nicht: getPaths in Bootstrap klappt nicht
-	public List<Image> getListOfImages(@PathParam("username") String username) throws UnknownHostException{
+	//funktioniert 
+	public List<Image> getListOfImages(@PathParam("username") String username) 
+			throws ClassNotFoundException, IOException{
 		return imageService.getAllImages(username);
 	}
 	
@@ -116,11 +118,11 @@ public class ImageResource {
 	 */
 	@DELETE
 	@Path("/{imageName}")
-	@Produces({MediaType.APPLICATION_JSON })
-	//funktioniert nicht : keine Delete methode in Bootstrap
-	public void deleteImage(@PathParam("username") String username, 
+	@Produces({MediaType.TEXT_PLAIN})
+	//funktioniert nicht : keine Delete  in Bootstrap funktioniert nicht
+	public String deleteImage(@PathParam("username") String username, 
 			@PathParam("imageName") String imageName) {
-		 imageService.removeImage(username, imageName);
+		 return imageService.deleteImage(username, imageName);
 	}
 	
 	
@@ -148,7 +150,8 @@ public class ImageResource {
 	@Produces({MediaType.APPLICATION_JSON })
 	//funktioniert nicht : unmöglich Metadata von ein ImageContainer zu lesen
 	public Metadata updateMetadata(@PathParam("username") String username, 
-			@PathParam("imageName") String imageName, Metadata metadata ) {
+			@PathParam("imageName") String imageName, Metadata metadata ) 
+					throws FileNotFoundException, ClassNotFoundException, IOException {
 		return imageService.updateMetadata(username, imageName, metadata);
 	}
 	

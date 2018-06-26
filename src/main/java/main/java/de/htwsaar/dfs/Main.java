@@ -37,6 +37,7 @@ import javax.sound.sampled.TargetDataLine;
 public class Main {
 	
 	static Bootstrap bootstrap = new Bootstrap();
+	static Peer p;
 	
 	//dummy fuer peers
 	public static Map<Integer, Peer> peers = Database.getPeers();
@@ -52,7 +53,7 @@ public class Main {
         final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.resource");
         rc.register(MultiPartFeature.class);
         rc.register(LoggingFilter.class);
-        rc.register(SecurityFilter.class);
+        //rc.register(SecurityFilter.class);
 
                
         // create and start a new instance of grizzly http server
@@ -75,16 +76,21 @@ public class Main {
 			LinkedList<String> tagList = new LinkedList<String>();	
 			bootstrap.createImage(img, "user", "Noname.jpg", "Berlin", null,tagList);
 			bootstrap.createImage(img, "user2", "bildUser1.jpg", "Milan", null, tagList);
+			//bootstrap.deleteImage("user", "Noname");
+		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		//peers
-				Zone zoneA = new Zone (new Point2D.Double(0.0, 0.0), new Point2D.Double(0.5, 0.0), new Point2D.Double(0.0, 0.5), new Point2D.Double(0.5, 0.5));
-				Zone zoneB = new Zone (new Point2D.Double(0.5, 0.0), new Point2D.Double(1.0, 0.0), new Point2D.Double(0.5, 0.5), new Point2D.Double(1.0, 0.5));
-				peers.put(1, new Peer(zoneA));
-				peers.put(2, new Peer(zoneB));
+		Zone zoneA = new Zone (new Point2D.Double(0.0, 0.0), new Point2D.Double(0.5, 0.0), new Point2D.Double(0.0, 0.5), new Point2D.Double(0.5, 0.5));
+		Zone zoneB = new Zone (new Point2D.Double(0.5, 0.0), new Point2D.Double(1.0, 0.0), new Point2D.Double(0.5, 0.5), new Point2D.Double(1.0, 0.5));
+		p = new Peer(zoneA);
+		
+		peers.put(1, p);
+		peers.put(2, new Peer(zoneB));
+		
 	}
     
     /**
@@ -105,6 +111,7 @@ public class Main {
     	putInDb();
         startServer();
         System.in.read();
+       
       
     }
 }
