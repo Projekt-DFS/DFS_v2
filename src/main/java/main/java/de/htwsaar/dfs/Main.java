@@ -52,7 +52,7 @@ public class Main {
         final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.resource");
         rc.register(MultiPartFeature.class);
         rc.register(LoggingFilter.class);
-        //rc.register(SecurityFilter.class);
+        rc.register(SecurityFilter.class);
 
                
         // create and start a new instance of grizzly http server
