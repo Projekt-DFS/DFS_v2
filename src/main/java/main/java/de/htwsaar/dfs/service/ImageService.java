@@ -3,6 +3,7 @@ package main.java.de.htwsaar.dfs.service;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +29,10 @@ public class ImageService {
 	 * This Method return a copy of all the images 
 	 * that are actually in the database without metadata
 	 * @return
+	 * @throws UnknownHostException 
 	 */
 	
-	public List<Image> getAllImages( String username){
+	public List<Image> getAllImages( String username) throws UnknownHostException{
 		List<Image> result = new ArrayList<>();
 	
 		ArrayList<String> list = Bootstrap.getPaths(username);
@@ -72,7 +74,7 @@ public class ImageService {
 	
 	public Image addImage(String username, Image image) {
 		Bootstrap.createImage(RestUtils.decodeToImage(image.getImageSource()),
-				username, image.getImageName(), image.getMetaData().getLocation(),
+				username, image.getImageName(), image.getMetaData().getLocation(),null,
 				image.getMetaData().getTagList());
 		return image;
 	}

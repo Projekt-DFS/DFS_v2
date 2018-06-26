@@ -39,7 +39,7 @@ public class Peer {
 	//@XmlTransient
 	//public  static String ip_adresse;
 	@XmlTransient
-	public InetAddress inet;
+	public static InetAddress inet;
 	
 	private LinkedList<Peer> routingTable = new LinkedList<Peer>();
 	//private ArrayList<Integer> neighbourList;				//Fill
@@ -137,9 +137,14 @@ public class Peer {
 		 * @throws UnknownHostException 
 		 */
 		
-		public String getIP() throws UnknownHostException {
+		public static String getIP() {
 			
-			this.inet = InetAddress.getLocalHost();
+			try {
+				inet = InetAddress.getLocalHost();
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return inet.getHostAddress();
 		}
 		
@@ -268,12 +273,8 @@ public class Peer {
 	public String routingTableToString() {
 		StringBuilder sb = new StringBuilder();
 		
-		try {
-			for (Peer p : routingTable) {
-				sb.append(p.getIP()).append(" ").append(p.getZone()).append(System.lineSeparator());
-			}
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+		for (Peer p : routingTable) {
+			sb.append(p.getIP()).append(" ").append(p.getZone()).append(System.lineSeparator());
 		}
 		
 		return sb.toString();	
@@ -325,5 +326,9 @@ public class Peer {
     	} else {
     		return false;
     	}	
-    }    
+    }
+	public Map<Integer, Peer> getNeighbours() {
+		// TODO Auto-generated method stub
+		return null;
+	}    
 }

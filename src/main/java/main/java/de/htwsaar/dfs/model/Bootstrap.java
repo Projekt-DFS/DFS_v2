@@ -25,7 +25,7 @@ import main.java.de.htwsaar.dfs.model.User;
 public class Bootstrap extends Peer {
 
 	//Variables
-	private ArrayList<User> userList;
+	private static ArrayList<User> userList;
 	private long userCount;
 	
 	/**
@@ -80,7 +80,7 @@ public class Bootstrap extends Peer {
 		return userList.get((int) id);
 	}
 	
-	public User getUser(String username) {
+	public static User getUser(String username) {
 		//TODO: what, if username does not exist?
 		for(User user : userList) {
 			if(user.getName().equals(username)) {
@@ -177,7 +177,7 @@ public class Bootstrap extends Peer {
 	 * @param password
 	 * @return true, if User & Password are correct, otherwise false
 	 */
-	public boolean authenticateUser(String name, String password) {
+	public static boolean authenticateUser(String name, String password) {
 		for(User user : userList) {
 			if(user.getName().equals(name) && user.getPassword().equals(password)) {
 				return true;
@@ -210,7 +210,7 @@ public class Bootstrap extends Peer {
 	 * Serialize the UserList in "userList.dat"
 	 * @throws IOException
 	 */
-	public void exportUserList() throws IOException {
+	public static void exportUserList() throws IOException {
 		ObjectOutputStream out = new ObjectOutputStream(
 				new BufferedOutputStream(
 						new FileOutputStream("userList.dat")));
@@ -287,7 +287,7 @@ public class Bootstrap extends Peer {
 	 * @param date the date when the image was shot
 	 * @param tagList a list of tags
 	 */
-	public void createImage(BufferedImage img, String username, String imageName, 
+	public static void createImage(BufferedImage img, String username, String imageName, 
 			String photographer, Date date, LinkedList<String> tagList) {
 		
 		User user = getUser(username);
@@ -313,7 +313,7 @@ public class Bootstrap extends Peer {
 	 * @param username the image's owner
 	 * @return a List with paths of all images of an user
 	 */
-	private HashSet<String> getListOfImages(String username){
+	private static HashSet<String> getListOfImages(String username){
 		/*List<String> paths = imageList.stream().
 				filter(s -> s.startsWith(username+ "|")).collect(Collectors.toList());
 		*/
@@ -327,7 +327,7 @@ public class Bootstrap extends Peer {
 	 * @return an ArrayList with all paths to the images
 	 * @throws UnknownHostException 
 	 */
-	public ArrayList<String> getPaths(String username) throws UnknownHostException {
+	public static ArrayList<String> getPaths(String username) throws UnknownHostException {
 		String path;
 		HashSet<String> imageList = getListOfImages(username);
 		ArrayList<String> paths = new ArrayList<String>();
@@ -380,7 +380,7 @@ public class Bootstrap extends Peer {
 	 * Saves an ImageContainer including the image and the thumbnail on the hdd
 	 * @param ic the imageContainer to be saved
 	 */
-	public void saveImageContainer(ImageContainer ic) throws IOException {
+	public static void saveImageContainer(ImageContainer ic) throws IOException {
 		
 		//Create folders if they do not already exist
 		File folder = new File("images");
@@ -416,7 +416,7 @@ public class Bootstrap extends Peer {
 	 * @throws FileNotFoundException 
 	 * @throws ClassNotFoundException 
 	 */
-	public ImageContainer loadImageContainer(String username, String imageName) throws FileNotFoundException, IOException, ClassNotFoundException {
+	public static ImageContainer loadImageContainer(String username, String imageName) throws FileNotFoundException, IOException, ClassNotFoundException {
 		//TODO routing
 		//Point2D.Double coordinate = StaticFunctions.hashToPoint(username, imageName);
 		

@@ -3,6 +3,7 @@ package main.java.de.htwsaar.dfs.resource;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -31,11 +32,12 @@ public class ImageResource {
 	/**
 	 * this method returns all images that are actually in the database
 	 * @return
+	 * @throws UnknownHostException 
 	 * */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	//funktioniert nicht: getPaths in Bootstrap klappt nicht
-	public List<Image> getListOfImages(@PathParam("username") String username){
+	public List<Image> getListOfImages(@PathParam("username") String username) throws UnknownHostException{
 		return imageService.getAllImages(username);
 	}
 	

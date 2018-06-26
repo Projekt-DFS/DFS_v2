@@ -52,7 +52,7 @@ public class Main {
         final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.resource");
         rc.register(MultiPartFeature.class);
         rc.register(LoggingFilter.class);
-        rc.register(SecurityFilter.class);
+        //rc.register(SecurityFilter.class);
 
                
         // create and start a new instance of grizzly http server
@@ -73,8 +73,8 @@ public class Main {
 			img = ImageIO.read(new File("C:/Users\\Aude\\Desktop\\downloadTest\\bild1.png"));
 			img2 = ImageIO.read(new File("C:/Users\\Aude\\Desktop\\downloadTest\\bild1.png"));
 			LinkedList<String> tagList = new LinkedList<String>();	
-			bootstrap.createImage(img, "user", "Noname.jpg", "Berlin", tagList);
-			bootstrap.createImage(img, "user2", "bildUser1.jpg", "Milan", tagList);
+			bootstrap.createImage(img, "user", "Noname.jpg", "Berlin", null,tagList);
+			bootstrap.createImage(img, "user2", "bildUser1.jpg", "Milan", null, tagList);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
