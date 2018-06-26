@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.User;
-
+import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 
 public class Bootstrap extends Peer {
@@ -45,18 +45,13 @@ public class Bootstrap extends Peer {
 			e.printStackTrace();
 		}
 
-		try {
-			this.inet = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+		this.inet = main.java.de.htwsaar.dfs.utils.StaticFunctions.getRightIP();//InetAddress.getLocalHost();
 		
 		//Create a new Zone
 		createZone(new Point2D.Double(0.0, 0.0), new Point2D.Double(1.0, 1.0));
 	}
 	
 
-	
 	
 	//get methods
 	/**
@@ -153,14 +148,16 @@ public class Bootstrap extends Peer {
 		//TODO: routing
 		try {
 			for(String imageName : getPaths(username)) {
-				fileName = new File("images/" + username);
+				fileName = new File("images//" + username);
 				for(File file: fileName.listFiles()) {
 					file.delete();
 				}
-				System.out.println(fileName.delete());
+				fileName.delete();
 			}
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
+		} catch (NullPointerException e) {
+			//e.printStackTrace();
 		}
 		userList.remove(user);
 		try {
@@ -319,8 +316,7 @@ public class Bootstrap extends Peer {
 		try {
 			user.deleteFromImageList(imageName);
 			exportUserList();							//Updates the UserList, incl Link to new Image
-			deleteImageContainer(username, imageName);
-			//TODO: temporary (routing)
+			deleteImageContainer(username, imageName);					//TODO: temporary (routing)
 		} catch (IOException e) {
 			return "Some errors have occured.";
 		}
