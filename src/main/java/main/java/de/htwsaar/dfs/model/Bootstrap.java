@@ -310,6 +310,7 @@ public class Bootstrap extends Peer {
 	 * @param imageName
 	 * @return Message, if image is deleted, or not
 	 */
+<<<<<<< HEAD
 	public static String deleteImage(String username, String imageName) {
 		User user = getUser(username);
 		//TODO: routing
@@ -412,3 +413,107 @@ public class Bootstrap extends Peer {
 
 
 }
+=======
+	public String deleteImage(String username, String imageName) {
+		User user = getUser(username);
+		//TODO: routing
+		try {
+			user.deleteFromImageList(imageName);
+			exportUserList();							//Updates the UserList, incl Link to new Image
+			deleteImageContainer(username, imageName);					//TODO: temporary (routing)
+		} catch (IOException e) {
+			return "Some errors have occured.";
+		}
+		return "image has been deleted.";
+	}
+
+
+	/**
+	 * Uses the User's imageList to search and filter all images in network
+	 * @param username the image's owner
+	 * @return a List with paths of all images of an user
+	 */
+	private static HashSet<String> getListOfImages(String username){
+		/*List<String> paths = imageList.stream().
+				filter(s -> s.startsWith(username+ "|")).collect(Collectors.toList());
+		*/
+		return getUser(username).getImageList();
+	}
+
+
+	/**
+	 * returns a List with all paths to the images
+	 * @param username 
+	 * @return an ArrayList with all paths to the images
+	 * @throws UnknownHostException 
+	 */
+	public static ArrayList<String> getPaths(String username) throws UnknownHostException {
+		String path;
+		HashSet<String> imageList = getListOfImages(username);
+		ArrayList<String> paths = new ArrayList<String>();
+		//TODO forwarding to the peers
+		for(String imageName : imageList) {
+			path = "http://" + getIP() + "/images/" + username + "/" + imageName;
+			paths.add(path);
+		}
+		return paths;
+	}
+	
+	
+	/**
+	 * returns an User's ArrayList with all imageContainers 
+	 * @param username
+	 * @return
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
+	 */
+	public ArrayList<ImageContainer> getAllImageContainers(String username) throws ClassNotFoundException, IOException {
+		ArrayList<ImageContainer> ics = new ArrayList<ImageContainer>();
+		HashSet<String> imageNames = getListOfImages(username);
+		
+		for(String imageName : imageNames) {
+			ics.add(loadImageContainer(username, imageName));
+			
+		}
+		
+		return ics;
+	}
+	
+	
+	/**
+	 * returns the metadata of an image
+	 * @param username
+	 * @param fileName
+	 */
+	public void getMeta(String username, String fileName) {
+		//TODO implement
+		
+		return;
+	}
+	
+	
+	
+
+	/**
+	 * Sends the ImageContainer object
+	 * @param ic
+	 */
+	public void sendImage(ImageContainer ic) {
+		//TODO implement
+	}
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+
+
+
+}
+>>>>>>> branch 'master' of https://github.com/Projekt-DFS/DFS_v2.git
