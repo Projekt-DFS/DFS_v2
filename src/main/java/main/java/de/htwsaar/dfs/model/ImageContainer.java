@@ -114,6 +114,7 @@ public class ImageContainer implements Serializable {
 		return tagList;
 	}
 	
+	
 	public String getTags() {
 		
 		return tagList.toString();

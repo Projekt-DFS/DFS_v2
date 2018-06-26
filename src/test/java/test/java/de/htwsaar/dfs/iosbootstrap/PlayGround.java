@@ -47,7 +47,7 @@ public class PlayGround {
 		}
 	}
 	
-	private void startBootstrapTest() throws IOException {
+	private void startBootstrapTest() throws IOException, ClassNotFoundException {
 		startBootstrapTestCreate();
 		startBootstrapTestLoad();
 	}
@@ -63,16 +63,11 @@ public class PlayGround {
 		Date date = new Date();
 		LinkedList<String> tagList = new LinkedList<String>();
 		
-		/*
-		BufferedImage img = ImageIO.read(new File("Classdiagramm.jpg"));
-		String photographer = "Knecht";
-		tagList = new LinkedList<String>();
-		bt.createImage(img, bt.getUser("test1").getName(), "img_001", photographer, date, tagList);
-		*/
 		img = ImageIO.read(new File("twins.jpg"));
 		photographer = "Thomas";
 		tagList.add("babys");
-		bt.createImage(img, bt.getUser("test2").getName(), "img_001", photographer, date, tagList);
+		bt.createImage(img, bt.getUser("test1").getName(), "img_001", photographer, date, tagList);
+		
 		
 		img = ImageIO.read(new File("coins.jpg"));
 		photographer = "amazon";
@@ -90,12 +85,22 @@ public class PlayGround {
 	}
 	
 	
-	private void startBootstrapTestLoad() throws UnknownHostException {
+	private void startBootstrapTestLoad() throws ClassNotFoundException, IOException {
 		bt = new Bootstrap();
-		System.out.println(bt.getPaths("test2"));
-		//ArrayList<ImageContainer> ics = bt.getAllImageContainers("test2");
-		//System.out.println(ics.get(1).getTagList());
-		bt.deleteUser("test1");
+		System.out.println("Pfade: " + Bootstrap.getPaths("test2"));
+		System.out.println("All Containers: " + bt.getAllImageContainers("test2"));
+		ArrayList<ImageContainer> ics;
+		ics = bt.getAllImageContainers("test2");
+		System.out.println("TagList: " + ics.get(0).getTags());
+		
+		ImageContainer coins = Bootstrap.loadImageContainer("test2", "img_002");
+		System.out.println(coins.getTags());
+		
+		bt.deleteImage("test2", "img_002");
+		//bt.deleteUser("test1");
+		
+		
+		
 	}
 	
 	

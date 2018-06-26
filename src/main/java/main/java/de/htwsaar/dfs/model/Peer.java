@@ -1,22 +1,31 @@
 package main.java.de.htwsaar.dfs.model;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URI;
 
 import java.awt.geom.Point2D;
-
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+import javax.imageio.ImageIO;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
 import java.util.ArrayList;
-
+import java.util.Date;
 import java.net.InetAddress;
 
 import java.net.UnknownHostException;
@@ -331,4 +340,160 @@ public class Peer {
 		// TODO Auto-generated method stub
 		return null;
 	}    
+	
+	
+	
+	
+	
+	
+	
+	
+	//Image functions P2P
+		/**
+		 * Saves an ImageContainer including the image and the thumbnail on the hdd
+		 * @param ic the imageContainer to be saved
+		 */
+		public static void saveImageContainer(ImageContainer ic) throws IOException {
+			
+			//Create folders if they do not already exist
+			File folder = new File("images");
+			if(!folder.exists()) {
+				folder.mkdir();
+			}
+			File userFolder = new File("images/" + ic.getUsername());
+			if(!userFolder.exists()) {
+				userFolder.mkdir();
+			}
+			
+			//Save imageContainer
+			ObjectOutputStream out = new ObjectOutputStream(
+					new BufferedOutputStream(
+							new FileOutputStream(ic.getPath() + ".data")));
+			out.writeObject(ic);
+			out.close();
+			
+			//Save image
+			File outputFile = new File(ic.getPath() + ".jpg");
+			ImageIO.write(ic.getImage(), "jpg", outputFile);
+			
+			//Save thumbnail
+			outputFile = new File(ic.getPath() + "_thumbnail.jpg");
+			ImageIO.write(ic.getThumbnail(), "jpg", outputFile);	
+		}
+		
+		
+		/**
+		 * Deserialize imageContainer  
+		 * @param canCoordinate
+		 * @throws IOException 
+		 * @throws FileNotFoundException 
+		 * @throws ClassNotFoundException 
+		 */
+		public static ImageContainer loadImageContainer(String username, String imageName) throws FileNotFoundException, IOException, ClassNotFoundException {
+			//TODO routing
+			//Point2D.Double coordinate = StaticFunctions.hashToPoint(username, imageName);
+			
+			//Get location
+			StringBuffer fileName = new StringBuffer();
+			fileName.append("images/").append(username).append("/")
+					.append(imageName);
+			//Load image
+			File inputFile = new File(fileName.toString() + ".jpg");
+			BufferedImage img = ImageIO.read(inputFile);
+			
+			//Load imageContainer and set image and thumbnail 
+			ImageContainer ic;
+			ObjectInputStream in= new ObjectInputStream(
+					new BufferedInputStream(
+							new FileInputStream(fileName.toString() + ".data")));
+			ic= (ImageContainer)in.readObject();
+			ic.setImage(img);
+			in.close();
+			return ic;
+			
+		}
+		
+		
+		public void deleteImageContainer(String username, String imageName) {
+			//TODO routing
+			//Point2D.Double coordinate = StaticFunctions.hashToPoint(username, imageName);
+			
+			//Get location
+			StringBuffer fileName = new StringBuffer();
+			fileName.append("images/").append(username).append("/")
+					.append(imageName);
+			//Load image
+			File inputFile = new File(fileName.toString() + ".jpg");
+			System.out.println(inputFile.delete());
+			
+			inputFile = new File(fileName.toString() + "_thumbnail.jpg");
+			inputFile.delete();
+			
+			inputFile = new File(fileName.toString() + ".data");
+			inputFile.delete();
+			
+		}
+		
+		
+
+		/**
+		 * 
+		 * @param path
+		 * @return
+		 * @throws IOException 
+		 * @throws ClassNotFoundException 
+		 */
+		/*public ImageContainer loadImageContainer(String path) throws IOException, ClassNotFoundException {
+			
+			File inputFile = new File(path + ".jpg");
+			BufferedImage img = ImageIO.read(inputFile);
+			
+			//Load imageContainer and set image and thumbnail 
+			ImageContainer ic;
+			ObjectInputStream in= new ObjectInputStream(
+					new BufferedInputStream(
+							new FileInputStream(path + ".data")));
+			ic= (ImageContainer)in.readObject();
+			ic.setImage(img);
+			in.close();
+			return ic;
+		}*/
+		
+		
+		
+			
+		/**
+		 * Sends the ImageContainer object
+		 * @param ic
+		 */
+		public void sendImageContainer(ImageContainer ic, Point2D.Double destinationCoordiante) {
+			//TODO implement
+		}
+	
+	
+		/**
+		 * Edits the image's meta data
+		 * @throws IOException 
+		 * @throws ClassNotFoundException 
+		 * @throws FileNotFoundException 
+		 */
+		public void editMeta(String username, String imageName, String location, Date date, LinkedList<String> tagList) throws FileNotFoundException, ClassNotFoundException, IOException {
+			//TODO routing
+			ImageContainer ic = loadImageContainer(username, imageName);
+			ic.setLocation(location);
+			ic.setDate(date);
+			ic.setTagList(tagList);
+			saveImageContainer(ic);
+		}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

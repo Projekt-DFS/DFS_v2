@@ -153,7 +153,7 @@ public class Bootstrap extends Peer {
 		//TODO: routing
 		try {
 			for(String imageName : getPaths(username)) {
-				fileName = new File("images//" + username);
+				fileName = new File("images/" + username);
 				for(File file: fileName.listFiles()) {
 					file.delete();
 				}
@@ -306,6 +306,25 @@ public class Bootstrap extends Peer {
 		}							
 
 	}
+	
+	/**
+	 * Function to delete an image, incl Metadata and Thumbnail. Is called by Bootstrap
+	 * @param username
+	 * @param imageName
+	 * @return Message, if image is deleted, or not
+	 */
+	public String deleteImage(String username, String imageName) {
+		User user = getUser(username);
+		//TODO: routing
+		try {
+			user.deleteFromImageList(imageName);
+			exportUserList();							//Updates the UserList, incl Link to new Image
+			deleteImageContainer(username, imageName);					//TODO: temporary (routing)
+		} catch (IOException e) {
+			return "Some errors have occured.";
+		}
+		return "image has been deleted.";
+	}
 
 
 	/**
@@ -333,7 +352,7 @@ public class Bootstrap extends Peer {
 		ArrayList<String> paths = new ArrayList<String>();
 		//TODO forwarding to the peers
 		for(String imageName : imageList) {
-			path = "http://" + getIP() + "//images//" + username + "//" + imageName;
+			path = "http://" + getIP() + "/images/" + username + "/" + imageName;
 			paths.add(path);
 		}
 		return paths;
@@ -347,12 +366,13 @@ public class Bootstrap extends Peer {
 	 * @throws IOException 
 	 * @throws ClassNotFoundException 
 	 */
-	public ArrayList<ImageContainer> getAllImages(String username) throws ClassNotFoundException, IOException {
+	public ArrayList<ImageContainer> getAllImageContainers(String username) throws ClassNotFoundException, IOException {
 		ArrayList<ImageContainer> ics = new ArrayList<ImageContainer>();
-		HashSet<String> paths = getListOfImages(username);
+		HashSet<String> imageNames = getListOfImages(username);
 		
-		for(String path : paths) {
-			ics.add(loadImageContainer(path));
+		for(String imageName : imageNames) {
+			ics.add(loadImageContainer(username, imageName));
+			
 		}
 		
 		return ics;
@@ -371,12 +391,7 @@ public class Bootstrap extends Peer {
 	}
 	
 	
-	/**
-	 * Edits the image's meta data
-	 */
-	public void editMeta() {
-		//TODO implement
-	}
+	
 
 	/**
 	 * Sends the ImageContainer object
@@ -393,108 +408,7 @@ public class Bootstrap extends Peer {
 	
 	
 	
-	//Image functions P2P
-	/**
-	 * Saves an ImageContainer including the image and the thumbnail on the hdd
-	 * @param ic the imageContainer to be saved
-	 */
-	public static void saveImageContainer(ImageContainer ic) throws IOException {
-		
-		//Create folders if they do not already exist
-		File folder = new File("images");
-		if(!folder.exists()) {
-			folder.mkdir();
-		}
-		File userFolder = new File("images//" + ic.getUsername());
-		if(!userFolder.exists()) {
-			userFolder.mkdir();
-		}
-		
-		//Save imageContainer
-		ObjectOutputStream out = new ObjectOutputStream(
-				new BufferedOutputStream(
-						new FileOutputStream(ic.getPath() + ".data")));
-		out.writeObject(ic);
-		out.close();
-		
-		//Save image
-		File outputFile = new File(ic.getPath() + ".jpg");
-		ImageIO.write(ic.getImage(), "jpg", outputFile);
-		
-		//Save thumbnail
-		outputFile = new File(ic.getPath() + "_thumbnail.jpg");
-		ImageIO.write(ic.getThumbnail(), "jpg", outputFile);	
-	}
 	
-	
-	/**
-	 * Deserialize imageContainer  
-	 * @param canCoordinate
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 * @throws ClassNotFoundException 
-	 */
-	public static ImageContainer loadImageContainer(String username, String imageName) throws FileNotFoundException, IOException, ClassNotFoundException {
-		//TODO routing
-		//Point2D.Double coordinate = StaticFunctions.hashToPoint(username, imageName);
-		
-		//Get location
-		StringBuffer fileName = new StringBuffer();
-		fileName.append("images//").append(username).append("//")
-				.append(imageName);
-		//Load image
-		File inputFile = new File(fileName.toString() + ".jpg");
-		BufferedImage img = ImageIO.read(inputFile);
-		
-		//Load imageContainer and set image and thumbnail 
-		ImageContainer ic;
-		ObjectInputStream in= new ObjectInputStream(
-				new BufferedInputStream(
-						new FileInputStream(fileName.toString() + ".data")));
-		ic= (ImageContainer)in.readObject();
-		ic.setImage(img);
-		in.close();
-		return ic;
-		
-	}
-	
-	
-	
-	
-
-	/**
-	 * 
-	 * @param path
-	 * @return
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 */
-	public ImageContainer loadImageContainer(String path) throws IOException, ClassNotFoundException {
-		
-		File inputFile = new File(path + ".jpg");
-		BufferedImage img = ImageIO.read(inputFile);
-		
-		//Load imageContainer and set image and thumbnail 
-		ImageContainer ic;
-		ObjectInputStream in= new ObjectInputStream(
-				new BufferedInputStream(
-						new FileInputStream(path + ".data")));
-		ic= (ImageContainer)in.readObject();
-		ic.setImage(img);
-		in.close();
-		return ic;
-	}
-	
-	
-	
-		
-	/**
-	 * Sends the ImageContainer object
-	 * @param ic
-	 */
-	public void sendImageContainer(ImageContainer ic, Point2D.Double destinationCoordiante) {
-		//TODO implement
-	}
 	
 	
 
