@@ -2,6 +2,11 @@ package main.java.de.htwsaar.dfs.utils;
 
 import java.awt.geom.Point2D;
 import java.awt.image.*;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 import java.awt.*;
 
 public class StaticFunctions {
@@ -64,6 +69,39 @@ public class StaticFunctions {
 	    // Return the buffered image
 	    return bimage;
 	}
+	
+	
+	/**
+	 * returns a non-loopback IP-Address
+	 * @return a non-loopback IP-Address
+	 */
+	public static InetAddress getRightIP() {
+		Enumeration<NetworkInterface> e;
+		try {
+			e = NetworkInterface.getNetworkInterfaces();
+			while(e.hasMoreElements())
+			{
+			    NetworkInterface n = (NetworkInterface) e.nextElement();
+			    Enumeration<InetAddress> ee = n.getInetAddresses();
+			    while (ee.hasMoreElements())
+			    {
+			        try {
+			        	Inet4Address i = (Inet4Address) ee.nextElement();
+			        	if(!i.isLoopbackAddress()) {
+				        	return i;
+				        }
+			        } catch (ClassCastException e1) {
+			        	//Do nothing, if it's no ipv4 Address
+			        }
+			    }
+			}
+		} catch (SocketException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return null;
+	}
+	
 	
 	/**
 	 * Convert a IP-Address(String) to long
