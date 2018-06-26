@@ -36,7 +36,6 @@ public class ImageTest {
 		bt = new Bootstrap();
 		bt.createUser("imageTestUser1", "pw");
 		bt.createUser("imageTestUser2", "password2");
-		
 		BufferedImage img;
 		String photographer;
 		Date date = new Date();
@@ -102,12 +101,27 @@ public class ImageTest {
 		ArrayList<ImageContainer> ics;
 		try {
 			ics = bt.getAllImageContainers("imageTestUser1");
+			
 			assertEquals(1, ics.size());
 		} catch (ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+	}
+	
+	@Test
+	public void test() {
+		try {
+			ImageContainer ic = bt.loadImageContainer("imageTestUser1", "img_001");
+			System.out.println(ic.getThumbnailPath());
+			
+			
+			
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 

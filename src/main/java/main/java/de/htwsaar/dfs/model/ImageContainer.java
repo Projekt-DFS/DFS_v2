@@ -89,7 +89,7 @@ public class ImageContainer implements Serializable {
 	
 	public String getThumbnailPath() {
 		//TODO
-		return path;
+		return path + "_thumbnail";
 	}
 	
 	// get-methods meta
@@ -142,7 +142,7 @@ public class ImageContainer implements Serializable {
 	
 	public void setPath() {
 		StringBuffer fileName = new StringBuffer();
-		fileName.append("images/").append(username).append("//")
+		fileName.append("images//").append(username).append("//")
 		.append(imageName);
 		
 		
