@@ -32,6 +32,7 @@ import java.net.UnknownHostException;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.ws.rs.core.Response;
 
 /**
  * @author Thomas Spanier
@@ -39,18 +40,20 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @XmlRootElement
 public class Peer {
-	//Variablen
-	public Zone ownZone;
-	public static final int port = 4434;
+	
+	//konstante
+	public static final int port = 8080;
 	public static final String ip_bootstrap = "192.168.2.100";
-	//TODO temporary
+	
+	//Attribute
+	public Zone ownZone;
 	// Aktuelle IP-Adresse des Servers
-	//@XmlTransient
-	//public  static String ip_adresse;
+	@XmlTransient
+	public String ip_adresse;
 	@XmlTransient
 	public static InetAddress inet;
-	
-	private LinkedList<Peer> routingTable = new LinkedList<Peer>();
+	//Liste alle Nachbarn
+	private static LinkedList<Peer> routingTable = new LinkedList<Peer>();
 	//private ArrayList<Integer> neighbourList;				//Fill
 	
 	
@@ -62,14 +65,11 @@ public class Peer {
 				
 			try {
 				this.inet = InetAddress.getLocalHost();
+				ip_adresse = InetAddress.getLocalHost().getHostAddress();
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			 System.out.println(inet.getHostAddress());
-			//ip_adresse = this.inet.toString();
-				
-			
 		}
 		//Constructor
 		/**
@@ -105,14 +105,10 @@ public class Peer {
 			this.ownZone = ownZone;
 		}
 
-//		public static String getIp_adresse() {
-//			return ip_adresse;
-//		}
-	//
-//		public static void setIp_adresse(String ip_adresse) {
-//			Peer.ip_adresse = ip_adresse;
-//		}
-
+		public String getIp_adresse() {
+			return ip_adresse;
+		}
+	
 		public InetAddress getInet() {
 			return inet;
 		}
@@ -128,6 +124,8 @@ public class Peer {
 		public static String getIpBootstrap() {
 			return ip_bootstrap;
 		}
+		
+		
 
 //		public void setNeighbourList(ArrayList<Integer> neighbourList) {
 //			this.neighbourList = neighbourList;
@@ -135,6 +133,12 @@ public class Peer {
 
 		
 		
+		public void setIp_adresse(String ip_adresse) {
+			this.ip_adresse = ip_adresse;
+		}
+		public void setRoutingTable(LinkedList<Peer> routingTable) {
+			this.routingTable = routingTable;
+		}
 		public Zone getZone() {
 			return ownZone;
 		}
@@ -157,7 +161,6 @@ public class Peer {
 			return inet.getHostAddress();
 		}
 		
-		
 		public LinkedList<Peer> getRoutingTable() {
 	    	return routingTable;
 	    }
@@ -174,8 +177,10 @@ public class Peer {
 			
 				
 				String zielPeer_IP_Adress ="";
-				String webContextPath="routing";
-				String baseUrl = "";
+				String webContextPath="routing"; //-->> du kannst das hier sparen
+				String baseUrl = ""; //-->> Wenn es kein nachbarn gibt am besten nutzt du 
+				// diesen Pfad zum testen. Sonnst hast du ein leeres URI das kann nicht funktionieren
+				//"http://" + getIP() + ":"+ getPort()+ "/iosbootstrap/v1" + "/peers/" + 1;
 				double smalest_square=0d;
 				
 				double tmp_square;
@@ -193,7 +198,7 @@ public class Peer {
 					//	smalest_square = ownZone.distanz(entry.getValue().getCenter().getX(), entry.getValue().getCenter().getY(), x, y);
 						if(smalest_square < tmp_square) {
 							tmp_square = smalest_square;
-							baseUrl = "http://"+ routingTable.get(i).getIP() + ":"+routingTable.get(i).getPort() + "/peers/";
+							baseUrl = "http://"+ routingTable.get(i).getIP() + ":"+routingTable.get(i).getPort()+ "/iosbootstrap/v1" + "/peers/" + i;
 							//baseUrl ="http://"+ longToIp(entry.getKey())+":4434/start/";
 						     // String baseUrl        = "http://"+ip_adresse+":"+port;
 						}
@@ -201,9 +206,12 @@ public class Peer {
 
 					      Client c = ClientBuilder.newClient();
 					      WebTarget  target = c.target( baseUrl );
-
-					      zielPeer_IP_Adress = (target.path(webContextPath).queryParam("x",x).queryParam("y", y).request( MediaType.TEXT_PLAIN ).get( String.class ));
-					      //System.out.println( target.path( webContextPath ));
+					      //---> So bekommst du das Peer Objekt
+					      Peer zielPeer = target.request().get().readEntity(Peer.class);
+					      zielPeer_IP_Adress = zielPeer.getIp_adresse();
+					      System.out.println(zielPeer_IP_Adress);
+//					      zielPeer_IP_Adress = (target.path(webContextPath).queryParam("x",x).queryParam("y", y).request( MediaType.TEXT_PLAIN ).get( String.class ));
+//					      //System.out.println( target.path( webContextPath ));
 			
 					}
 				
@@ -437,7 +445,7 @@ public class Peer {
 		}
 		
 		
-		public void deleteImageContainer(String username, String imageName) {
+		public static void deleteImageContainer(String username, String imageName) {
 			//TODO routing
 			//Point2D.Double coordinate = StaticFunctions.hashToPoint(username, imageName);
 			
@@ -500,7 +508,7 @@ public class Peer {
 		 * @throws ClassNotFoundException 
 		 * @throws FileNotFoundException 
 		 */
-		public void editMeta(String username, String imageName, String location, Date date, LinkedList<String> tagList) throws FileNotFoundException, ClassNotFoundException, IOException {
+		public static void editMeta(String username, String imageName, String location, Date date, LinkedList<String> tagList) throws FileNotFoundException, ClassNotFoundException, IOException {
 			//TODO routing
 			ImageContainer ic = loadImageContainer(username, imageName);
 			ic.setLocation(location);
