@@ -153,14 +153,16 @@ public class Bootstrap extends Peer {
 		//TODO: routing
 		try {
 			for(String imageName : getPaths(username)) {
-				fileName = new File("images/" + username);
+				fileName = new File("images//" + username);
 				for(File file: fileName.listFiles()) {
 					file.delete();
 				}
-				System.out.println(fileName.delete());
+				fileName.delete();
 			}
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
+		} catch (NullPointerException e) {
+			//e.printStackTrace();
 		}
 		userList.remove(user);
 		try {
