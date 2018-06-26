@@ -93,8 +93,8 @@ public class PlayGround {
 	private void startBootstrapTestLoad() throws UnknownHostException {
 		bt = new Bootstrap();
 		System.out.println(bt.getPaths("test2"));
-		ArrayList<ImageContainer> ics = bt.getAllImageContainers("test2");
-		System.out.println(ics.get(1).getTagList());
+		//ArrayList<ImageContainer> ics = bt.getAllImageContainers("test2");
+		//System.out.println(ics.get(1).getTagList());
 		bt.deleteUser("test1");
 	}
 	

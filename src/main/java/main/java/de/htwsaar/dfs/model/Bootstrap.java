@@ -340,6 +340,24 @@ public class Bootstrap extends Peer {
 	}
 	
 	
+	/**
+	 * returns an User's ArrayList with all imageContainers 
+	 * @param username
+	 * @return
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
+	 */
+	public ArrayList<ImageContainer> getAllImages(String username) throws ClassNotFoundException, IOException {
+		ArrayList<ImageContainer> ics = new ArrayList<ImageContainer>();
+		HashSet<String> paths = getListOfImages(username);
+		
+		for(String path : paths) {
+			ics.add(loadImageContainer(path));
+		}
+		
+		return ics;
+	}
+	
 	
 	/**
 	 * returns the metadata of an image
@@ -439,6 +457,36 @@ public class Bootstrap extends Peer {
 		return ic;
 		
 	}
+	
+	
+	
+	
+
+	/**
+	 * 
+	 * @param path
+	 * @return
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
+	 */
+	public ImageContainer loadImageContainer(String path) throws IOException, ClassNotFoundException {
+		
+		File inputFile = new File(path + ".jpg");
+		BufferedImage img = ImageIO.read(inputFile);
+		
+		//Load imageContainer and set image and thumbnail 
+		ImageContainer ic;
+		ObjectInputStream in= new ObjectInputStream(
+				new BufferedInputStream(
+						new FileInputStream(path + ".data")));
+		ic= (ImageContainer)in.readObject();
+		ic.setImage(img);
+		in.close();
+		return ic;
+	}
+	
+	
+	
 		
 	/**
 	 * Sends the ImageContainer object
