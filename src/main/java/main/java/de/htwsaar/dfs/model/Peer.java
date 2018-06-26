@@ -163,29 +163,52 @@ public class Peer {
 	    }
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		//TODO: Routing Algorithmus
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		/**
+		 * @author Mario Anklam 26.06.18
+		 * Routing-algorithmus
+		 * @param x Koordinate des gesuchten Punktes
+		 * @param y Koordinate des gesuchten Punktes
+		 * @return IP-Adresse vom zonen-verantwortlichen Peer
+		 */
+		public  String checkZone (double x, double y) {
+			
+				
+				String zielPeer_IP_Adress ="";
+				String webContextPath="routing";
+				String baseUrl = "";
+				double smalest_square=0d;
+				
+				double tmp_square;
+				tmp_square = ownZone.distanz(ownZone.getCenter().getX(), ownZone.getCenter().getY(), x, y);
+			
+			
+				if(x >= ownZone.getBottomLeft().getX() && x <= ownZone.getBottomRight().getX() && y >= ownZone.getBottomRight().getY() && y <= ownZone.getUpperRight().getY()) {
+				 return Peer.getIP();
+				}
+				else
+				{
+					for(int i = 0; i < routingTable.size(); i++) {
+					//for(Map.Entry<Long, Zone> entry : routingTable.entrySet()) {
+						smalest_square = ownZone.distanz(routingTable.get(i).getZone().getCenter().getX(), routingTable.get(i).getZone().getCenter().getY(), x, y);
+					//	smalest_square = ownZone.distanz(entry.getValue().getCenter().getX(), entry.getValue().getCenter().getY(), x, y);
+						if(smalest_square < tmp_square) {
+							tmp_square = smalest_square;
+							baseUrl = "http://"+ routingTable.get(i).getIP() + ":"+routingTable.get(i).getPort() + "/peers/";
+							//baseUrl ="http://"+ longToIp(entry.getKey())+":4434/start/";
+						     // String baseUrl        = "http://"+ip_adresse+":"+port;
+						}
+					}
+
+					      Client c = ClientBuilder.newClient();
+					      WebTarget  target = c.target( baseUrl );
+
+					      zielPeer_IP_Adress = (target.path(webContextPath).queryParam("x",x).queryParam("y", y).request( MediaType.TEXT_PLAIN ).get( String.class ));
+					      //System.out.println( target.path( webContextPath ));
+			
+					}
+				
+				return zielPeer_IP_Adress;
+}
 		
 		
 		
