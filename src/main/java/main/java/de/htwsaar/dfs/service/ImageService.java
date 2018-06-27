@@ -88,9 +88,9 @@ public class ImageService {
 		return addImage(username, image);
 	}
 	
-	public String deleteImage(String username, String imageName) {
+	public void deleteImage(String username, String imageName) {
 		 Bootstrap.deleteImageContainer(username, imageName);
-		 return "succeed";
+		
 	}
 
 	public Metadata getMetadata(String username, String imageName) 
@@ -122,7 +122,6 @@ public class ImageService {
 		String fileSrc = "images/"+ username + "/" + imageName;
 		BufferedImage img = null;
 		try {
-			System.out.println(fileSrc);
 			img = ImageIO.read(new File( fileSrc));
 		} catch (IOException e) {
 			e.printStackTrace();

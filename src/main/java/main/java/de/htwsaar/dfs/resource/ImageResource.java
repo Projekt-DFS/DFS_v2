@@ -91,7 +91,7 @@ public class ImageResource {
 	 */
 	//funktioniert
 	@GET
-	@Path("/{imageName}/img")
+	@Path("/{imageName}/download")
 	@Produces({ "image/png" , "image/jpg"})
 	public BufferedImage getImage( @PathParam("username") String username, 
 			@PathParam("imageName") String imageName) 
@@ -126,9 +126,9 @@ public class ImageResource {
 	@Path("/{imageName}")
 	@Produces({MediaType.TEXT_PLAIN})
 	//funktioniert
-	public String deleteImage(@PathParam("username") String username, 
+	public void deleteImage(@PathParam("username") String username, 
 			@PathParam("imageName") String imageName) {
-		 return imageService.deleteImage(username, imageName);
+		  imageService.deleteImage(username, imageName);
 	}
 	
 	
