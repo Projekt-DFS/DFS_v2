@@ -3,7 +3,6 @@ package main.java.de.htwsaar.dfs.resource;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -24,13 +23,15 @@ import main.java.de.htwsaar.dfs.service.ImageService;
  * @author Aude Nana
  *
  */
-@Path("/")
+@Path("images/{username}")
 public class ImageResource {
 
 	private ImageService imageService = new ImageService();
 	
 	/**
-	 * this method returns all images that are actually in the database
+	 * this method returns all images of the current user
+	 * that are actually in the database as objects
+	 * @param username
 	 * @return
 	 * @throws IOException 
 	 * @throws ClassNotFoundException 
@@ -44,7 +45,8 @@ public class ImageResource {
 	}
 	
 	/**
-	 * this method allows to add a picture in the database
+	 * this method allows to add a picture in the database 
+	 * @param username
 	 * @param image
 	 * @return
 	 */
@@ -60,12 +62,13 @@ public class ImageResource {
 	}
 
 	/**
-	 * this method returns a special picture Object 
-	 * @param id
+	 * this method returns a special image object 
+	 * @param username
+	 * @param imageName
 	 * @return
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 * @throws FileNotFoundException 
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
 	 */
 	//funktioniert
 	@GET
@@ -78,7 +81,7 @@ public class ImageResource {
 	}
 	
 	/**
-	 * this method returns the Picture als BufferedImage
+	 * this method returns a picture as BufferedImage
 	 * @param username
 	 * @param imageName
 	 * @return
@@ -88,7 +91,7 @@ public class ImageResource {
 	 */
 	//funktioniert
 	@GET
-	@Path("/{username}/{imageName}")
+	@Path("/{imageName}/img")
 	@Produces({ "image/png" , "image/jpg"})
 	public BufferedImage getImage( @PathParam("username") String username, 
 			@PathParam("imageName") String imageName) 
@@ -97,8 +100,9 @@ public class ImageResource {
 	}
 	
 	/**
-	 * this method allows to update a picture in the database
-	 * @param id
+	 * this method allows to update a image object in the database
+	 * @param username
+	 * @param imageName
 	 * @param image
 	 * @return
 	 */
@@ -114,12 +118,14 @@ public class ImageResource {
 	
 	/**
 	 * this method deletes a picture in the database
-	 * @param id
+	 * @param username
+	 * @param imageName
+	 * @return
 	 */
 	@DELETE
 	@Path("/{imageName}")
 	@Produces({MediaType.TEXT_PLAIN})
-	//funktioniert nicht : keine Delete  in Bootstrap funktioniert nicht
+	//funktioniert
 	public String deleteImage(@PathParam("username") String username, 
 			@PathParam("imageName") String imageName) {
 		 return imageService.deleteImage(username, imageName);
@@ -128,27 +134,38 @@ public class ImageResource {
 	
 	/**
 	 * This method returns the metadata of a picture
+	 * @param username
+	 * @param imageName
 	 * @return
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 * @throws FileNotFoundException 
-	 */ 
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	@GET
 	@Path("/{imageName}/metadata")
 	@Produces(MediaType.APPLICATION_JSON)
-	//funktioniert nicht : unmöglich Metadata von ein ImageContainer zu lesen
+	//funktioniert zum teil : Das Datum wird nicht mitgeliefert
 	public Metadata getMetadata(@PathParam("username") String username, 
 			@PathParam("imageName") String imageName) 
 					throws FileNotFoundException, ClassNotFoundException, IOException {
 		return imageService.getMetadata(username, imageName);
 	}
 	
-	
+	/**
+	 * This method allows to update the metadata of a picture
+	 * @param username
+	 * @param imageName
+	 * @param metadata
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	@PUT
 	@Path("/{imagename}/metadata")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_JSON })
-	//funktioniert nicht : unmöglich Metadata von ein ImageContainer zu lesen
+	//funktioniert nicht : editMetadata in Peer klappt nicht
 	public Metadata updateMetadata(@PathParam("username") String username, 
 			@PathParam("imageName") String imageName, Metadata metadata ) 
 					throws FileNotFoundException, ClassNotFoundException, IOException {
@@ -156,4 +173,8 @@ public class ImageResource {
 	}
 	
 	
+	//delete many images at the same time
+	//.....
+	
+		
 }
