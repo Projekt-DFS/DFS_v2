@@ -87,15 +87,17 @@ public class Peer {
 			
 		}
 		
-		public Peer() {
-				
+		/**
+		 * Creates new Peer with ip address only
+		 */
+		public Peer () {
+			try {
+				this.inet = InetAddress.getLocalHost();
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
 		}
 	
-	
-		
-		
-		
-		
 		
 		public Zone getOwnZone() {
 			return ownZone;
