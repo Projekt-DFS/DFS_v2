@@ -570,6 +570,17 @@ public class Peer {
 				return shortestPath(destinationCoordinate);
 			}
 		}
+		
+		/**
+		 * @author Raphaela Wagner 27.06.2018
+		 * after finding the destinationPeer denoted through the randomPoint
+		 * the destinationPeer performs splitZone with this Peer
+		 * @param randomPoint
+		 * @return
+		 */
+		public Peer joinRequest(Point2D.Double randomPoint) {
+			return shortestPath(randomPoint).splitZone(this);
+		}
 	
 	
 	
