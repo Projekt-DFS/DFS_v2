@@ -1,10 +1,13 @@
 package main.java.de.htwsaar.dfs.service;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.ImageContainer;
@@ -13,16 +16,17 @@ import main.java.de.htwsaar.dfs.model.Metadata;
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.utils.RestUtils;
 
-
+/**
+ * 
+ * @author Aude Nana
+ *
+ */
 public class ImageService {
 	
 	//URI for Image
-	private String baseUri = "http://" + Bootstrap.getIP() + ":" + Bootstrap.port +"/iosbootstrap/v1/users/";
+	private String baseUri = "http://" + Bootstrap.getIP() + ":" + Bootstrap.port +"/iosbootstrap/v1/";
 	
-	public ImageService(){
-//		bootstrap.createImage(img, bootstrap.hashToPoint("name", "Nana"), "AN",
-//				user, new Date(), null);
-	}
+	public ImageService(){	}
 	
 	
 	/**
@@ -38,9 +42,9 @@ public class ImageService {
 		ArrayList <ImageContainer> list = Bootstrap.getAllImageContainers(username);
 		for( ImageContainer ic : list) {
 			Image img = new Image();
-			img.setThumbnail(baseUri + username + "/" + ic.getThumbnailPath());
+			img.setThumbnail(baseUri + ic.getThumbnailPath() + ".jpg/img");
 			img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
-			img.setImageSource(baseUri + username + "/"+ ic.getPath());
+			img.setImageSource(baseUri + ic.getPath()  + ".jpg/img");
 			result.add(img);
 		}
 		return result; 
@@ -65,8 +69,8 @@ public class ImageService {
 		}
 		Image img = new Image( ic.getImageName().toString(), 
 				(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList())),
-				baseUri + username +"/"+ ic.getPath(), 
-				baseUri + username +"/"+ ic.getThumbnailPath());
+				baseUri + ic.getPath()+ ".jpg/img", 
+				baseUri + ic.getThumbnailPath()+ ".jpg/img");
 		
 		return img;
 	}
@@ -85,7 +89,8 @@ public class ImageService {
 	}
 	
 	public String deleteImage(String username, String imageName) {
-		 return  Bootstrap.deleteImage(username, imageName);
+		 Bootstrap.deleteImageContainer(username, imageName);
+		 return "succeed";
 	}
 
 	public Metadata getMetadata(String username, String imageName) 
@@ -98,7 +103,7 @@ public class ImageService {
 	public Metadata updateMetadata(String username, String imageName, Metadata metadata) 
 			throws FileNotFoundException, ClassNotFoundException, IOException {
 		Peer.editMeta(username, imageName, metadata.getLocation(), metadata.getTagList());
-		return null;
+		return metadata;
 	}
 
 
@@ -113,10 +118,18 @@ public class ImageService {
 	 */
 	public BufferedImage getBufferedImage(String username, String imageName) 
 			throws FileNotFoundException, ClassNotFoundException, IOException {
-		ImageContainer ic = Bootstrap.loadImageContainer(username, imageName);
-		return ic.getImage();
-	}
+		
+		String fileSrc = "images/"+ username + "/" + imageName;
+		BufferedImage img = null;
+		try {
+			System.out.println(fileSrc);
+			img = ImageIO.read(new File( fileSrc));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
+		return img;
+	}
 
 	
 }
