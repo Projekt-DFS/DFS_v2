@@ -97,7 +97,7 @@ public class ImageService {
 
 	public Metadata updateMetadata(String username, String imageName, Metadata metadata) 
 			throws FileNotFoundException, ClassNotFoundException, IOException {
-		Peer.editMeta(username, imageName, metadata.getLocation(),metadata.getCreated(), metadata.getTagList());
+		Peer.editMeta(username, imageName, metadata.getLocation(), metadata.getTagList());
 		return null;
 	}
 
