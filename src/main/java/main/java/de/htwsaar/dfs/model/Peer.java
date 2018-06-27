@@ -520,7 +520,22 @@ public class Peer {
 		}
 	
 	
-	
+		/**
+		 * @author Raphaela Wagner 27.06.2018
+		 * looks up whether destinationCoordinate lies in this Peer's zone
+		 * @param destinationCoordinate
+		 * @return
+		 */
+		public boolean lookup(Point2D.Double destinationCoordinate) {
+			if (this.getOwnZone().getBottomLeft().getX() <= destinationCoordinate.getX() 
+					&& this.getOwnZone().getUpperRight().getX() >= destinationCoordinate.getX()
+					&& this.getOwnZone().getBottomLeft().getY() <= destinationCoordinate.getY()
+					&& this.getOwnZone().getUpperRight().getY() >= destinationCoordinate.getY()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	
 	
 	
