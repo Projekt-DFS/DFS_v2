@@ -518,7 +518,27 @@ public class Peer {
 			ic.setTagList(tagList);
 			saveImageContainer(ic);
 		}
-	
+		
+		/**
+		 * @author Raphaela Wagner 27.06.2018
+		 * Recursive method that returns the destinationPeer which holds the destinationCoordinate
+		 * @param destinationCoordinate
+		 * @return 
+		 */
+			public Peer shortestPath(Point2D.Double destinationCoordinate) {
+				
+				double smallestSquare = this.getRoutingTable().getFirst().getZone().calculateCentrePoint().distanceSq(destinationCoordinate);
+				Peer closestNeighbour = this.getRoutingTable().getFirst();
+					
+					for(int i = 1; i < getRoutingTable().size(); i++) {
+						if (this.getRoutingTable().get(i).getZone().calculateCentrePoint().distanceSq(destinationCoordinate) < smallestSquare) {
+							closestNeighbour = this.getRoutingTable().get(i);
+							smallestSquare = this.getRoutingTable().get(i).getZone().calculateCentrePoint().distanceSq(destinationCoordinate);
+						}
+					}
+					
+					return closestNeighbour.routing(destinationCoordinate);
+				}
 	
 		/**
 		 * @author Raphaela Wagner 27.06.2018
@@ -537,7 +557,19 @@ public class Peer {
 			}
 		}
 	
-	
+		/**
+		 * @ author Raphaela Wagner 27.06.2018
+		 * routing method 
+		 * @param destinationCoordinate
+		 * @return
+		 */
+		public Peer routing(Point2D.Double destinationCoordinate) {
+			if (lookup(destinationCoordinate)) {
+				return this;
+			} else {
+				return shortestPath(destinationCoordinate);
+			}
+		}
 	
 	
 	
