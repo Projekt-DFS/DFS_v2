@@ -510,11 +510,10 @@ public class Peer {
 		 * @throws ClassNotFoundException 
 		 * @throws FileNotFoundException 
 		 */
-		public static void editMeta(String username, String imageName, String location, Date date, LinkedList<String> tagList) throws FileNotFoundException, ClassNotFoundException, IOException {
+		public static void editMeta(String username, String imageName, String location, LinkedList<String> tagList) throws FileNotFoundException, ClassNotFoundException, IOException {
 			//TODO routing
 			ImageContainer ic = loadImageContainer(username, imageName);
 			ic.setLocation(location);
-			ic.setDate(date);
 			ic.setTagList(tagList);
 			saveImageContainer(ic);
 		}
