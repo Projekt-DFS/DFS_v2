@@ -8,6 +8,8 @@ import java.util.Base64;
 
 import javax.imageio.ImageIO;
 
+import main.java.de.htwsaar.dfs.model.Image;
+
 public class RestUtils {
 
 	/**
@@ -53,21 +55,16 @@ public class RestUtils {
         }
         return image;
     }
+
 	
-	//Thumbnails
 	/**
-	 * creates a Thumbnail and saves it in this object
-	 * @param img the original image
+	 * This method tests the image's fied 
+	 * @param image
+	 * @return
 	 */
-	public String createThumbnail(String imgPath) {
-		BufferedImage img = RestUtils.decodeToImage(imgPath);//null;
-//		try {
-//			img = ImageIO.read(new File(imgPath));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		java.awt.Image temp = img.getScaledInstance(img.getWidth() / 10, img.getHeight() / 10, BufferedImage.SCALE_DEFAULT);
-		String t= RestUtils.encodeToString(StaticFunctions.toBufferedImage(temp), "png");
-	return t;
+	public static boolean checkImageFields(Image image) {
+		if( image.getImageSource().equals("") || image.getImageName().equals(""))
+			return false;
+		return true;
 	}
 }
