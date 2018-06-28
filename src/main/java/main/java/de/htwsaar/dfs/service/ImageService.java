@@ -42,9 +42,9 @@ public class ImageService {
 		ArrayList <ImageContainer> list = Bootstrap.getAllImageContainers(username);
 		for( ImageContainer ic : list) {
 			Image img = new Image();
-			img.setThumbnail(baseUri + ic.getThumbnailPath() + ".jpg/img");
+			img.setThumbnail(baseUri + ic.getThumbnailPath() + ".jpg/download");
 			img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
-			img.setImageSource(baseUri + ic.getPath()  + ".jpg/img");
+			img.setImageSource(baseUri + ic.getPath()  + ".jpg/download");
 			result.add(img);
 		}
 		return result; 
