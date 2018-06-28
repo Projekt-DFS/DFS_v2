@@ -21,7 +21,8 @@ import main.java.de.htwsaar.dfs.service.PeerService;
  * @author Aude Nana
  *
  */
-@Path("/peers")
+
+@Path("/")
 public class PeerResource {
 
 	private PeerService ps = new PeerService();
@@ -31,6 +32,7 @@ public class PeerResource {
 	 * @return
 	 */
 	@GET
+	@Path("peers")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Peer> getAllNeighbors(){
 		return ps.getAllNeighbors();
@@ -42,6 +44,7 @@ public class PeerResource {
 	 * @return
 	 */
 	@POST
+	@Path("peers")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON )
 	public Peer addPeer(Peer peer) {
@@ -56,7 +59,7 @@ public class PeerResource {
 	 * @return
 	 */
 	@GET
-	@Path("/{peerId}")
+	@Path("/peers/{peerId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Peer getPeer(@PathParam("peerId") int pid){
 		return ps.getPeer(pid);
@@ -68,7 +71,7 @@ public class PeerResource {
 	 * @return
 	 */
 	@PUT
-	@Path("/{peerId}")
+	@Path("/peers/{peerId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON )
 	public Peer updatePeer(@PathParam("peerId") int pid, Peer peer) {
@@ -83,36 +86,24 @@ public class PeerResource {
 	 */
 	
 	@DELETE
-	@Path("/{peerId}")
+	@Path("/peers/{peerId}")
 	@Produces(MediaType.TEXT_PLAIN)
+	//kommt später 
 	public String deletePeer(@PathParam("peerId") int pid){
 		 return ps.deletePeer(pid);
 	}
 	
 	/**
-	 * This method returns the neigbor list of a peer in the neighbour list
+	 * this method returns the own zone related to the peer
 	 * @param pid
 	 * @return
 	 */
 	@GET
-	@Path("/{peerId}/neighbors")
-	@Produces(MediaType.APPLICATION_JSON)
-	//ist normalerweise unnötig
-	public List<Peer> getPeerNeighbors(@PathParam("peerId") int pid){
-		return ps.getPeerNeighbors(pid);
-	}
-	
-	/**
-	 * this method returns the own zone related the peer
-	 * @param pid
-	 * @return
-	 */
-	@GET
-	@Path("/{peerId}/ownzone")
+	@Path("/ownzone")
 	@Produces(MediaType.APPLICATION_JSON)
 	//unmoglich
-	public Zone getOwnZone(@PathParam("peerId") int pid){
-		return ps.getOwnZone(pid);
+	public Zone getOwnZone(){
+		return ps.getOwnZone();
 	}
 	
 	/**
@@ -122,12 +113,12 @@ public class PeerResource {
 	 * @return
 	 */
 	@PUT
-	@Path("/{peerId}/ownzone")
+	@Path("/ownzone")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON )
 	//unmoeglich
-	public Zone updateOwnZone(@PathParam("peerId") int pid, Zone zone) {
-		ps.updateOwnZone(pid, zone);
+	public Zone updateOwnZone( Zone zone) {
+		ps.updateOwnZone( zone);
 		return zone;
 	}
 	

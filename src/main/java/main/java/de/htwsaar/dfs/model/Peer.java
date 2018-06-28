@@ -32,6 +32,9 @@ import java.net.UnknownHostException;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import main.java.de.htwsaar.dfs.utils.StaticFunctions;
+
 import javax.ws.rs.core.Response;
 
 /**
@@ -42,8 +45,7 @@ import javax.ws.rs.core.Response;
 public class Peer {
 	
 	//konstante
-	public static final int port = 8080;
-	public static final String ip_bootstrap = "192.168.2.100";
+	public static final int port = 4434;
 	
 	//Attribute
 	public Zone ownZone;
@@ -53,9 +55,7 @@ public class Peer {
 	@XmlTransient
 	public static InetAddress inet;
 	//Liste alle Nachbarn
-	private static LinkedList<Peer> routingTable = new LinkedList<Peer>();
-	//private ArrayList<Integer> neighbourList;				//Fill
-	
+	private LinkedList<Peer> routingTable = new LinkedList<Peer>();
 	
 	
 	
@@ -122,16 +122,6 @@ public class Peer {
 		public static int getPort() {
 			return port;
 		}
-
-		public static String getIpBootstrap() {
-			return ip_bootstrap;
-		}
-		
-		
-
-//		public void setNeighbourList(ArrayList<Integer> neighbourList) {
-//			this.neighbourList = neighbourList;
-//		}
 
 		
 		
@@ -316,7 +306,7 @@ public class Peer {
 		StringBuilder sb = new StringBuilder();
 		
 		for (Peer p : routingTable) {
-			sb.append(p.getIP()).append(" ").append(p.getZone()).append(System.lineSeparator());
+			sb.append(StaticFunctions.getRightIP()).append(" ").append(p.getZone()).append(System.lineSeparator());
 		}
 		
 		return sb.toString();	

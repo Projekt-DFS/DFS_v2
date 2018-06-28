@@ -15,15 +15,10 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.TargetDataLine;
 
 
 
@@ -37,10 +32,7 @@ import javax.sound.sampled.TargetDataLine;
 public class Main {
 	
 	static Bootstrap bootstrap = new Bootstrap();
-	static Peer p;
-	
-	//dummy fuer peers
-	public static Map<Integer, Peer> peers = Database.getPeers();
+	public static Peer peer;
 	
 	/**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
@@ -53,12 +45,12 @@ public class Main {
         final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.resource");
         rc.register(MultiPartFeature.class);
         rc.register(LoggingFilter.class);
-        rc.register(SecurityFilter.class);
+//        rc.register(SecurityFilter.class);
 
                
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP()+":8080/iosbootstrap/v1/"), rc);
+        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP() +":" + Peer.port+ "/iosbootstrap/v1/"), rc);
     }
     
     //just let full the database
@@ -85,10 +77,7 @@ public class Main {
 		//peers
 		Zone zoneA = new Zone (new Point2D.Double(0.0, 0.0), new Point2D.Double(0.5, 0.0), new Point2D.Double(0.0, 0.5), new Point2D.Double(0.5, 0.5));
 		Zone zoneB = new Zone (new Point2D.Double(0.5, 0.0), new Point2D.Double(1.0, 0.0), new Point2D.Double(0.5, 0.5), new Point2D.Double(1.0, 0.5));
-		p = new Peer(zoneA);
-		
-		peers.put(1, p);
-		peers.put(2, new Peer(zoneB));
+		peer = new Peer(zoneA);
 		
 	}
     
