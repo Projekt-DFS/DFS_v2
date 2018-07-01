@@ -16,10 +16,28 @@ import main.java.de.htwsaar.dfs.model.Bootstrap;
  * JUNIT Test for Peers
  *
  */
+
+
+/**  
+ * @author Rapha
+ *    _______________
+ *   l       l       l   p6 is destinationPeer for Point P(0.9, 0.2)
+ *   l	bs	 l   1   l
+ *   l______ l_______l
+ *   l	 l	 l   l 5 l
+ *   l 2 l 3 l 4 l---l	
+ *   l___l___l___l_6_l
+ */
+
+
+
+
+
+
 public class PeerTest {
 
-	private Bootstrap bt;
-	
+	private Bootstrap bs;
+	private Peer p1, p2, p3, p4, p5, p6;
 	
 	/**
 	 * Creates the Bootstrap Peer
@@ -27,7 +45,20 @@ public class PeerTest {
 	 */
 	@Before
 	public void setUp() {
-		bt = new Bootstrap();
+		bs = new Bootstrap();
+		p1 = new Peer();
+		p2 = new Peer();
+		p3 = new Peer();
+		p4 = new Peer();
+		p5 = new Peer(); 
+		p6 = new Peer();
+		
+		bs.splitZone(p1);
+		bs.splitZone(p2);
+		p1.splitZone(p4);
+		p2.splitZone(p3);
+		p4.splitZone(p5);
+		p5.splitZone(p6);
 		
 	}
 
@@ -54,134 +85,74 @@ public class PeerTest {
 	
 	
 	/**
-	 * Adds Peers and checks whether other Peers are neighbours 
+	 * @author Rapha
+	 * tests whether isNeighbour successfully distinguishes between
+	 * neighbours and non-neighbours 
 	 */
 	@Test
 	public void testIsNeighbour() {
-		Peer p1 = new Peer();
-		bt.splitZone(p1);
-		assertEquals(true, bt.isNeighbour(p1));
-		Peer p2 = new Peer();
-		bt.splitZone(p2);
-		assertEquals(true, bt.isNeighbour(p2));
-		assertEquals(true, p1.isNeighbour(p2));
-		Peer p3 = new Peer();
-		p1.splitZone(p3);
-		assertEquals(true, p1.isNeighbour(p3));
-		assertEquals(false, bt.isNeighbour(p3));
-		assertEquals(false, p1.isNeighbour(p2));
-		Peer p4 = new Peer();
-		bt.splitZone(p4);
-		assertEquals(true, bt.isNeighbour(p4));
-		assertEquals(false, bt.isNeighbour(p1));
-		Peer p5 = new Peer();
-		bt.splitZone(p5);
-		assertEquals(true, bt.isNeighbour(p5));
-		assertEquals(true, p5.isNeighbour(p4));
-		assertEquals(false, p5.isNeighbour(p1));
-		assertEquals(false, p5.isNeighbour(p3));
-		Peer p6 = new Peer();
-		p3.splitZone(p6);
-		assertEquals(true, p3.isNeighbour(p6));
-		assertEquals(false, p4.isNeighbour(p6));
-		Peer p7 = new Peer();
-		p3.splitZone(p7);
-		assertEquals(true, p3.isNeighbour(p7));
-		assertEquals(false, p7.isNeighbour(p1));
-		Peer p8 = new Peer();
-		p6.splitZone(p8);
-		assertEquals(true, p6.isNeighbour(p8));
-		assertEquals(false, p8.isNeighbour(bt));
+		assertEquals(true, bs.isNeighbour(p1) && bs.isNeighbour(p2) && bs.isNeighbour(p3));
+		assertEquals(false, bs.isNeighbour(p4) && bs.isNeighbour(p5) && bs.isNeighbour(p6));
+		
+		assertEquals(true, p1.isNeighbour(bs) && p1.isNeighbour(p4) && p1.isNeighbour(p5));
+		assertEquals(false, p1.isNeighbour(p2) && p1.isNeighbour(p3) && p1.isNeighbour(p6));
+		
+		assertEquals(true, p2.isNeighbour(bs) && p2.isNeighbour(p3));
+		assertEquals(false, p2.isNeighbour(p1) && p2.isNeighbour(p4) && p2.isNeighbour(p5) && p2.isNeighbour(p5));
+		
+		assertEquals(true, p3.isNeighbour(bs) && p3.isNeighbour(p2) && p3.isNeighbour(p4));
+		assertEquals(false, p3.isNeighbour(p1) && p3.isNeighbour(p5) && p3.isNeighbour(p6));
+		
+		assertEquals(true, p4.isNeighbour(p1) && p4.isNeighbour(p3) && p4.isNeighbour(p5) && p4.isNeighbour(p6));
+		assertEquals(false, p4.isNeighbour(bs) && p4.isNeighbour(p2));
+		
+		assertEquals(true, p5.isNeighbour(p1) && p5.isNeighbour(p4) && p5.isNeighbour(p6));
+		assertEquals(false, p5.isNeighbour(bs) && p5.isNeighbour(p2) && p5.isNeighbour(p2));
+		
+		assertEquals(true, p6.isNeighbour(p4) && p6.isNeighbour(p5));
+		assertEquals(false, p6.isNeighbour(bs) && p6.isNeighbour(p1) && p6.isNeighbour(p2) && p6.isNeighbour(p3));
 	}
 	
 	/**
+	 * @author Rapha
 	 * Tests if routingTables get updated correctly
 	 */
 	@Test
 	public void testUpdateRoutingTables() {
-		Peer p1 = new Peer();
-		Peer p2 = new Peer();
-		Peer p3 = new Peer();
-		Peer p4 = new Peer();
-		Peer p5 = new Peer();
+		assertEquals(true, bs.getRoutingTable().contains(p1) && bs.getRoutingTable().contains(p2) && bs.getRoutingTable().contains(p3));
+		assertEquals(false, bs.getRoutingTable().contains(p4) && bs.getRoutingTable().contains(p5) && bs.getRoutingTable().contains(p6));
 		
-		bt.splitZone(p1);
-		assertEquals(true, bt.getRoutingTable().contains(p1));
-		
-		bt.splitZone(p2);
-		assertEquals(true, bt.getRoutingTable().contains(p2));
-		assertEquals(true, bt.getRoutingTable().contains(p1));
-	
-		p1.splitZone(p3);
-		assertEquals(true, p1.getRoutingTable().contains(bt));
-		assertEquals(true, p1.getRoutingTable().contains(p3));
-		
-		assertEquals(false, p1.getRoutingTable().contains(p2));
-		
-		p1.splitZone(p4);
-		assertEquals(true, p4.getRoutingTable().contains(p1));
-		assertEquals(true, p4.getRoutingTable().contains(p3));
-		
-		assertEquals(false, p4.getRoutingTable().contains(bt));
-		assertEquals(false, p4.getRoutingTable().contains(p2));
-		
-		p4.splitZone(p5);
-		assertEquals(true, p5.getRoutingTable().contains(p1));
-		assertEquals(true, p5.getRoutingTable().contains(p3));
-		assertEquals(true, p5.getRoutingTable().contains(p4));
-		
-		assertEquals(false, p5.getRoutingTable().contains(bt));
-		assertEquals(false, p5.getRoutingTable().contains(p2));
 	}
 	
 	/**
 	 * Tests whether splitZone() creates and sets the correct Zones after splitting
 	 */
-	@Test
+	
 	public void testSplitZoneForCorrectZones() {
-		Peer p1 = new Peer();
-		Peer p2 = new Peer();
-		Peer p3 = new Peer();
-		Peer p4 = new Peer();
-		Peer p5 = new Peer();
 		
-		assertEquals(true, bt.getZone().getBottomLeft().getX() == 0.0 && bt.getZone().getBottomLeft().getY() == 0.0);
-		assertEquals(true, bt.getZone().getUpperRight().getX() == 1.0 && bt.getZone().getUpperRight().getY() == 1.0);
+	}
+	
+	/**
+	 * @author Rapha
+	 * shows that destinationPeer p6 which holds the destinationCoordinate P(0.9, 0.2) is returned successfully
+	 */
+	@Test
+	public void testShortestPath() {
+		assertEquals(true, bs.shortestPath(new Point2D.Double(0.9, 0.2)) == p6);
+				
+	}
+	
+	@Test
+	public void testRouting() {
+		assertEquals(true, bs.routing(new Point2D.Double(0.9, 0.2)) == p6);
+	}
+	
+	
+	public void testJoinRequest() {
 		
-		bt.splitZone(p1);
-		assertEquals(true, bt.getZone().getBottomLeft().getX() == 0.0 && bt.getZone().getBottomLeft().getY() == 0.0);
-		assertEquals(true, bt.getZone().getUpperRight().getX() == 0.5 && bt.getZone().getUpperRight().getY() == 1.0);
 		
-		assertEquals(true, p1.getZone().getBottomLeft().getX() == 0.5 && p1.getZone().getBottomLeft().getY() == 0.0);
-		assertEquals(true, p1.getZone().getUpperRight().getX() == 1.0 && p1.getZone().getUpperRight().getY() == 1.0);
 		
-		bt.splitZone(p2);
-		assertEquals(true, bt.getZone().getBottomLeft().getX() == 0.0 && bt.getZone().getBottomLeft().getY() == 0.5);
-		assertEquals(true, bt.getZone().getUpperRight().getX() == 0.5 && bt.getZone().getUpperRight().getY() == 1.0);
 		
-		assertEquals(true, p2.getZone().getBottomLeft().getX() == 0.0 && p2.getZone().getBottomLeft().getY() == 0.0);
-		assertEquals(true, p2.getZone().getUpperRight().getX() == 0.5 && p2.getZone().getUpperRight().getY() == 0.5);
-		
-		p1.splitZone(p3);
-		assertEquals(true, p1.getZone().getBottomLeft().getX() == 0.5 && p1.getZone().getBottomLeft().getY() == 0.5);
-		assertEquals(true, p1.getZone().getUpperRight().getX() == 1.0 && p1.getZone().getUpperRight().getY() == 1.0);
-		
-		assertEquals(true, p3.getZone().getBottomLeft().getX() == 0.5 && p3.getZone().getBottomLeft().getY() == 0.0);
-		assertEquals(true, p3.getZone().getUpperRight().getX() == 1.0 && p3.getZone().getUpperRight().getY() == 0.5);
-		
-		p1.splitZone(p4);
-		assertEquals(true, p1.getZone().getBottomLeft().getX() == 0.5 && p1.getZone().getBottomLeft().getY() == 0.5);
-		assertEquals(true, p1.getZone().getUpperRight().getX() == 0.75 && p1.getZone().getUpperRight().getY() == 1.0);
-		
-		assertEquals(true, p4.getZone().getBottomLeft().getX() == 0.75 && p4.getZone().getBottomLeft().getY() == 0.5);
-		assertEquals(true, p4.getZone().getUpperRight().getX() == 1.0 && p4.getZone().getUpperRight().getY() == 1.0);
-		
-		p4.splitZone(p5);
-		assertEquals(true, p4.getZone().getBottomLeft().getX() == 0.75 && p4.getZone().getBottomLeft().getY() == 0.75);
-		assertEquals(true, p4.getZone().getUpperRight().getX() == 1.0 && p4.getZone().getUpperRight().getY() == 1.0);
-		
-		assertEquals(true, p5.getZone().getBottomLeft().getX() == 0.75 && p5.getZone().getBottomLeft().getY() == 0.5);
-		assertEquals(true, p5.getZone().getUpperRight().getX() == 1.0 && p5.getZone().getUpperRight().getY() == 0.75);
 	}
 
 }

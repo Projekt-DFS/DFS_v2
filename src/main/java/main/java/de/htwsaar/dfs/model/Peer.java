@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.client.Client;
@@ -55,7 +56,8 @@ public class Peer {
 	@XmlTransient
 	public static InetAddress inet;
 	//Liste alle Nachbarn
-	private LinkedList<Peer> routingTable = new LinkedList<Peer>();
+	
+	private CopyOnWriteArrayList<Peer> routingTable = new CopyOnWriteArrayList<>();
 	
 	
 	
@@ -128,7 +130,7 @@ public class Peer {
 		public void setIp_adresse(String ip_adresse) {
 			this.ip_adresse = ip_adresse;
 		}
-		public void setRoutingTable(LinkedList<Peer> routingTable) {
+		public void setRoutingTable(CopyOnWriteArrayList<Peer> routingTable) {
 			this.routingTable = routingTable;
 		}
 		public Zone getZone() {
@@ -153,7 +155,7 @@ public class Peer {
 			return inet.getHostAddress();
 		}
 		
-		public LinkedList<Peer> getRoutingTable() {
+		public CopyOnWriteArrayList<Peer> getRoutingTable() {
 	    	return routingTable;
 	    }
 		
@@ -286,7 +288,7 @@ public class Peer {
 	 * a neighbour's routingTable is merged into the Peer's routingTable
 	 * @param neighboursRoutingTable
 	 */
-	public void mergeRoutingTableWithList(LinkedList<Peer> neighboursRoutingTable) {
+	public void mergeRoutingTableWithList(CopyOnWriteArrayList<Peer> neighboursRoutingTable) {
 		routingTable.addAll(neighboursRoutingTable);
 	}
 	
@@ -295,7 +297,7 @@ public class Peer {
 	 * @param peer
 	 */
 	public void eliminateNeighbours(Peer peer) {
-		peer.getRoutingTable().parallelStream().forEach( p-> {
+		peer.getRoutingTable().stream().forEach( p-> {
 			if(peer.isNeighbour(p) == false) {
 				peer.getRoutingTable().remove(p);
 			}
@@ -516,8 +518,8 @@ public class Peer {
 		 */
 			public Peer shortestPath(Point2D.Double destinationCoordinate) {
 				
-				double smallestSquare = this.getRoutingTable().getFirst().getZone().calculateCentrePoint().distanceSq(destinationCoordinate);
-				Peer closestNeighbour = this.getRoutingTable().getFirst();
+				double smallestSquare = this.getRoutingTable().get(0).getZone().calculateCentrePoint().distanceSq(destinationCoordinate);
+				Peer closestNeighbour = this.getRoutingTable().get(0);
 					
 					for(int i = 1; i < getRoutingTable().size(); i++) {
 						if (this.getRoutingTable().get(i).getZone().calculateCentrePoint().distanceSq(destinationCoordinate) < smallestSquare) {
