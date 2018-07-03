@@ -2,6 +2,8 @@ package main.java.de.htwsaar.dfs.model;
 import java.io.Serializable;
 import java.util.HashSet;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import main.java.de.htwsaar.dfs.exceptions.*;
 
 /**
@@ -12,6 +14,7 @@ import main.java.de.htwsaar.dfs.exceptions.*;
  * @author Thomas Spanier
  *
  */
+@XmlRootElement
 public class User implements Serializable {
 
 	
@@ -38,7 +41,10 @@ public class User implements Serializable {
 		setName(name);
 		setPassword(password);
 	}
-	
+	//standard constructor for jersey
+	public User() {
+		
+	}
 	//get-methods
 	public long getId() {
 		return id;

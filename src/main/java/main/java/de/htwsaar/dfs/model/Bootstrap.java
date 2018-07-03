@@ -11,15 +11,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
 
-import javax.imageio.ImageIO;
-
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.User;
-import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 
 public class Bootstrap extends Peer {
@@ -284,7 +280,7 @@ public class Bootstrap extends Peer {
 	 * @param date the date when the image was shot
 	 * @param tagList a list of tags
 	 */
-	public static void createImage(BufferedImage img, String username, String imageName, 
+	public void createImage(BufferedImage img, String username, String imageName, 
 			String photographer, Date date, LinkedList<String> tagList) {
 		
 		User user = getUser(username);
@@ -311,7 +307,7 @@ public class Bootstrap extends Peer {
 	 * @return Message, if image is deleted, or not
 	 */
 	
-	public static String deleteImage(String username, String imageName) {
+	public String deleteImage(String username, String imageName) {
 		User user = getUser(username);
 		//TODO: routing
 		try {
@@ -364,7 +360,7 @@ public class Bootstrap extends Peer {
 	 * @throws IOException 
 	 * @throws ClassNotFoundException 
 	 */
-	public static ArrayList<ImageContainer> getAllImageContainers(String username) throws ClassNotFoundException, IOException {
+	public ArrayList<ImageContainer> getAllImageContainers(String username) throws ClassNotFoundException, IOException {
 		ArrayList<ImageContainer> ics = new ArrayList<ImageContainer>();
 		HashSet<String> imageNames = getListOfImages(username);
 		

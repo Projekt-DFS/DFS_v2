@@ -93,7 +93,7 @@ public class PlayGround {
 		ics = bt.getAllImageContainers("test2");
 		System.out.println("TagList: " + ics.get(0).getTags());
 		
-		ImageContainer coins = Bootstrap.loadImageContainer("test2", "img_002");
+		ImageContainer coins = bt.loadImageContainer("test2", "img_002");
 		System.out.println(coins.getTags());
 		
 		bt.deleteImage("test2", "img_002");

@@ -44,7 +44,7 @@ public class ImageTest {
 		img = ImageIO.read(new File("twins.jpg"));
 		photographer = "Thomas";
 		tagList.add("babys");
-		Bootstrap.createImage(img, Bootstrap.getUser("imageTestUser1").getName(), "img_001", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("imageTestUser1").getName(), "img_001", photographer, date, tagList);
 		
 		
 		img = ImageIO.read(new File("Classdiagram.jpg"));
@@ -53,7 +53,7 @@ public class ImageTest {
 		tagList.add("UML");
 		tagList.add("software");
 		tagList.add("diagram");
-		Bootstrap.createImage(img, Bootstrap.getUser("imageTestUser2").getName(), "img_001", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("imageTestUser2").getName(), "img_001", photographer, date, tagList);
 		
 		
 		
@@ -63,7 +63,7 @@ public class ImageTest {
 		tagList.removeIf(s -> true);
 		tagList.add("Kaufbelege");
 		tagList.add("money");
-		Bootstrap.createImage(img, Bootstrap.getUser("imageTestUser1").getName(), "img_002", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("imageTestUser1").getName(), "img_002", photographer, date, tagList);
 		
 		
 		

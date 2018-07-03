@@ -414,7 +414,7 @@ public class Peer {
 		 * @throws FileNotFoundException 
 		 * @throws ClassNotFoundException 
 		 */
-		public static ImageContainer loadImageContainer(String username, String imageName) throws FileNotFoundException, IOException, ClassNotFoundException {
+		public ImageContainer loadImageContainer(String username, String imageName) throws FileNotFoundException, IOException, ClassNotFoundException {
 			//TODO routing
 			//Point2D.Double coordinate = StaticFunctions.hashToPoint(username, imageName);
 			
@@ -439,7 +439,7 @@ public class Peer {
 		}
 		
 		
-		public static void deleteImageContainer(String username, String imageName) {
+		public void deleteImageContainer(String username, String imageName) {
 			//TODO routing
 			//Point2D.Double coordinate = StaticFunctions.hashToPoint(username, imageName);
 			
@@ -502,7 +502,7 @@ public class Peer {
 		 * @throws ClassNotFoundException 
 		 * @throws FileNotFoundException 
 		 */
-		public static void editMeta(String username, String imageName, String location, LinkedList<String> tagList) throws FileNotFoundException, ClassNotFoundException, IOException {
+		public void editMeta(String username, String imageName, String location, LinkedList<String> tagList) throws FileNotFoundException, ClassNotFoundException, IOException {
 			//TODO routing
 			ImageContainer ic = loadImageContainer(username, imageName);
 			ic.setLocation(location);
