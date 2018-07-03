@@ -1,17 +1,11 @@
 package main.java.de.htwsaar.dfs;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.function.Predicate;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.PreMatching;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 

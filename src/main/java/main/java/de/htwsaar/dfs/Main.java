@@ -31,7 +31,7 @@ import javax.imageio.ImageIO;
  */
 public class Main {
 	
-	static Bootstrap bootstrap = new Bootstrap();
+	public static Bootstrap bootstrap = new Bootstrap();
 	public static Peer peer;
 	
 	/**
@@ -67,7 +67,7 @@ public class Main {
 			img2 = ImageIO.read(new File("C:/Users\\Aude\\Desktop\\downloadTest\\bild1.png"));
 			LinkedList<String> tagList = new LinkedList<String>();	
 			bootstrap.createImage(img, "user", "Noname.jpg", "Berlin", new Date(),tagList);
-			bootstrap.createImage(img, "user2", "bildUser1.jpg", "Milan",new Date(), tagList);
+			bootstrap.createImage(img2, "user2", "bildUser1.jpg", "Milan",new Date(), tagList);
 		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -76,8 +76,11 @@ public class Main {
 		
 		//peers
 		Zone zoneA = new Zone (new Point2D.Double(0.0, 0.0), new Point2D.Double(0.5, 0.0), new Point2D.Double(0.0, 0.5), new Point2D.Double(0.5, 0.5));
-		Zone zoneB = new Zone (new Point2D.Double(0.5, 0.0), new Point2D.Double(1.0, 0.0), new Point2D.Double(0.5, 0.5), new Point2D.Double(1.0, 0.5));
+//		Zone zoneB = new Zone (new Point2D.Double(0.5, 0.0), new Point2D.Double(1.0, 0.0), new Point2D.Double(0.5, 0.5), new Point2D.Double(1.0, 0.5));
 		peer = new Peer(zoneA);
+//		peer.updateRoutingTables(new Peer(zoneB));
+//		peer.mergeRoutingTableSinglePeer(new Peer(zoneB));
+//		System.out.println(peer.checkZone(0.5 , 0.0));
 		
 	}
     

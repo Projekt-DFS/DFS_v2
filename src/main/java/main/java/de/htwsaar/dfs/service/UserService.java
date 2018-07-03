@@ -1,6 +1,8 @@
 package main.java.de.htwsaar.dfs.service;
 
 import java.util.List;
+
+import main.java.de.htwsaar.dfs.Main;
 import main.java.de.htwsaar.dfs.model.*;
 
 
@@ -11,13 +13,10 @@ import main.java.de.htwsaar.dfs.model.*;
  */
 public class UserService {
 
-	private Bootstrap bootstrap = new Bootstrap();
+	private Bootstrap bootstrap = Main.bootstrap;
 	
 	public UserService(){
-		//just put 2 users in the bootstrap for testing authentication 
-		//It will not be able  to add users from the ios app
-		bootstrap.createUser("User", "Password");
-		bootstrap.createUser("user", "user");
+
 	}
 
 	/**
@@ -32,11 +31,11 @@ public class UserService {
 	
 	/**
 	 * This Method return a special user in the bootstrap
-	 * @param userId
+	 * @param username
 	 * @return
 	 */
-	public User getUser( int userId) {
-		return bootstrap.getUser(userId);
+	public User getUser( String username) {
+		return Bootstrap.getUser(username);
 	}
 	
 	/**

@@ -41,8 +41,8 @@ public class UserResource {
 	@GET
 	@Path("/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public User getUser( @PathParam("userId") int id) {
-		return userService.getUser(id - 1);
+	public User getUser( @PathParam("username") String username) {
+		return userService.getUser(username);
 	}
 	
 	
@@ -56,18 +56,10 @@ public class UserResource {
 	@Path("/{username}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public User updateUser(@PathParam("userId") long id ,
+	//funktioniert nicht : update user nicht möglich in bootstrap
+	public User updateUser(@PathParam("username") String username ,
 								User user) {
-		user.setId(id);
 		return userService.updateUser(user);
 	}
-	
-	/**
-	 * This method returns all the pictures of a special user
-	 * @return
-	 */
-/*	@Path("/{username}/images")
-	public ImageResource getImageResource( ) {
-		return new ImageResource();
-	}*/
+
 }
