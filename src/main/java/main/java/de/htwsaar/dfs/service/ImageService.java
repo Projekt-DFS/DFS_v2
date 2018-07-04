@@ -71,8 +71,8 @@ public class ImageService {
 		}
 		Image img = new Image( ic.getImageName().toString(), 
 				(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList())),
-				baseUri + ic.getPath()+ ".jpg/img", 
-				baseUri + ic.getThumbnailPath()+ ".jpg/img");
+				baseUri + ic.getPath()+ ".jpg/download", 
+				baseUri + ic.getThumbnailPath()+ ".jpg/download");
 		
 		return img;
 	}
@@ -113,7 +113,6 @@ public class ImageService {
 		if(metadata.getTagList() != null)
 			ic.setTagList(metadata.getTagList());
 		Bootstrap.saveImageContainer(ic);
-		//Peer.editMeta(username, imageName, metadata.getLocation(), metadata.getTagList());
 		return metadata;
 	}
 

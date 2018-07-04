@@ -177,9 +177,9 @@ public class ImageResource {
 	@Path("/{imagename}/metadata")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_JSON })
-	//funktioniert nicht : editMetadata in Peer klappt nicht
+	//funktioniert
 	public Metadata updateMetadata(@PathParam("username") String username, 
-			@PathParam("imageName") String imageName, Metadata metadata ) 
+			@PathParam("imagename") String imageName, Metadata metadata ) 
 					throws FileNotFoundException, ClassNotFoundException, IOException {
 		return imageService.updateMetadata(username, imageName, metadata);
 	}
