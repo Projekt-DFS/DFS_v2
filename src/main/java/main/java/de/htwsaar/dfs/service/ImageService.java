@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -109,8 +108,10 @@ public class ImageService {
 	public Metadata updateMetadata(String username, String imageName, Metadata metadata) 
 			throws FileNotFoundException, ClassNotFoundException, IOException {
 		ImageContainer ic = bootstrap.loadImageContainer(username, imageName);
-		ic.setLocation(metadata.getLocation());
-		ic.setTagList(metadata.getTagList());
+		if(metadata.getLocation() != null)
+			ic.setLocation(metadata.getLocation());
+		if(metadata.getTagList() != null)
+			ic.setTagList(metadata.getTagList());
 		Bootstrap.saveImageContainer(ic);
 		//Peer.editMeta(username, imageName, metadata.getLocation(), metadata.getTagList());
 		return metadata;

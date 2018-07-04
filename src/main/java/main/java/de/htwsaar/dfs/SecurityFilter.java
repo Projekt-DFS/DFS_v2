@@ -17,7 +17,7 @@ import main.java.de.htwsaar.dfs.model.*;
 /**
  * SecurityFilter class.
  * this class filters all access to Images resources. 
- * @author Aude
+ * @author Aude Nana
  *
  */
 @Provider

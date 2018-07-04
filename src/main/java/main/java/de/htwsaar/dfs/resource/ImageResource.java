@@ -3,7 +3,6 @@ package main.java.de.htwsaar.dfs.resource;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -157,7 +156,7 @@ public class ImageResource {
 	@GET
 	@Path("/{imageName}/metadata")
 	@Produces(MediaType.APPLICATION_JSON)
-	//funktioniert zum teil : Das Datum wird nicht mitgeliefert
+	//funktioniert
 	public Metadata getMetadata(@PathParam("username") String username, 
 			@PathParam("imageName") String imageName) 
 					throws FileNotFoundException, ClassNotFoundException, IOException {
