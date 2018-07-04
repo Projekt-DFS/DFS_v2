@@ -21,7 +21,11 @@ public class Metadata {
 	private LinkedList<String> tagList;
 	
 	public Metadata() {
-		this.owner = ""; this.created = new Date(); this.location = ""; this.tagList = new LinkedList<String>();
+	}
+	
+	public Metadata (String owner) {
+		this.owner = owner;
+		this.tagList = new LinkedList<>();
 	}
 	
 	public Metadata(String owner, Date created,String location,LinkedList<String> tagList) {
@@ -56,6 +60,13 @@ public class Metadata {
 	public void setTagList(LinkedList<String> tagList) {
 		this.tagList = tagList;
 	}
+
+	@Override
+	public String toString() {
+		return "Metadata [owner=" + owner + ", created=" + created + ", location=" + location + ", tagList=" + tagList
+				+ "]";
+	}
+	
 	
 	
 }

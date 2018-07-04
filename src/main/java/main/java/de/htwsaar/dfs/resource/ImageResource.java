@@ -3,6 +3,7 @@ package main.java.de.htwsaar.dfs.resource;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -58,9 +59,9 @@ public class ImageResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON )
 	public Response addImage(@PathParam("username") String username, Image image) {
-		
-			Image img = imageService.addImage(username, image);
-			return Response.status(Status.CREATED)
+		Image img = imageService.addImage(username, image);
+			
+		return Response.status(Status.CREATED)
 					.entity(img)
 					.build();
 		

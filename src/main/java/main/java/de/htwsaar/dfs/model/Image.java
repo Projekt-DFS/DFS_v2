@@ -23,11 +23,11 @@ public class Image {
 		this.imageName = imageName;
 		this.metaData = metadata;
 		this.imageSource = imageSource;
-		this.thumbnail = thumbnailSource;//createThumbnail(imageSource);
+		this.thumbnail = thumbnailSource;
 	}
 	
 	public Image() {
-		//this.id= 0; this.imageName = ""; this.metaData = new Metadata(); this.imageSource = ""; this.thumbnail = "";
+		//this.imageName = ""; //this.metaData = new Metadata(); this.imageSource = ""; this.thumbnail = "";
 	}
 
 	public String getImageName() {
@@ -61,5 +61,12 @@ public class Image {
 	public void setThumbnail(String thumbnailSource) {
 		this.thumbnail = thumbnailSource;
 	}
-		
+
+	@Override
+	public String toString() {
+		return "Image [imageName=" + imageName + ", metaData=" + metaData + ", imageSource=" + imageSource
+				+ ", thumbnail=" + thumbnail + "]";
+	}
+	
+	
 }

@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -79,6 +80,9 @@ public class ImageService {
 	
 	
 	public Image addImage(String username, Image image) {
+		if(image.getMetaData() == null) {
+			image.setMetaData(new Metadata(username));	
+		}
 		bootstrap.createImage(RestUtils.decodeToImage(image.getImageSource()),
 				username, image.getImageName(), image.getMetaData().getLocation(),new Date(),
 				image.getMetaData().getTagList());
