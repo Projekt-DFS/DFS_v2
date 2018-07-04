@@ -65,11 +65,21 @@ public class ImageResource {
 					.build();
 		
 	}
+
 	
+	/**
+	 * This method allows the user to delete many pictures at the same time
+	 * @param username
+	 * @param imageName
+	 */
+	@DELETE
+	@Produces({MediaType.APPLICATION_JSON})
 	public void deleteImages(@PathParam("username") String username, 
 			@QueryParam("imageName") String imageName) {
 		if( !imageName.equals(null)) {
-			imageService.deleteImage(username, imageName);
+			String[] list = imageName.split(",");
+			for ( String str : list)
+			imageService.deleteImage(username, str);
 		}
 	}
 
@@ -136,7 +146,7 @@ public class ImageResource {
 	 */
 	@DELETE
 	@Path("/{imageName}")
-	@Produces({MediaType.TEXT_PLAIN})
+	@Produces({MediaType.APPLICATION_JSON})
 	//funktioniert
 	public void deleteImage(@PathParam("username") String username, 
 			@PathParam("imageName") String imageName) {
@@ -183,10 +193,6 @@ public class ImageResource {
 					throws FileNotFoundException, ClassNotFoundException, IOException {
 		return imageService.updateMetadata(username, imageName, metadata);
 	}
-	
-	
-	//delete many images at the same time
-	//.....
 	
 		
 }
