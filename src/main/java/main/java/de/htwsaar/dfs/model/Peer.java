@@ -570,7 +570,7 @@ public class Peer {
 		 * @return
 		 */
 		public Peer joinRequest(Point2D.Double randomPoint) {
-			return shortestPath(randomPoint).splitZone(this);
+			return routing(randomPoint).splitZone(this);
 		}
 	
 	
