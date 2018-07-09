@@ -49,14 +49,6 @@ public class StartPeer {
         return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP() +":" + Peer.port+ "/iosbootstrap/v1/"), rc);
     }
     
-    //just let full the database
-//    private static void putInDb() {	
-//    	bt= new Bootstrap();
-//    	peer = new Peer();
-//    	Peer p = new Peer();
-//    	bt.splitZone(p);
-//    	bt.mergeRoutingTableSinglePeer(p);
-//	}
 	private static void joinPeer() {
 		String bootstrapURL ="http://192.168.0.103:" + Peer.port+ "/iosbootstrap/v1/createPeer";
 		Client c = ClientBuilder.newClient();
@@ -83,7 +75,6 @@ public class StartPeer {
      */
     public static void main(String[] args) throws IOException {
 //    	joinPeer();
-    	//putInDb();
         startServer();
         System.in.read();
        

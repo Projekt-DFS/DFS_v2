@@ -573,7 +573,25 @@ public class Peer {
 			return routing(randomPoint).splitZone(this);
 		}
 	
-	
+		/**
+		 * @author Raphaela Wagner 27.06.2018
+		 * creates a new Peer and invokes joinRequest for joining the coordinate space
+		 * @return
+		 */
+		public Peer createPeer() {
+			Peer newPeer = new Peer();
+			
+			if(getRoutingTable().size() == 0) {
+				splitZone(newPeer);
+				
+			} else {
+				newPeer.mergeRoutingTableWithList(getRoutingTable());
+				newPeer.joinRequest(newPeer.generateRandomPoint());
+			}
+			
+			return newPeer;
+		}
+
 	
 	
 	

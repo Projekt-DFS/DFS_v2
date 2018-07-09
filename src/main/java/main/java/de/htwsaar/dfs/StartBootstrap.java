@@ -59,22 +59,21 @@ public class StartBootstrap {
     	bootstrap.createUser("user", "user");
     	bootstrap.createUser("user2", "password");
 		
-//    	//images
-//		BufferedImage img = null , img2 = null;
-//		try {
-//			img = ImageIO.read(new File("C:/Users\\Aude\\Desktop\\dienstleist_web.jpg"));
-//			img2 = ImageIO.read(new File("C:/Users\\Aude\\Desktop\\downloadTest\\bild1.png"));
-//			LinkedList<String> tagList = new LinkedList<String>();	
-//			bootstrap.createImage(img, "user", "dienst.jpg", "Berlin", new Date(),tagList);
-//			bootstrap.createImage(img2, "user2", "bildUser1.jpg", "Milan",new Date(), tagList);
-//		
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-    	
-    
+    	//images
+		BufferedImage img = null , img2 = null;
+		try {
+			img = ImageIO.read(new File("C:/Users\\Aude\\Desktop\\dienstleist_web.jpg"));
+			img2 = ImageIO.read(new File("C:/Users\\Aude\\Desktop\\downloadTest\\bild1.png"));
+			LinkedList<String> tagList = new LinkedList<String>();	
+			bootstrap.createImage(img, "user", "dienst.jpg", "Berlin", new Date(),tagList);
+			bootstrap.createImage(img2, "user2", "bildUser1.jpg", "Milan",new Date(), tagList);
+		
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}    
 	}
+
     
     /**
      * read the IP address automatically
