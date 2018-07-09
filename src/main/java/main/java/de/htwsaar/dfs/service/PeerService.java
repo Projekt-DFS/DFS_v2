@@ -2,13 +2,13 @@ package main.java.de.htwsaar.dfs.service;
 
 import java.util.List;
 
-import main.java.de.htwsaar.dfs.Main;
+import main.java.de.htwsaar.dfs.StartPeer;
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.Zone;
 
 public class PeerService {
 	
-	private Peer peer = Main.peer;
+	private Peer peer = StartPeer.peer;
 
 	public List<Peer> getAllNeighbors() {
 		return peer.getRoutingTable();

@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.java.de.htwsaar.dfs.Main;
+import main.java.de.htwsaar.dfs.StartBootstrap;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,7 +22,7 @@ public class MyResourceTest {
     @Before
     public void setUp() throws Exception {
         // start the server
-        server = Main.startServer();
+        server = StartBootstrap.startServer();
         // create the client
         Client c = ClientBuilder.newClient();
 
@@ -32,7 +32,7 @@ public class MyResourceTest {
         // --
         // c.configuration().enable(new org.glassfish.jersey.media.json.JsonJaxbFeature());
 
-        target = c.target(Main.getIP());
+        target = c.target(StartBootstrap.getIP());
     }
 
     @After

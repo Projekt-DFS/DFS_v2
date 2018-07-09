@@ -1,38 +1,29 @@
 package main.java.de.htwsaar.dfs;
 
+import java.awt.geom.Point2D;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.UnknownHostException;
+
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import main.java.de.htwsaar.dfs.model.*;
+import main.java.de.htwsaar.dfs.model.Peer;
+import main.java.de.htwsaar.dfs.model.Zone;
 
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.UnknownHostException;
-import java.util.Date;
-import java.util.LinkedList;
-
-import javax.imageio.ImageIO;
-
-
-
-
-/**
- * Main Class
- * Starts the Server
- * @author Aude Nana
- *
- */
-public class StartBootstrap {
+public class StartPeer {
 	
-	public static Bootstrap bootstrap = new Bootstrap();
-	
+	public static Peer peer;
+	private String bootstrapIP;
+
+	public StartPeer(String bootstrapIP) {
+		this.bootstrapIP = bootstrapIP;	
+	}
+
 	/**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
      * @return Grizzly HTTP server.
@@ -54,24 +45,14 @@ public class StartBootstrap {
     
     //just let full the database
     private static void putInDb() {
-    	
-    	//users
-    	bootstrap.createUser("user", "user");
-    	bootstrap.createUser("user2", "password");
+		//peers
+		Zone zoneA = new Zone (new Point2D.Double(0.0, 0.0), new Point2D.Double(0.5, 0.0), new Point2D.Double(0.0, 0.5), new Point2D.Double(0.5, 0.5));
+//		Zone zoneB = new Zone (new Point2D.Double(0.5, 0.0), new Point2D.Double(1.0, 0.0), new Point2D.Double(0.5, 0.5), new Point2D.Double(1.0, 0.5));
+		peer = new Peer(zoneA);
+//		peer.updateRoutingTables(new Peer(zoneB));
+//		peer.mergeRoutingTableSinglePeer(new Peer(zoneB));
+//		System.out.println(peer.checkZone(0.5 , 0.0));
 		
-//    	//images
-//		BufferedImage img = null , img2 = null;
-//		try {
-//			img = ImageIO.read(new File("C:/Users\\Aude\\Desktop\\dienstleist_web.jpg"));
-//			img2 = ImageIO.read(new File("C:/Users\\Aude\\Desktop\\downloadTest\\bild1.png"));
-//			LinkedList<String> tagList = new LinkedList<String>();	
-//			bootstrap.createImage(img, "user", "dienst.jpg", "Berlin", new Date(),tagList);
-//			bootstrap.createImage(img2, "user2", "bildUser1.jpg", "Milan",new Date(), tagList);
-//		
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}	
 	}
     
     /**
@@ -96,4 +77,3 @@ public class StartBootstrap {
       
     }
 }
-

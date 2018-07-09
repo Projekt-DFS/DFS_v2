@@ -2,7 +2,7 @@ package main.java.de.htwsaar.dfs.service;
 
 import java.util.List;
 
-import main.java.de.htwsaar.dfs.Main;
+import main.java.de.htwsaar.dfs.StartBootstrap;
 import main.java.de.htwsaar.dfs.model.*;
 
 
@@ -13,7 +13,7 @@ import main.java.de.htwsaar.dfs.model.*;
  */
 public class UserService {
 
-	private Bootstrap bootstrap = Main.bootstrap;
+	private Bootstrap bootstrap = StartBootstrap.bootstrap;
 	
 	public UserService(){
 

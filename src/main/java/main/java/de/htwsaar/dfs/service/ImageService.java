@@ -6,15 +6,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import main.java.de.htwsaar.dfs.Main;
+import main.java.de.htwsaar.dfs.StartBootstrap;
+import main.java.de.htwsaar.dfs.StartPeer;
 import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.ImageContainer;
 import main.java.de.htwsaar.dfs.model.Image;
 import main.java.de.htwsaar.dfs.model.Metadata;
+import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.utils.RestUtils;
 
 /**
@@ -24,7 +27,8 @@ import main.java.de.htwsaar.dfs.utils.RestUtils;
  */
 public class ImageService {
 	
-	Bootstrap bootstrap = Main.bootstrap;
+	Bootstrap bootstrap = StartBootstrap.bootstrap;
+	Peer peer = StartPeer.peer;
 	//URI for Image
 	private String baseUri = "http://" + Bootstrap.getIP() + ":" + Bootstrap.port +"/iosbootstrap/v1/";
 	
@@ -65,7 +69,7 @@ public class ImageService {
 	public Image getImage(String username , String imageName)  {
 		ImageContainer ic = null;
 		try {
-			ic = bootstrap.loadImageContainer(username, imageName);
+			ic = peer.loadImageContainer(username, imageName);
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
@@ -77,6 +81,22 @@ public class ImageService {
 		return img;
 	}
 	
+//	public Image getImage(String username , String imageName)  {
+//	ImageContainer ic = null;
+//	
+//	
+//	/*try {
+//		ic = bootstrap.loadImageContainer(username, imageName);
+//	} catch (ClassNotFoundException | IOException e) {
+//		e.printStackTrace();
+//	}
+//	Image img = new Image( ic.getImageName().toString(), 
+//			(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList())),
+//			baseUri + ic.getPath()+ ".jpg/download", 
+//			baseUri + ic.getThumbnailPath()+ ".jpg/download");
+//	*/
+//	return img;
+//}
 	
 	public Image addImage(String username, Image image) {
 		if(image.getMetaData() == null) {
@@ -107,12 +127,13 @@ public class ImageService {
 
 	public Metadata updateMetadata(String username, String imageName, Metadata metadata) 
 			throws FileNotFoundException, ClassNotFoundException, IOException {
-		ImageContainer ic = bootstrap.loadImageContainer(username, imageName);
+		String m = "" ;
+		LinkedList<String> t = new LinkedList<>();
 		if(metadata.getLocation() != null)
-			ic.setLocation(metadata.getLocation());
+			m = metadata.getLocation();
 		if(metadata.getTagList() != null)
-			ic.setTagList(metadata.getTagList());
-		Bootstrap.saveImageContainer(ic);
+			t= metadata.getTagList();
+		bootstrap.editMeta(username, imageName, m, t);
 		return metadata;
 	}
 
