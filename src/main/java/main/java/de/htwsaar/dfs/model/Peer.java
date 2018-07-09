@@ -568,6 +568,7 @@ public class Peer {
 		 * @return
 		 */
 		public Peer createPeer(String newPeerAdress) {
+			System.out.println("Zone von Bootstrap vor createPeer(): " + this.ownZone);
 			Peer newPeer = new Peer();
 			newPeer.setIp_adresse(newPeerAdress);
 			
@@ -578,10 +579,12 @@ public class Peer {
 				newPeer.mergeRoutingTableWithList(getRoutingTable());
 				newPeer.joinRequest(newPeer.generateRandomPoint());
 			}
+			System.out.println("IP Adresse new Peer :" + newPeer.ip_adresse);
+			System.out.println("routingtable von Bootstrap nach createPeer() : " + routingTableToString());
+			System.out.println("routingtable von newPeer nach createPeer() : " + newPeer.routingTableToString());
 			
 			return newPeer;
 		}
-
 	
 	
 	

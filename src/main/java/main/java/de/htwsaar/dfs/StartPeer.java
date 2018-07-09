@@ -1,15 +1,18 @@
 package main.java.de.htwsaar.dfs;
 
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -18,16 +21,16 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.Peer;
-import main.java.de.htwsaar.dfs.model.Zone;
+import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 public class StartPeer {
 	
 	public static Peer peer;
 	public static Bootstrap bt;
-	private String bootstrapIP;
+	private static String bootstrapIP = "192.168.1.6";
 
 	public StartPeer(String bootstrapIP) {
-		this.bootstrapIP = bootstrapIP;	
+		StartPeer.bootstrapIP = bootstrapIP;	
 	}
 
 	/**
@@ -49,15 +52,20 @@ public class StartPeer {
         return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP() +":" + Peer.port+ "/iosbootstrap/v1/"), rc);
     }
     
-	private static void joinPeer() {
-		String bootstrapURL ="http://192.168.0.103:" + Peer.port+ "/iosbootstrap/v1/createPeer";
-		Client c = ClientBuilder.newClient();
-	      WebTarget  target = c.target( bootstrapURL );
-	
-	      peer = target.request().get().readEntity(Peer.class);
-	     
-	      System.out.println(peer.getIp_adresse());
-	      c.close();
+    private static void joinPeer() throws ClientProtocolException, IOException {
+		final String bootstrapURL ="http://" +bootstrapIP + ":4434/iosbootstrap/v1/createPeer";
+		
+		String post = StaticFunctions.getRightIP().getHostAddress();
+	    System.out.println("IPadresse dieses Rechners : "+post);
+	    StringEntity entity = new StringEntity(post,
+	                ContentType.APPLICATION_FORM_URLENCODED);      
+	    HttpClient httpClient = HttpClientBuilder.create().build();
+	    HttpPost request = new HttpPost(bootstrapURL);
+	    request.addHeader("content-type", "application/json");
+	    request.setEntity(entity);
+
+	    HttpResponse response = httpClient.execute(request);
+	    
 	}
     /**
      * read the IP address automatically

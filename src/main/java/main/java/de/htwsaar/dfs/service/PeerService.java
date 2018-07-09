@@ -70,14 +70,8 @@ public class PeerService {
 	}
 
 	public Peer createPeer(String newPeerAdress) {
-//		String bootstrapURL ="http://192.168.0.102:" + 4434+ "/iosbootstrap/v1/";
-//		Bootstrap bt= new Bootstrap();
-//		Client c = ClientBuilder.newClient();
-//	      WebTarget  target = c.target( bootstrapURL );
-	   //   bt = (Bootstrap)target.request().get().readEntity(Peer.class);
-	
-	     return bootstrap.createPeer(newPeerAdress);
-		
+	    bootstrap.createPeer(newPeerAdress);
+		return null;
 	}
 
 }
