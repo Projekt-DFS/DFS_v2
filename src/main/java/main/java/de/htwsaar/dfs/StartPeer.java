@@ -74,7 +74,7 @@ public class StartPeer {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-//    	joinPeer();
+    	joinPeer();
         startServer();
         System.in.read();
        

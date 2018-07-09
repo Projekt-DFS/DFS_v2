@@ -1,5 +1,6 @@
 package main.java.de.htwsaar.dfs.resource;
 
+import java.net.InetAddress;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -130,12 +131,12 @@ public class PeerResource {
 		return new ImageResource();
 	}
 	
-	@GET
+	@POST
 	@Path("/createPeer")
 	@Produces(MediaType.APPLICATION_JSON)
 	//unmoglich
-	public Peer createOeer(){
-		return ps.createPeer();
+	public Peer createPeer(String  newPeerAdress){
+		return ps.createPeer(newPeerAdress);
 	}
 	
 }

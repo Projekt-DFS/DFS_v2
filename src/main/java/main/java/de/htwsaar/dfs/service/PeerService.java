@@ -1,5 +1,6 @@
 package main.java.de.htwsaar.dfs.service;
 
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -68,14 +69,14 @@ public class PeerService {
 		return zone;
 	}
 
-	public Peer createPeer() {
-		String bootstrapURL ="http://192.168.0.103:" + 8080+ "/iosbootstrap/v1/";
-		Bootstrap bt= new Bootstrap();
-		Client c = ClientBuilder.newClient();
-	      WebTarget  target = c.target( bootstrapURL );
-	      bt = target.request().get().readEntity(Bootstrap.class);
+	public Peer createPeer(String newPeerAdress) {
+//		String bootstrapURL ="http://192.168.0.102:" + 4434+ "/iosbootstrap/v1/";
+//		Bootstrap bt= new Bootstrap();
+//		Client c = ClientBuilder.newClient();
+//	      WebTarget  target = c.target( bootstrapURL );
+	   //   bt = (Bootstrap)target.request().get().readEntity(Peer.class);
 	
-	     return bt.createPeer();
+	     return bootstrap.createPeer(newPeerAdress);
 		
 	}
 
