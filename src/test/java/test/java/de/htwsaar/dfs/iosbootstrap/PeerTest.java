@@ -121,6 +121,7 @@ public class PeerTest {
 	public void testUpdateRoutingTables() {
 		assertEquals(true, bs.getRoutingTable().contains(p1) && bs.getRoutingTable().contains(p2) && bs.getRoutingTable().contains(p3));
 		assertEquals(false, bs.getRoutingTable().contains(p4) && bs.getRoutingTable().contains(p5) && bs.getRoutingTable().contains(p6));
+		assertEquals(true, p2.getRoutingTable().contains(p3));
 		
 	}
 	
