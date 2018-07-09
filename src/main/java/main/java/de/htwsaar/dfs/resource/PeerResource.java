@@ -1,6 +1,5 @@
 package main.java.de.htwsaar.dfs.resource;
 
-import java.net.InetAddress;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -36,6 +35,7 @@ public class PeerResource {
 	@Path("peers")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Peer> getAllNeighbors(){
+		System.out.println("test resource");
 		return ps.getAllNeighbors();
 	}
 	

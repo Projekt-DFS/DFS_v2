@@ -59,7 +59,7 @@ public class StartBootstrap {
     	bootstrap.createUser("user", "user");
     	bootstrap.createUser("user2", "password");
 		
-//    	//images
+    	//images
 //		BufferedImage img = null , img2 = null;
 //		try {
 //			img = ImageIO.read(new File("C:/Users\\Aude\\Desktop\\dienstleist_web.jpg"));

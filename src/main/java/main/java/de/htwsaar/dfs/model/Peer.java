@@ -145,6 +145,7 @@ public class Peer {
 		}
 		
 		public CopyOnWriteArrayList<Peer> getRoutingTable() {
+			System.out.println("test");
 	    	return routingTable;
 	    }
 		
@@ -568,7 +569,7 @@ public class Peer {
 		 * @return
 		 */
 		public Peer createPeer(String newPeerAdress) {
-			System.out.println("Zone von Bootstrap vor createPeer(): " + this.ownZone);
+			System.out.println("Peer vor createPeer(): " + this);
 			Peer newPeer = new Peer();
 			newPeer.setIp_adresse(newPeerAdress);
 			
@@ -579,14 +580,19 @@ public class Peer {
 				newPeer.mergeRoutingTableWithList(getRoutingTable());
 				newPeer.joinRequest(newPeer.generateRandomPoint());
 			}
-			System.out.println("IP Adresse new Peer :" + newPeer.ip_adresse);
-			System.out.println("routingtable von Bootstrap nach createPeer() : " + routingTableToString());
-			System.out.println("routingtable von newPeer nach createPeer() : " + newPeer.routingTableToString());
-			
+//			System.out.println("Peer nach createPeer() : " + this);
+//			System.out.println("newPeer nach createPeer() : " + newPeer.routingTableToString());
+			System.out.println("Peer with adress "+ newPeer.getIp_adresse()+" has joined the network");
 			return newPeer;
+		}
+		
+		@Override
+		public String toString() {
+			return "Peer [ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTable + "]";
 		}
 	
 	
+		
 	
 	
 }

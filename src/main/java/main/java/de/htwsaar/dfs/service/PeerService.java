@@ -29,6 +29,7 @@ public class PeerService {
 	}
 
 	public List<Peer> getAllNeighbors() {
+		System.out.println("test service");
 		return peer.getRoutingTable();
 		//return new ArrayList<>(neighbors.values());
 	}
@@ -70,8 +71,7 @@ public class PeerService {
 	}
 
 	public Peer createPeer(String newPeerAdress) {
-	    bootstrap.createPeer(newPeerAdress);
-		return null;
+	    return bootstrap.createPeer(newPeerAdress);
 	}
 
 }

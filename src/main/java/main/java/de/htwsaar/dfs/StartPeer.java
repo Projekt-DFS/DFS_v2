@@ -65,6 +65,7 @@ public class StartPeer {
 	    request.setEntity(entity);
 
 	    HttpResponse response = httpClient.execute(request);
+	    System.out.println("New Peer tries to join he nework.......");
 	    
 	}
     /**
