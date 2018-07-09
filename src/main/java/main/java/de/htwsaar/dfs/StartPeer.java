@@ -6,18 +6,24 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.Zone;
 
 public class StartPeer {
 	
 	public static Peer peer;
+	public static Bootstrap bt;
 	private String bootstrapIP;
 
 	public StartPeer(String bootstrapIP) {
@@ -44,17 +50,23 @@ public class StartPeer {
     }
     
     //just let full the database
-    private static void putInDb() {
-		//peers
-		Zone zoneA = new Zone (new Point2D.Double(0.0, 0.0), new Point2D.Double(0.5, 0.0), new Point2D.Double(0.0, 0.5), new Point2D.Double(0.5, 0.5));
-//		Zone zoneB = new Zone (new Point2D.Double(0.5, 0.0), new Point2D.Double(1.0, 0.0), new Point2D.Double(0.5, 0.5), new Point2D.Double(1.0, 0.5));
-		peer = new Peer(zoneA);
-//		peer.updateRoutingTables(new Peer(zoneB));
-//		peer.mergeRoutingTableSinglePeer(new Peer(zoneB));
-//		System.out.println(peer.checkZone(0.5 , 0.0));
-		
+//    private static void putInDb() {	
+//    	bt= new Bootstrap();
+//    	peer = new Peer();
+//    	Peer p = new Peer();
+//    	bt.splitZone(p);
+//    	bt.mergeRoutingTableSinglePeer(p);
+//	}
+	private static void joinPeer() {
+		String bootstrapURL ="http://192.168.0.103:" + Peer.port+ "/iosbootstrap/v1/createPeer";
+		Client c = ClientBuilder.newClient();
+	      WebTarget  target = c.target( bootstrapURL );
+	
+	      peer = target.request().get().readEntity(Peer.class);
+	     
+	      System.out.println(peer.getIp_adresse());
+	      c.close();
 	}
-    
     /**
      * read the IP address automatically
      * @return
@@ -70,7 +82,8 @@ public class StartPeer {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-    	putInDb();
+//    	joinPeer();
+    	//putInDb();
         startServer();
         System.in.read();
        

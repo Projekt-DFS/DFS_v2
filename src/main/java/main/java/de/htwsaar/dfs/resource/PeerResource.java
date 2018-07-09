@@ -130,6 +130,12 @@ public class PeerResource {
 		return new ImageResource();
 	}
 	
-	
+	@GET
+	@Path("/createPeer")
+	@Produces(MediaType.APPLICATION_JSON)
+	//unmoglich
+	public Peer createOeer(){
+		return ps.createPeer();
+	}
 	
 }
