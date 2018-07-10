@@ -40,7 +40,7 @@ public class StartPeer {
     public static HttpServer startServer() throws UnknownHostException {
         // create a resource config that scans for JAX-RS resources and providers
         // in de.htwsaar.dfs.iosbootstrap package
-        final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.resource.peer");
+        final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.peer.resource");
         rc.register(MultiPartFeature.class);
         rc.register(LoggingFilter.class);
         rc.register(SecurityFilter.class);

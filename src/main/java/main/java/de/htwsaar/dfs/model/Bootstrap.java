@@ -301,7 +301,7 @@ public class Bootstrap extends Peer {
 		user.insertIntoImageList(imageName);
 		
 		try {
-			forwardMessage(routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse , username,ic);
+			//forwardMessage(routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse , username,ic);
 			System.out.println(routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse);
 			routing(StaticFunctions.hashToPoint(username, imageName)).saveImageContainer(ic);
 			exportUserList();							//Updates the UserList, incl Link to new Image

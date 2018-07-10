@@ -1,4 +1,4 @@
-package main.java.de.htwsaar.dfs.resource.bootstrap;
+package main.java.de.htwsaar.dfs.bootstrap.resource;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import main.java.de.htwsaar.dfs.model.User;
-import main.java.de.htwsaar.dfs.service.UserService;
+import main.java.de.htwsaar.dfs.bootstrap.service.UserService;
 
 /**
  * This class give access to users Resource

@@ -1,4 +1,4 @@
-package main.java.de.htwsaar.dfs.service;
+package main.java.de.htwsaar.dfs.bootstrap.service;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,12 +12,10 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import main.java.de.htwsaar.dfs.StartBootstrap;
-import main.java.de.htwsaar.dfs.StartPeer;
 import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.ImageContainer;
 import main.java.de.htwsaar.dfs.model.Image;
 import main.java.de.htwsaar.dfs.model.Metadata;
-import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.utils.RestUtils;
 
 /**
@@ -28,9 +26,8 @@ import main.java.de.htwsaar.dfs.utils.RestUtils;
 public class ImageService {
 	
 	Bootstrap bootstrap = StartBootstrap.bootstrap;
-	Peer peer = StartPeer.peer;
 	//URI for Image
-	private String baseUri = "http://" + Bootstrap.getIP() + ":" + Bootstrap.port +"/iosbootstrap/v1/";
+	private String baseUri = "http://" + Bootstrap.getIP() + ":" + Bootstrap.port +"/bootstrap/v1/";
 	
 	public ImageService(){	}
 	
@@ -48,6 +45,7 @@ public class ImageService {
 		ArrayList <ImageContainer> list = bootstrap.getAllImageContainers(username);
 		for( ImageContainer ic : list) {
 			Image img = new Image();
+			img.setImageName(ic.getImageName());
 			img.setThumbnail(baseUri + ic.getThumbnailPath() + ".jpg/download");
 			img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
 			img.setImageSource(baseUri + ic.getPath()  + ".jpg/download");
@@ -69,7 +67,7 @@ public class ImageService {
 	public Image getImage(String username , String imageName)  {
 		ImageContainer ic = null;
 		try {
-			ic = peer.loadImageContainer(username, imageName);
+			ic = bootstrap.loadImageContainer(username, imageName);
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
@@ -80,23 +78,6 @@ public class ImageService {
 		
 		return img;
 	}
-	
-//	public Image getImage(String username , String imageName)  {
-//	ImageContainer ic = null;
-//	
-//	
-//	/*try {
-//		ic = bootstrap.loadImageContainer(username, imageName);
-//	} catch (ClassNotFoundException | IOException e) {
-//		e.printStackTrace();
-//	}
-//	Image img = new Image( ic.getImageName().toString(), 
-//			(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList())),
-//			baseUri + ic.getPath()+ ".jpg/download", 
-//			baseUri + ic.getThumbnailPath()+ ".jpg/download");
-//	*/
-//	return img;
-//}
 	
 	public Image addImage(String username, Image image) {
 		if(image.getMetaData() == null) {

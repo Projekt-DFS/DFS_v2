@@ -1,4 +1,4 @@
-package main.java.de.htwsaar.dfs.resource.bootstrap;
+package main.java.de.htwsaar.dfs.bootstrap.resource;
 
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response.Status;
 
 import main.java.de.htwsaar.dfs.model.Image;
 import main.java.de.htwsaar.dfs.model.Metadata;
-import main.java.de.htwsaar.dfs.service.ImageService;
+import main.java.de.htwsaar.dfs.bootstrap.service.ImageService;
 /**
  * 
  * @author Aude Nana

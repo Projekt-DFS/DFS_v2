@@ -1,4 +1,4 @@
-package main.java.de.htwsaar.dfs.resource.bootstrap;
+package main.java.de.htwsaar.dfs.peer.resource;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +17,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.Zone;
-import main.java.de.htwsaar.dfs.service.PeerService;
+import main.java.de.htwsaar.dfs.peer.service.PeerService;
 
 /**
  * 

@@ -8,17 +8,23 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import main.java.de.htwsaar.dfs.model.*;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.util.Date;
+import java.util.LinkedList;
+
+import javax.imageio.ImageIO;
 
 
 
 
 /**
  * Main Class
- * Starts the Server
+ * Starts the Bootstrap Server
  * @author Aude Nana
  *
  */
@@ -34,7 +40,7 @@ public class StartBootstrap {
     public static HttpServer startServer() throws UnknownHostException {
         // create a resource config that scans for JAX-RS resources and providers
         // in de.htwsaar.dfs.iosbootstrap package
-        final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.resource.bootstrap");
+        final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.bootstrap.resource");
         rc.register(MultiPartFeature.class);
         rc.register(LoggingFilter.class);
         rc.register(SecurityFilter.class);

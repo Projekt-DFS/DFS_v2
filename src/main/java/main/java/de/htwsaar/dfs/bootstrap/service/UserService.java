@@ -1,4 +1,4 @@
-package main.java.de.htwsaar.dfs.service;
+package main.java.de.htwsaar.dfs.bootstrap.service;
 
 import java.util.List;
 

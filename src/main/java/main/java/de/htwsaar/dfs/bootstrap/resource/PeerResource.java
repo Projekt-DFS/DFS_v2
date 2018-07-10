@@ -1,4 +1,4 @@
-package main.java.de.htwsaar.dfs.resource.peer;
+package main.java.de.htwsaar.dfs.bootstrap.resource;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +17,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.Zone;
-import main.java.de.htwsaar.dfs.service.PeerService;
+import main.java.de.htwsaar.dfs.bootstrap.service.PeerService;
 
 /**
  * 
@@ -137,6 +137,7 @@ public class PeerResource {
 	@POST
 	@Path("/createPeer")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	//unmoglich
 	public Peer createPeer(String  newPeerAdress) throws ClientProtocolException, IOException{
 		return ps.createPeer(newPeerAdress);

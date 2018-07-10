@@ -15,7 +15,7 @@ public class Image {
 	private String imageSource;
 	private String thumbnail;
 		
-	//public Image() {}
+	public Image() {}
 
 	//constructor with values
 	public Image(String imageName, 
@@ -24,10 +24,6 @@ public class Image {
 		this.metaData = metadata;
 		this.imageSource = imageSource;
 		this.thumbnail = thumbnailSource;
-	}
-	
-	public Image() {
-		//this.imageName = ""; //this.metaData = new Metadata(); this.imageSource = ""; this.thumbnail = "";
 	}
 
 	public String getImageName() {

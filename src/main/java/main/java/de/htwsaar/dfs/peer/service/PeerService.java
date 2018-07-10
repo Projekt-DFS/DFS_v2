@@ -1,35 +1,25 @@
-package main.java.de.htwsaar.dfs.service;
+package main.java.de.htwsaar.dfs.peer.service;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.List;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 
 import org.apache.http.client.ClientProtocolException;
 
-import main.java.de.htwsaar.dfs.StartBootstrap;
 import main.java.de.htwsaar.dfs.StartPeer;
-import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.Zone;
 
+/**
+ * 
+ * @author Aude Nana
+ *
+ */
 public class PeerService {
 	
-	//private Peer peer = StartPeer.peer;
-	private Bootstrap bootstrap = StartBootstrap.bootstrap;
-	private Peer peer =(Peer) bootstrap;
+	private Peer peer = StartPeer.peer;
 	
-	public PeerService(){
-//		System.out.println(StartBootstrap.getIP());
-//		if (bootstrap.getIp_adresse().equals("192.168.0.103"))
-//			peer = (Peer) bootstrap;
-//		else 
-//			peer = new Peer();
-	}
+	public PeerService(){	}
 
 	public List<Peer> getAllNeighbors() {
 		System.out.println("test service");
@@ -74,7 +64,7 @@ public class PeerService {
 	}
 
 	public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
-	    return bootstrap.createPeer(newPeerAdress);
+	    return peer.createPeer(newPeerAdress);
 	}
 
 }
