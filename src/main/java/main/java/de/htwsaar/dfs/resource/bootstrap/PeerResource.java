@@ -134,6 +134,7 @@ public class PeerResource {
 	@POST
 	@Path("/createPeer")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	//unmoglich
 	public Peer createPeer(String  newPeerAdress){
 		return ps.createPeer(newPeerAdress);
