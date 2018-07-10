@@ -1,4 +1,4 @@
-package main.java.de.htwsaar.dfs.resource;
+package main.java.de.htwsaar.dfs.resource.peer;
 
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;

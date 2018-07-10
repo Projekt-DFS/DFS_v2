@@ -8,17 +8,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import main.java.de.htwsaar.dfs.model.*;
 
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
-import java.util.Date;
-import java.util.LinkedList;
-
-import javax.imageio.ImageIO;
 
 
 
@@ -41,7 +34,7 @@ public class StartBootstrap {
     public static HttpServer startServer() throws UnknownHostException {
         // create a resource config that scans for JAX-RS resources and providers
         // in de.htwsaar.dfs.iosbootstrap package
-        final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.resource");
+        final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.resource.bootstrap");
         rc.register(MultiPartFeature.class);
         rc.register(LoggingFilter.class);
         rc.register(SecurityFilter.class);
@@ -49,7 +42,7 @@ public class StartBootstrap {
                
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP() +":" + Peer.port+ "/iosbootstrap/v1/"), rc);
+        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP() +":" + Peer.port+ "/bootstrap/v1/"), rc);
     }
     
     //just let full the database
