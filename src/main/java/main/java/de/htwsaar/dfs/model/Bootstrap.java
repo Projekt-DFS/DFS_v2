@@ -14,8 +14,18 @@ import java.io.ObjectOutputStream;
 import java.net.UnknownHostException;
 import java.util.*;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.User;
+import main.java.de.htwsaar.dfs.utils.RestUtils;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 
@@ -291,12 +301,39 @@ public class Bootstrap extends Peer {
 		user.insertIntoImageList(imageName);
 		
 		try {
+			forwardMessage(routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse , username,ic);
+			System.out.println(routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse);
 			routing(StaticFunctions.hashToPoint(username, imageName)).saveImageContainer(ic);
 			exportUserList();							//Updates the UserList, incl Link to new Image
 		} catch (IOException e) {
 			e.printStackTrace();
-		}							
+		}	
 		return ic;
+		
+	}
+	
+	private void forwardMessage(String zielIpAdress, String username, ImageContainer ic) throws ClientProtocolException, IOException {
+		final String bootstrapURL ="http://" + zielIpAdress + ":4434/bootstrap/v1/images/"+username;
+		
+		Image post =  new Image(ic.getImageName(), new Metadata(), RestUtils.encodeToString(ic.getImage(), ".jpg"), null);
+	    System.out.println("IPadresse dieses Rechners : "+post);
+
+	    HttpClient httpClient = HttpClientBuilder.create().build();
+	    HttpPost httpost = new HttpPost(bootstrapURL);
+	    httpost.setEntity(new StringEntity("{\"filters\":true}"));
+	    httpost.setHeader("Accept", "application/json");
+	    httpost.setHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+	    HttpResponse response = httpClient.execute(httpost);
+	    
+	    /*     
+	    HttpClient httpClient = HttpClientBuilder.create().build();
+	    HttpPost request = new HttpPost(bootstrapURL);
+	    request.addHeader("content-type", "application/json");
+	    request.setEntity(entity);
+	    
+	    HttpResponse response = httpClient.execute(request);
+	    */
+	    System.out.println("New Peer tries to join he nework.......");
 		
 	}
 	

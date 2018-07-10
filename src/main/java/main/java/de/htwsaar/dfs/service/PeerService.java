@@ -1,5 +1,6 @@
 package main.java.de.htwsaar.dfs.service;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+
+import org.apache.http.client.ClientProtocolException;
 
 import main.java.de.htwsaar.dfs.StartBootstrap;
 import main.java.de.htwsaar.dfs.StartPeer;
@@ -70,7 +73,7 @@ public class PeerService {
 		return zone;
 	}
 
-	public Peer createPeer(String newPeerAdress) {
+	public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
 	    return bootstrap.createPeer(newPeerAdress);
 	}
 

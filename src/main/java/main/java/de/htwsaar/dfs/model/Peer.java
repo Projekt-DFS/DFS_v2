@@ -35,6 +35,14 @@ import java.net.UnknownHostException;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 import javax.ws.rs.core.Response;
@@ -145,7 +153,6 @@ public class Peer {
 		}
 		
 		public CopyOnWriteArrayList<Peer> getRoutingTable() {
-			System.out.println("test");
 	    	return routingTable;
 	    }
 		
@@ -567,12 +574,13 @@ public class Peer {
 		 * @author Raphaela Wagner 27.06.2018
 		 * creates a new Peer and invokes joinRequest for joining the coordinate space
 		 * @return
+		 * @throws IOException 
+		 * @throws ClientProtocolException 
 		 */
-		public Peer createPeer(String newPeerAdress) {
+		public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
 			System.out.println("Peer vor createPeer(): " + this);
 			Peer newPeer = new Peer();
 			newPeer.setIp_adresse(newPeerAdress);
-			
 			if(getRoutingTable().size() == 0) {
 				splitZone(newPeer);
 				
@@ -581,14 +589,33 @@ public class Peer {
 				newPeer.joinRequest(newPeer.generateRandomPoint());
 			}
 //			System.out.println("Peer nach createPeer() : " + this);
-//			System.out.println("newPeer nach createPeer() : " + newPeer.routingTableToString());
+//			System.out.println("newPeer nach createPeer() : " + newPeer);
 			System.out.println("Peer with adress "+ newPeer.getIp_adresse()+" has joined the network");
-			return newPeer;
+			
+			updatePeer(newPeer.ip_adresse);
+			return new Peer();//newPeer;
 		}
 		
-		@Override
+		 private static void updatePeer(String ip) throws ClientProtocolException, IOException {
+				final String bootstrapURL ="http://" +ip + ":4434/bootstrap/v1/addPeer";
+				
+				String post = "test";
+			    System.out.println("IPadresse dieses Rechners : "+post);
+			    StringEntity entity = new StringEntity(post,
+			                ContentType.APPLICATION_FORM_URLENCODED);      
+			    HttpClient httpClient = HttpClientBuilder.create().build();
+			    HttpPost request = new HttpPost(bootstrapURL);
+			    request.addHeader("content-type", "application/json");
+			    request.setEntity(entity);
+
+			    HttpResponse response = httpClient.execute(request);
+			    System.out.println("Owzone geandert.......");
+			    
+			}
+		
+		
 		public String toString() {
-			return "Peer [ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTable + "]";
+			return "[ ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTable + "]";
 		}
 	
 	
