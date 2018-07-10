@@ -96,6 +96,7 @@ public class PlayGround {
 		ImageContainer coins = bt.loadImageContainer("test2", "img_002");
 		System.out.println(coins.getTags());
 		
+		
 		bt.deleteImage("test2", "img_002");
 		//bt.deleteUser("test1");
 		
