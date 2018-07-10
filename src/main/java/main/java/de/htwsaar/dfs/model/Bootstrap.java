@@ -42,6 +42,7 @@ public class Bootstrap extends Peer {
 		}
 
 		this.inet = main.java.de.htwsaar.dfs.utils.StaticFunctions.getRightIP();//InetAddress.getLocalHost();
+		this.ip_adresse = inet.getHostAddress();
 		
 		//Create a new Zone
 		createZone(new Point2D.Double(0.0, 0.0), new Point2D.Double(1.0, 1.0));
@@ -382,25 +383,6 @@ public class Bootstrap extends Peer {
 		//TODO implement
 		
 		return;
-	}
-	
-	/**
-	 * @author Raphaela Wagner 27.06.2018
-	 * creates a new Peer and invokes joinRequest for joining the coordinate space
-	 * @return
-	 */
-	public Peer createPeer() {
-		Peer newPeer = new Peer();
-		
-		if(getRoutingTable().size() == 0) {
-			splitZone(newPeer);
-			
-		} else {
-			newPeer.mergeRoutingTableWithList(getRoutingTable());
-			newPeer.joinRequest(newPeer.generateRandomPoint());
-		}
-		
-		return newPeer;
 	}
 
 }

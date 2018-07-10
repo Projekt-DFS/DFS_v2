@@ -1,27 +1,36 @@
 package main.java.de.htwsaar.dfs;
 
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.Peer;
-import main.java.de.htwsaar.dfs.model.Zone;
+import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 public class StartPeer {
 	
 	public static Peer peer;
-	private String bootstrapIP;
+	public static Bootstrap bt;
+	private static String bootstrapIP = "192.168.1.6";
 
 	public StartPeer(String bootstrapIP) {
-		this.bootstrapIP = bootstrapIP;	
+		StartPeer.bootstrapIP = bootstrapIP;	
 	}
 
 	/**
@@ -43,18 +52,22 @@ public class StartPeer {
         return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP() +":" + Peer.port+ "/iosbootstrap/v1/"), rc);
     }
     
-    //just let full the database
-    private static void putInDb() {
-		//peers
-		Zone zoneA = new Zone (new Point2D.Double(0.0, 0.0), new Point2D.Double(0.5, 0.0), new Point2D.Double(0.0, 0.5), new Point2D.Double(0.5, 0.5));
-//		Zone zoneB = new Zone (new Point2D.Double(0.5, 0.0), new Point2D.Double(1.0, 0.0), new Point2D.Double(0.5, 0.5), new Point2D.Double(1.0, 0.5));
-		peer = new Peer(zoneA);
-//		peer.updateRoutingTables(new Peer(zoneB));
-//		peer.mergeRoutingTableSinglePeer(new Peer(zoneB));
-//		System.out.println(peer.checkZone(0.5 , 0.0));
+    private static void joinPeer() throws ClientProtocolException, IOException {
+		final String bootstrapURL ="http://" +bootstrapIP + ":4434/iosbootstrap/v1/createPeer";
 		
+		String post = StaticFunctions.getRightIP().getHostAddress();
+	    System.out.println("IPadresse dieses Rechners : "+post);
+	    StringEntity entity = new StringEntity(post,
+	                ContentType.APPLICATION_FORM_URLENCODED);      
+	    HttpClient httpClient = HttpClientBuilder.create().build();
+	    HttpPost request = new HttpPost(bootstrapURL);
+	    request.addHeader("content-type", "application/json");
+	    request.setEntity(entity);
+
+	    HttpResponse response = httpClient.execute(request);
+	    System.out.println("New Peer tries to join he nework.......");
+	    
 	}
-    
     /**
      * read the IP address automatically
      * @return
@@ -70,7 +83,7 @@ public class StartPeer {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-    	putInDb();
+    	joinPeer();
         startServer();
         System.in.read();
        

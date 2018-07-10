@@ -39,12 +39,12 @@
 		    <artifactId>jersey-media-multipart</artifactId>
 		    <version>2.19</version>
 		</dependency>
-		<!-- download file from internet picsum -->
+		<!-- build json object with HttpClient  -->
 		<dependency>
-    <groupId>commons-io</groupId>
-    <artifactId>commons-io</artifactId>
-    <version>2.5</version>
-</dependency> 
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <version>4.5.3</version>
+		</dependency>
 
         <dependency>
             <groupId>junit</groupId>

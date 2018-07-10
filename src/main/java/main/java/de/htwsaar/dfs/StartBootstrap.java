@@ -59,7 +59,7 @@ public class StartBootstrap {
     	bootstrap.createUser("user", "user");
     	bootstrap.createUser("user2", "password");
 		
-//    	//images
+    	//images
 //		BufferedImage img = null , img2 = null;
 //		try {
 //			img = ImageIO.read(new File("C:/Users\\Aude\\Desktop\\dienstleist_web.jpg"));
@@ -71,8 +71,9 @@ public class StartBootstrap {
 //		} catch (IOException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
-//		}	
+//		}    
 	}
+
     
     /**
      * read the IP address automatically

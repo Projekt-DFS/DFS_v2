@@ -28,6 +28,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.net.InetAddress;
+import main.java.de.htwsaar.dfs.utils.*;
 
 import java.net.UnknownHostException;
 
@@ -61,43 +62,31 @@ public class Peer {
 	
 	
 	
-	//Constructor
-		public Peer(Zone tmpZone) {
-			this.ownZone = tmpZone;
-				
-			try {
-				this.inet = InetAddress.getLocalHost();
-				ip_adresse = InetAddress.getLocalHost().getHostAddress();
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 		//Constructor
 		/**
 		 * Creates a new Peer in oldPeer's Zone
 		 * @param oldPeer
 		 */
-		public Peer(Peer oldPeer) {
-			try {
-				this.inet = InetAddress.getLocalHost();
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			oldPeer.splitZone(this);
-			
-		}
+//		public Peer(Peer oldPeer) {
+//			try {
+//				this.inet = InetAddress.getLocalHost();
+//			} catch (UnknownHostException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			oldPeer.splitZone(this);
+//			
+//		}
 		
 		/**
 		 * Creates new Peer with ip address only
 		 */
-		public Peer () {
-			try {
-				this.inet = InetAddress.getLocalHost();
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
+		public Peer () {	
+				this.inet = StaticFunctions.getRightIP();
+				
+		}
+		public Peer (InetAddress inet) {
+			this.inet = inet;
 		}
 	
 		
@@ -156,6 +145,7 @@ public class Peer {
 		}
 		
 		public CopyOnWriteArrayList<Peer> getRoutingTable() {
+			System.out.println("test");
 	    	return routingTable;
 	    }
 		
@@ -573,9 +563,36 @@ public class Peer {
 			return routing(randomPoint).splitZone(this);
 		}
 	
+		/**
+		 * @author Raphaela Wagner 27.06.2018
+		 * creates a new Peer and invokes joinRequest for joining the coordinate space
+		 * @return
+		 */
+		public Peer createPeer(String newPeerAdress) {
+			System.out.println("Peer vor createPeer(): " + this);
+			Peer newPeer = new Peer();
+			newPeer.setIp_adresse(newPeerAdress);
+			
+			if(getRoutingTable().size() == 0) {
+				splitZone(newPeer);
+				
+			} else {
+				newPeer.mergeRoutingTableWithList(getRoutingTable());
+				newPeer.joinRequest(newPeer.generateRandomPoint());
+			}
+//			System.out.println("Peer nach createPeer() : " + this);
+//			System.out.println("newPeer nach createPeer() : " + newPeer.routingTableToString());
+			System.out.println("Peer with adress "+ newPeer.getIp_adresse()+" has joined the network");
+			return newPeer;
+		}
+		
+		@Override
+		public String toString() {
+			return "Peer [ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTable + "]";
+		}
 	
 	
-	
+		
 	
 	
 }

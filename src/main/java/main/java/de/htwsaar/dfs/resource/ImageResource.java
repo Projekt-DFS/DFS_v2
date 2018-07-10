@@ -93,15 +93,6 @@ public class ImageResource {
 	 * @throws IOException
 	 */
 	//funktioniert
-/*	@GET
-	@Path("/{imageName}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Image getImageObject( @PathParam("username") String username, 
-			@PathParam("imageName") String imageName) 
-			throws FileNotFoundException, ClassNotFoundException, IOException {
-		return imageService.getImage(username, imageName);
-	}*/
-	
 	@GET
 	@Path("/{imageName}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -110,7 +101,6 @@ public class ImageResource {
 			throws FileNotFoundException, ClassNotFoundException, IOException {
 		return imageService.getImage(username, imageName);
 	}
-	
 	
 	/**
 	 * this method returns a picture as BufferedImage

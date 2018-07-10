@@ -35,6 +35,7 @@ public class PeerResource {
 	@Path("peers")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Peer> getAllNeighbors(){
+		System.out.println("test resource");
 		return ps.getAllNeighbors();
 	}
 	
@@ -130,6 +131,12 @@ public class PeerResource {
 		return new ImageResource();
 	}
 	
-	
+	@POST
+	@Path("/createPeer")
+	@Produces(MediaType.APPLICATION_JSON)
+	//unmoglich
+	public Peer createPeer(String  newPeerAdress){
+		return ps.createPeer(newPeerAdress);
+	}
 	
 }

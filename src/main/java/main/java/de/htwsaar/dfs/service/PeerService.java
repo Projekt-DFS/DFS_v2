@@ -1,16 +1,35 @@
 package main.java.de.htwsaar.dfs.service;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+
+import main.java.de.htwsaar.dfs.StartBootstrap;
 import main.java.de.htwsaar.dfs.StartPeer;
+import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.Zone;
 
 public class PeerService {
 	
-	private Peer peer = StartPeer.peer;
+	//private Peer peer = StartPeer.peer;
+	private Bootstrap bootstrap = StartBootstrap.bootstrap;
+	private Peer peer =(Peer) bootstrap;
+	
+	public PeerService(){
+//		System.out.println(StartBootstrap.getIP());
+//		if (bootstrap.getIp_adresse().equals("192.168.0.103"))
+//			peer = (Peer) bootstrap;
+//		else 
+//			peer = new Peer();
+	}
 
 	public List<Peer> getAllNeighbors() {
+		System.out.println("test service");
 		return peer.getRoutingTable();
 		//return new ArrayList<>(neighbors.values());
 	}
@@ -49,6 +68,10 @@ public class PeerService {
 	public Zone updateOwnZone(Zone zone) {
 		peer.setOwnZone(zone);
 		return zone;
+	}
+
+	public Peer createPeer(String newPeerAdress) {
+	    return bootstrap.createPeer(newPeerAdress);
 	}
 
 }
