@@ -16,6 +16,7 @@ import java.util.*;
 
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.User;
+import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 
 public class Bootstrap extends Peer {
@@ -281,7 +282,7 @@ public class Bootstrap extends Peer {
 	 * @param date the date when the image was shot
 	 * @param tagList a list of tags
 	 */
-	public void createImage(BufferedImage img, String username, String imageName, 
+	public ImageContainer createImage(BufferedImage img, String username, String imageName, 
 			String photographer, Date date, LinkedList<String> tagList) {
 		
 		User user = getUser(username);
@@ -289,16 +290,14 @@ public class Bootstrap extends Peer {
 		ImageContainer ic = new ImageContainer(img, username, imageName, photographer, date, tagList);
 		user.insertIntoImageList(imageName);
 		
-		//TODO routing
 		try {
-			
+			routing(StaticFunctions.hashToPoint(username, imageName)).saveImageContainer(ic);
 			exportUserList();							//Updates the UserList, incl Link to new Image
-			saveImageContainer(ic);						//TODO: temporary (routing)
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}							
-
+		return ic;
+		
 	}
 	
 	/**
@@ -310,11 +309,10 @@ public class Bootstrap extends Peer {
 	
 	public String deleteImage(String username, String imageName) {
 		User user = getUser(username);
-		//TODO: routing
 		try {
 			user.deleteFromImageList(imageName);
 			exportUserList();							//Updates the UserList, incl Link to new Image
-			deleteImageContainer(username, imageName);					//TODO: temporary (routing)
+			routing(StaticFunctions.hashToPoint(username, imageName)).deleteImageContainer(username, imageName);					//TODO: temporary (routing)
 		} catch (IOException e) {
 			return "Some errors have occured.";
 		}
@@ -341,13 +339,15 @@ public class Bootstrap extends Peer {
 	 * @return an ArrayList with all paths to the images
 	 * @throws UnknownHostException 
 	 */
-	public static ArrayList<String> getPaths(String username) throws UnknownHostException {
+	public ArrayList<String> getPaths(String username) throws UnknownHostException {
 		String path;
+		String ip;
 		HashSet<String> imageList = getListOfImages(username);
 		ArrayList<String> paths = new ArrayList<String>();
 		//TODO forwarding to the peers
 		for(String imageName : imageList) {
-			path = "http://" + getIP() + "/images/" + username + "/" + imageName;
+			ip = routing(StaticFunctions.hashToPoint(username, imageName)).getIP();
+			path = "http://" + ip + "/images/" + username + "/" + imageName;
 			paths.add(path);
 		}
 		return paths;

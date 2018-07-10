@@ -66,7 +66,7 @@ public class PlayGround {
 		img = ImageIO.read(new File("twins.jpg"));
 		photographer = "Thomas";
 		tagList.add("babys");
-		bt.createImage(img, bt.getUser("test1").getName(), "img_001", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("test1").getName(), "img_001", photographer, date, tagList);
 		
 		
 		img = ImageIO.read(new File("coins.jpg"));
@@ -74,7 +74,7 @@ public class PlayGround {
 		tagList.removeFirst();
 		tagList.add("Kaufbelege");
 		tagList.add("money");
-		bt.createImage(img, bt.getUser("test2").getName(), "img_002", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("test2").getName(), "img_002", photographer, date, tagList);
 		System.out.println(bt.getPaths("test2"));
 		try {
 			System.out.println("tagList:" + bt.loadImageContainer("test2", "img_002").getTagList());
@@ -87,7 +87,7 @@ public class PlayGround {
 	
 	private void startBootstrapTestLoad() throws ClassNotFoundException, IOException {
 		bt = new Bootstrap();
-		System.out.println("Pfade: " + Bootstrap.getPaths("test2"));
+		System.out.println("Pfade: " + bt.getPaths("test2"));
 		System.out.println("All Containers: " + bt.getAllImageContainers("test2"));
 		ArrayList<ImageContainer> ics;
 		ics = bt.getAllImageContainers("test2");
