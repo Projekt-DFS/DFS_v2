@@ -86,16 +86,20 @@ public class Peer {
 //			
 //		}
 		
+		
+		public Peer () {		
+		}
+		
 		/**
 		 * Creates new Peer with ip address only
 		 */
-		public Peer () {	
-				//this.inet = StaticFunctions.getRightIP();		
-		}
-		
 		public Peer (InetAddress inet) {
 			this.inet = inet;
 			this.ip_adresse = inet.getHostAddress();
+		}
+		
+		public Peer (String ip_adress) {
+			this.ip_adresse = ip_adress;
 		}
 	
 		
@@ -244,7 +248,6 @@ public class Peer {
 	public void updateRoutingTables(Peer newPeer) {
 		
 		newPeer.mergeRoutingTableSinglePeer(this);
-	    System.out.println("newpeer: "+newPeer);
 	    
 		// oldPeer becomes neighbour of new Peer
 //	    this.mergeRoutingTableSinglePeer(newPeer);
@@ -252,7 +255,8 @@ public class Peer {
 	    
 	    // newPeer gets the routingTable from oldPeer
 	    newPeer.mergeRoutingTableWithList(routingTable);
-	    System.out.println(newPeer);
+	    
+	    System.out.println("newpeer: "+newPeer);
 //	     newPeer becomes neighbour of oldPeer
 
 	    /**
@@ -581,7 +585,7 @@ public class Peer {
 		 * @throws IOException 
 		 * @throws ClientProtocolException 
 		 */
-		public Peer createPeer(InetAddress newPeerAdress) throws ClientProtocolException, IOException {
+		public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
 			System.out.println("Peer vor createPeer(): " + this);
 			Peer newPeer = new Peer(newPeerAdress);
 			//newPeer.setIp_adresse(newPeerAdress);
@@ -589,34 +593,15 @@ public class Peer {
 				newPeer = splitZone(newPeer);
 				
 			} else {
-//				newPeer.mergeRoutingTableWithList(getRoutingTable());
-//				newPeer.joinRequest(newPeer.generateRandomPoint());
+				newPeer.mergeRoutingTableWithList(getRoutingTable());
+				newPeer.joinRequest(newPeer.generateRandomPoint());
 			}
 //			System.out.println("Peer nach createPeer() : " + this);
 //			System.out.println("newPeer nach createPeer() : " + newPeer);
 			System.out.println("Peer with adress "+ newPeer.getIp_adresse()+" has joined the network");
 			
-		//	updatePeer(newPeer.ip_adresse);
 			return newPeer;
 		}
-		
-		 private static void updatePeer(String ip) throws ClientProtocolException, IOException {
-				final String bootstrapURL ="http://" +ip + ":4434/bootstrap/v1/addPeer";
-				
-				String post = "test";
-			    System.out.println("IPadresse dieses Rechners : "+post);
-			    StringEntity entity = new StringEntity(post,
-			                ContentType.APPLICATION_FORM_URLENCODED);      
-			    HttpClient httpClient = HttpClientBuilder.create().build();
-			    HttpPost request = new HttpPost(bootstrapURL);
-			    request.addHeader("content-type", "application/json");
-			    request.setEntity(entity);
-
-			    HttpResponse response = httpClient.execute(request);
-			    System.out.println("Owzone geandert.......");
-			    
-			}
-		
 		
 		public String toString() {
 			return "[ ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTable + "]";

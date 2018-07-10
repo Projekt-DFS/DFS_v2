@@ -32,9 +32,9 @@ import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 public class StartPeer {
 	
-	public static Peer peer;
+	public static Peer peer = new Peer();
 	public static Bootstrap bt;
-	private static String bootstrapIP = "192.168.1.5";
+	private static String bootstrapIP = "192.168.1.6";
 
 	public StartPeer(String bootstrapIP) {
 		StartPeer.bootstrapIP = bootstrapIP;	
@@ -61,29 +61,19 @@ public class StartPeer {
     
     private static void joinPeer() throws ClientProtocolException, IOException {
 		final String bootstrapURL ="http://" +bootstrapIP + ":4434/bootstrap/v1/createPeer";
-		
-//		String post = StaticFunctions.getRightIP().getHostAddress();
-//	    System.out.println("IPadresse dieses Rechners : "+post);
-//	    StringEntity entity = new StringEntity(post,
-//	                ContentType.APPLICATION_FORM_URLENCODED);      
-//	    HttpClient httpClient = HttpClientBuilder.create().build();
-//	    HttpPost request = new HttpPost(bootstrapURL);
-//	    request.addHeader("content-type", "application/json");
-//	    request.setEntity(entity);
-//
-//	    HttpResponse response = httpClient.execute(request);
-//	    System.out.println("New Peer tries to join he nework.......");
-//	    
-		Peer p= new Peer(StaticFunctions.getRightIP());
+		   
+		peer= new Peer(getIP());
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target(bootstrapURL);
 		Invocation.Builder invocationBuilder 
 		  = webTarget.request(MediaType.APPLICATION_JSON);
 		Response response 
 		  = invocationBuilder
-		  .post(Entity.entity(p, MediaType.APPLICATION_JSON));
+		  .post(Entity.entity(peer, MediaType.APPLICATION_JSON));
 		System.out.println(response.getStatus());
-		System.out.println(response.readEntity(String.class));
+		String str = response.readEntity(String.class);
+		//Peer newp = response.readEntity(Peer.class);
+		System.out.println(str);
 	}
     /**
      * read the IP address automatically

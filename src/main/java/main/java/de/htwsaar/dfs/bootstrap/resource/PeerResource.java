@@ -40,7 +40,6 @@ public class PeerResource {
 	@Path("peers")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Peer> getAllNeighbors(){
-		System.out.println("test resource");
 		return ps.getAllNeighbors();
 	}
 
@@ -48,9 +47,9 @@ public class PeerResource {
 	@Path("peer")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Peer getPeer(){
-		Peer p = new Peer(StaticFunctions.getRightIP());
+		Peer p = new Peer("4.4.4.4");
 		p.createZone(new Point2D.Double(0.0, 0.0), new Point2D.Double(1.0, 1.0));
-		return p;
+		return new Peer();
 	}
 	
 	/**
@@ -67,6 +66,20 @@ public class PeerResource {
 		return peer;
 	}
 	
+	/**
+	 * This method allows to update a peer 
+	 * @param peer
+	 * @return
+	 */
+	@PUT
+	@Path("/update")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON )
+	public Peer updatePeer(Peer peer) {
+		ps.updatePeer(peer);
+		return peer;
+	}
+
 
 	/**
 	 * This method returns a special peer from the neighbors 
@@ -78,20 +91,6 @@ public class PeerResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Peer getPeer(@PathParam("peerId") int pid){
 		return ps.getPeer(pid);
-	}
-	
-	/**
-	 * This method allows to update a peer in the neighbor list
-	 * @param peer
-	 * @return
-	 */
-	@PUT
-	@Path("/peers/{peerId}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON )
-	public Peer updatePeer(@PathParam("peerId") int pid, Peer peer) {
-		ps.updatePeer(pid, peer);
-		return peer;
 	}
 	
 	/**
@@ -151,7 +150,9 @@ public class PeerResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	//unmoglich
 	public Peer createPeer(Peer peer) throws ClientProtocolException, IOException{
-		return ps.createPeer(peer.getInet());
+		return ps.createPeer(peer.getIp_adresse());
 	}
+	
+	
 	
 }

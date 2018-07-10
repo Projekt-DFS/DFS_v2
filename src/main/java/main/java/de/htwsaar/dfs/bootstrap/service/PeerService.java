@@ -38,12 +38,10 @@ public class PeerService {
 		return newPeer;
 	}
 
-	public Peer updatePeer(int pid, Peer peer) {
-		if( !peer.isNeighbour(peer))// !neighbors.containsKey(pid))
-			return null;
-		peer.mergeRoutingTableSinglePeer(peer);
-		//neighbors.replace(pid, peer);
-		return peer;
+	public Peer updatePeer(Peer p) {
+		bootstrap.setOwnZone(p.getOwnZone());
+		bootstrap.setRoutingTable(p.getRoutingTable());
+		return bootstrap;
 	}
 
 	public String deletePeer(int pid) {
@@ -63,8 +61,8 @@ public class PeerService {
 		return zone;
 	}
 
-	public Peer createPeer(InetAddress inet) throws ClientProtocolException, IOException {
-		return bootstrap.createPeer(inet);
+	public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
+		return bootstrap.createPeer(newPeerAdress);
 	}
 
 }
