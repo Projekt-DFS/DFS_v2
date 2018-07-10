@@ -1,5 +1,6 @@
 package main.java.de.htwsaar.dfs.bootstrap.resource;
 
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.Zone;
+import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 import main.java.de.htwsaar.dfs.bootstrap.service.PeerService;
 
 /**
@@ -40,6 +42,15 @@ public class PeerResource {
 	public List<Peer> getAllNeighbors(){
 		System.out.println("test resource");
 		return ps.getAllNeighbors();
+	}
+
+	@GET
+	@Path("peer")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Peer getPeer(){
+		Peer p = new Peer(StaticFunctions.getRightIP());
+		p.createZone(new Point2D.Double(0.0, 0.0), new Point2D.Double(1.0, 1.0));
+		return p;
 	}
 	
 	/**
@@ -139,8 +150,8 @@ public class PeerResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	//unmoglich
-	public Peer createPeer(String  newPeerAdress) throws ClientProtocolException, IOException{
-		return ps.createPeer(newPeerAdress);
+	public Peer createPeer(Peer peer) throws ClientProtocolException, IOException{
+		return ps.createPeer(peer.getInet());
 	}
 	
 }

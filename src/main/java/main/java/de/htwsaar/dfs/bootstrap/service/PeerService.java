@@ -1,6 +1,7 @@
 package main.java.de.htwsaar.dfs.bootstrap.service;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
@@ -62,8 +63,8 @@ public class PeerService {
 		return zone;
 	}
 
-	public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
-	    return bootstrap.createPeer(newPeerAdress);
+	public Peer createPeer(InetAddress inet) throws ClientProtocolException, IOException {
+		return bootstrap.createPeer(inet);
 	}
 
 }

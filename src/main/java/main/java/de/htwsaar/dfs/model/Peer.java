@@ -90,11 +90,12 @@ public class Peer {
 		 * Creates new Peer with ip address only
 		 */
 		public Peer () {	
-				this.inet = StaticFunctions.getRightIP();
-				
+				//this.inet = StaticFunctions.getRightIP();		
 		}
+		
 		public Peer (InetAddress inet) {
 			this.inet = inet;
+			this.ip_adresse = inet.getHostAddress();
 		}
 	
 		
@@ -223,13 +224,12 @@ public class Peer {
 	    if (ownZone.isSquare()) {
 	        
 	    	newPeer.createZone(new Point2D.Double(ownZone.calculateCentrePoint().getX(), ownZone.getBottomRight().getY()), ownZone.getUpperRight());
-	        ownZone.setZone(ownZone.getBottomLeft(), new Point2D.Double(ownZone.calculateCentrePoint().getX(), ownZone.getUpperLeft().getY()));    
+	    	ownZone.setZone(ownZone.getBottomLeft(), new Point2D.Double(ownZone.calculateCentrePoint().getX(), ownZone.getUpperLeft().getY()));    
 	    } else {
 	        
 	    	newPeer.createZone(ownZone.getBottomLeft(), (new Point2D.Double(ownZone.getBottomRight().getX(), ownZone.calculateCentrePoint().getY())));
 	        ownZone.setZone(new Point2D.Double(ownZone.getUpperLeft().getX(), ownZone.calculateCentrePoint().getY()), ownZone.getUpperRight());    
 	    }
-	    
 	    updateRoutingTables(newPeer);
 	    
 	    return newPeer;
@@ -242,15 +242,19 @@ public class Peer {
 	 * @param newPeer
 	 */
 	public void updateRoutingTables(Peer newPeer) {
+		
+		newPeer.mergeRoutingTableSinglePeer(this);
+	    System.out.println("newpeer: "+newPeer);
+	    
 		// oldPeer becomes neighbour of new Peer
-	    newPeer.mergeRoutingTableSinglePeer(this);
+//	    this.mergeRoutingTableSinglePeer(newPeer);
+//	    System.out.println("upd+"+this);
 	    
 	    // newPeer gets the routingTable from oldPeer
 	    newPeer.mergeRoutingTableWithList(routingTable);
-	    
-	    // newPeer becomes neighbour of oldPeer
-	    this.mergeRoutingTableSinglePeer(newPeer);
-	   
+	    System.out.println(newPeer);
+//	     newPeer becomes neighbour of oldPeer
+
 	    /**
 	     * each Peer of oldPeer's routingTable gets newPeer as a temporary neighbour
 	     * Peers from oldPeer's old routingTable check if oldPeer and newPeer are neighbours
@@ -577,23 +581,23 @@ public class Peer {
 		 * @throws IOException 
 		 * @throws ClientProtocolException 
 		 */
-		public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
+		public Peer createPeer(InetAddress newPeerAdress) throws ClientProtocolException, IOException {
 			System.out.println("Peer vor createPeer(): " + this);
-			Peer newPeer = new Peer();
-			newPeer.setIp_adresse(newPeerAdress);
+			Peer newPeer = new Peer(newPeerAdress);
+			//newPeer.setIp_adresse(newPeerAdress);
 			if(getRoutingTable().size() == 0) {
-				splitZone(newPeer);
+				newPeer = splitZone(newPeer);
 				
 			} else {
-				newPeer.mergeRoutingTableWithList(getRoutingTable());
-				newPeer.joinRequest(newPeer.generateRandomPoint());
+//				newPeer.mergeRoutingTableWithList(getRoutingTable());
+//				newPeer.joinRequest(newPeer.generateRandomPoint());
 			}
 //			System.out.println("Peer nach createPeer() : " + this);
 //			System.out.println("newPeer nach createPeer() : " + newPeer);
 			System.out.println("Peer with adress "+ newPeer.getIp_adresse()+" has joined the network");
 			
-			updatePeer(newPeer.ip_adresse);
-			return new Peer();//newPeer;
+		//	updatePeer(newPeer.ip_adresse);
+			return newPeer;
 		}
 		
 		 private static void updatePeer(String ip) throws ClientProtocolException, IOException {

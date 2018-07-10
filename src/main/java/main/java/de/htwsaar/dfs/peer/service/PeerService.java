@@ -64,7 +64,7 @@ public class PeerService {
 	}
 
 	public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
-	    return peer.createPeer(newPeerAdress);
+	    return null;//peer.createPeer(newPeerAdress);
 	}
 
 }
