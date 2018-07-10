@@ -5,7 +5,6 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -41,7 +40,7 @@ public class StartPeer {
     public static HttpServer startServer() throws UnknownHostException {
         // create a resource config that scans for JAX-RS resources and providers
         // in de.htwsaar.dfs.iosbootstrap package
-        final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.resource");
+        final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.resource.peer");
         rc.register(MultiPartFeature.class);
         rc.register(LoggingFilter.class);
         rc.register(SecurityFilter.class);
@@ -49,11 +48,11 @@ public class StartPeer {
                
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP() +":" + Peer.port+ "/iosbootstrap/v1/"), rc);
+        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP() +":" + Peer.port+ "/p2p/v1/"), rc);
     }
     
     private static void joinPeer() throws ClientProtocolException, IOException {
-		final String bootstrapURL ="http://" +bootstrapIP + ":4434/iosbootstrap/v1/createPeer";
+		final String bootstrapURL ="http://" +bootstrapIP + ":4434/bootstrap/v1/createPeer";
 		
 		String post = StaticFunctions.getRightIP().getHostAddress();
 	    System.out.println("IPadresse dieses Rechners : "+post);
