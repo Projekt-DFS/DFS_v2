@@ -1,18 +1,14 @@
 package main.java.de.htwsaar.dfs;
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
-import javax.json.JsonReaderFactory;
-import javax.json.JsonValue;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
-import java.util.Map.Entry;
-import java.util.concurrent.CopyOnWriteArrayList;
+
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -22,7 +18,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -36,15 +31,15 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import main.java.de.htwsaar.dfs.model.Bootstrap;
+import main.java.de.htwsaar.dfs.model.Parser;
 import main.java.de.htwsaar.dfs.model.Peer;
-import main.java.de.htwsaar.dfs.model.Zone;
-import main.java.de.htwsaar.dfs.utils.StaticFunctions;
+
 
 public class StartPeer {
 	
 	public static Peer peer = new Peer();
 	public static Bootstrap bt;
-	private static String bootstrapIP = "192.168.1.5";
+	private static String bootstrapIP = "192.168.1.6";
 
 	public StartPeer(String bootstrapIP) {
 		StartPeer.bootstrapIP = bootstrapIP;	
@@ -85,14 +80,15 @@ public class StartPeer {
        
 	//	Peer newp = new Peer(response.getEntity(Peer.class));
 //		System.out.println(newp);
-		System.out.println(str);
+		System.out.println(readJson(str));
 		
 //		joinAllNeighbors(str);
 	}
-    private static Peer readJson(final String str) throws JsonParseException, JsonMappingException, IOException {
+    private static Parser.MyPeer readJson(final String str) throws JsonParseException, JsonMappingException, IOException {
     	JsonReader jsonReader = Json.createReader( new StringReader(str));
     	JsonObject j = jsonReader.readObject();
-    	Peer p= new ObjectMapper().readValue(str, Peer.class);
+    	Parser parser = new Parser();
+    	Parser.MyPeer p= new ObjectMapper().readValue(str,Parser.MyPeer.class);
     	System.out.println(p.toString());
 //    	j.get
        //Peer p= new Peer( ((Zone)j.get("ownZone")), j.getString("ip_adresse"),(CopyOnWriteArrayList<Peer>)j.get("routingTable"));
