@@ -81,5 +81,10 @@ public class Interval {
 	public double getMax() {
 		return max;
 	}
+
+	@Override
+	public String toString() {
+		return "Interval [min=" + min + ", max=" + max + ", anchor=" + anchor + "]";
+	}
 	
 }
