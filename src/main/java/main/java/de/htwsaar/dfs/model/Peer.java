@@ -86,6 +86,11 @@ public class Peer {
 //			
 //		}
 		
+		public Peer (Peer copie) {
+			this.ownZone = copie.ownZone;
+			this.ip_adresse= copie.ip_adresse;
+			this.routingTable = copie.routingTable;
+		}
 		
 		public Peer () {		
 		}
