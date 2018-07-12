@@ -85,8 +85,8 @@ public class StartPeer {
 //		joinAllNeighbors(str);
 	}
     private static Parser.MyPeer readJson(final String str) throws JsonParseException, JsonMappingException, IOException {
-    	JsonReader jsonReader = Json.createReader( new StringReader(str));
-    	JsonObject j = jsonReader.readObject();
+//    	JsonReader jsonReader = Json.createReader( new StringReader(str));
+//    	JsonObject j = jsonReader.readObject();
     	Parser parser = new Parser();
     	Parser.MyPeer p= new ObjectMapper().readValue(str,Parser.MyPeer.class);
     	System.out.println(p.toString());

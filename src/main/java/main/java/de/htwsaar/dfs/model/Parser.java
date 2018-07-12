@@ -1,6 +1,7 @@
 package main.java.de.htwsaar.dfs.model;
 
 import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Parser {
@@ -44,6 +45,16 @@ public class Parser {
 			 bottomX = zone.getBottomX();
 			 upperX = zone.getUpperX();
 		 }
+
+		@Override
+		public String toString() {
+			return "MyZone [bottomLeft=" + Arrays.toString(bottomLeft) + ", bottomRight=" + Arrays.toString(bottomRight)
+					+ ", upperLeft=" + Arrays.toString(upperLeft) + ", upperRight=" + Arrays.toString(upperRight)
+					+ ", center=" + Arrays.toString(center) + ", leftY=" + leftY + ", rightY=" + rightY + ", bottomX="
+					+ bottomX + ", upperX=" + upperX + "]";
+		}
+		 
+		 
 		 
 	}
 	
