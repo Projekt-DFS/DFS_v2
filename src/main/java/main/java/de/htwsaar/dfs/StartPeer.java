@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import main.java.de.htwsaar.dfs.model.Bootstrap;
+import main.java.de.htwsaar.dfs.model.MyPeer;
 import main.java.de.htwsaar.dfs.model.Parser;
 import main.java.de.htwsaar.dfs.model.Peer;
 
@@ -80,15 +81,15 @@ public class StartPeer {
        
 	//	Peer newp = new Peer(response.getEntity(Peer.class));
 //		System.out.println(newp);
-		System.out.println(readJson(str));
+		System.out.println(str);
 		
 //		joinAllNeighbors(str);
 	}
-    private static Parser.MyPeer readJson(final String str) throws JsonParseException, JsonMappingException, IOException {
+    private static MyPeer readJson(final String str) throws JsonParseException, JsonMappingException, IOException {
 //    	JsonReader jsonReader = Json.createReader( new StringReader(str));
 //    	JsonObject j = jsonReader.readObject();
     	Parser parser = new Parser();
-    	Parser.MyPeer p= new ObjectMapper().readValue(str,Parser.MyPeer.class);
+    	MyPeer p= new ObjectMapper().readValue(str,MyPeer.class);
     	System.out.println(p.toString());
 //    	j.get
        //Peer p= new Peer( ((Zone)j.get("ownZone")), j.getString("ip_adresse"),(CopyOnWriteArrayList<Peer>)j.get("routingTable"));

@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.http.client.ClientProtocolException;
 
+import main.java.de.htwsaar.dfs.model.MyPeer;
 import main.java.de.htwsaar.dfs.model.Parser;
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.Zone;
@@ -150,8 +151,8 @@ public class PeerResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	//unmoglich
-	public Parser.MyPeer createPeer(Peer peer) throws ClientProtocolException, IOException{
-		Parser.MyPeer nP= new Parser().parsePeer(ps.createPeer(peer.getIp_adresse()));
+	public MyPeer createPeer(Peer peer) throws ClientProtocolException, IOException{
+		MyPeer nP= new Parser().parsePeer(ps.createPeer(peer.getIp_adresse()));
 		System.out.println("new Peer successfully created :" + nP);
 		return nP;
 	}
