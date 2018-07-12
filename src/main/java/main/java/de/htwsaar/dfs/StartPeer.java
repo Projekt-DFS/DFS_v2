@@ -1,10 +1,5 @@
 package main.java.de.htwsaar.dfs;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;

@@ -11,10 +11,10 @@ public class MyPeer{
 	public int port = 4434;
 	//public MyZone ownZone;
 	public String ip;
-	private Point bottomLeft, bottomRight, upperLeft, upperRight, center ;
+	public Point bottomLeft, bottomRight, upperLeft, upperRight, center ;
 	 @SuppressWarnings("unused")
-	private Interval leftY, rightY, bottomX, upperX;
-	private CopyOnWriteArrayList<MyPeer> routingTable = new CopyOnWriteArrayList<>();
+	public Interval leftY, rightY, bottomX, upperX;
+	public CopyOnWriteArrayList<MyPeer> routingTable = new CopyOnWriteArrayList<>();
 	
 	public MyPeer(){}
 	MyPeer( Peer peer){
