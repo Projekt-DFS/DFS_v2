@@ -11,36 +11,26 @@ public class MyPeer{
 	public int port = 4434;
 	//public MyZone ownZone;
 	public String ip;
-	private double[] bottomLeft, bottomRight, upperLeft, upperRight, center ;
+	private Point bottomLeft, bottomRight, upperLeft, upperRight, center ;
 	 @SuppressWarnings("unused")
 	private Interval leftY, rightY, bottomX, upperX;
 	private CopyOnWriteArrayList<MyPeer> routingTable = new CopyOnWriteArrayList<>();
 	
 	public MyPeer(){}
 	MyPeer( Peer peer){
-		
-		//initialize arrays
-		 bottomLeft = new double[2];
-		 bottomRight = new double[2];;
-		 upperLeft = new double[2];
-		 upperRight = new double[2];
-		 center = new double[2]; 
 		 
 		 //convert point2double to arrays
-		 bottomLeft[0] = peer.getOwnZone().getBottomLeft().getX();
-		 bottomLeft[1] = peer.getOwnZone().getBottomLeft().getY();
+		 bottomLeft = new Point(peer.getOwnZone().getBottomLeft().getX(),
+				 peer.getOwnZone().getBottomLeft().getY());
 		 
-		 bottomRight[0] = peer.getOwnZone().getBottomRight().getX();
-		 bottomRight[1] = peer.getOwnZone().getBottomRight().getY();
+		 bottomRight = new Point(peer.getOwnZone().getBottomRight().getX(), peer.getOwnZone().getBottomRight().getY());
 		 
-		 upperLeft[0] = peer.getOwnZone().getUpperLeft().getX();
-		 upperLeft[1] = peer.getOwnZone().getUpperLeft().getY();
+		 upperLeft = new Point(peer.getOwnZone().getUpperLeft().getX(),peer.getOwnZone().getUpperLeft().getY());
 		 
-		 upperRight[0] = peer.getOwnZone().getUpperRight().getX();
-		 upperRight[1] = peer.getOwnZone().getUpperRight().getY();
+		 upperRight= new Point( peer.getOwnZone().getUpperRight().getX(),peer.getOwnZone().getUpperRight().getY());
 		 
-		 center[0] = peer.getOwnZone().getCenter().getX();
-		 center[1] = peer.getOwnZone().getCenter().getY();
+		 center=new Point( peer.getOwnZone().getCenter().getX(),
+				 peer.getOwnZone().getCenter().getY());
 		 
 		 //Copy Intervals
 		 leftY = peer.getOwnZone().getLeftY();
@@ -54,11 +44,12 @@ public class MyPeer{
 	}
 	@Override
 	public String toString() {
-		return "MyPeer [port=" + port + ", ip=" + ip + ", bottomLeft=" + Arrays.toString(bottomLeft) + ", bottomRight="
-				+ Arrays.toString(bottomRight) + ", upperLeft=" + Arrays.toString(upperLeft) + ", upperRight="
-				+ Arrays.toString(upperRight) + ", center=" + Arrays.toString(center) + ", leftY=" + leftY + ", rightY="
-				+ rightY + ", bottomX=" + bottomX + ", upperX=" + upperX + ", routingTable=" + routingTable + "]";
+		return "MyPeer [port=" + port + ", ip=" + ip + ", bottomLeft=" + bottomLeft + ", bottomRight=" + bottomRight
+				+ ", upperLeft=" + upperLeft + ", upperRight=" + upperRight + ", center=" + center + ", leftY=" + leftY
+				+ ", rightY=" + rightY + ", bottomX=" + bottomX + ", upperX=" + upperX + ", routingTable="
+				+ routingTable + "]";
 	}
+	
 
 	
 	
