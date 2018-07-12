@@ -71,10 +71,16 @@ public class StartPeer {
 		  = invocationBuilder
 		  .post(Entity.entity(peer, MediaType.APPLICATION_JSON));
 		System.out.println(response.getStatus());
-		String str = response.readEntity(String.class);
-		//Peer newp = response.readEntity(Peer.class);
-		System.out.println(str);
+//		String str = response.readEntity(String.class);
+		Peer newp = response.readEntity(Peer.class);
+		System.out.println(newp);
+//		System.out.println(str);
+//		joinAllNeighbors(str);
 	}
+    
+    private static void joinAllNeighbors(String str) {
+    	//List<String> neighbors =  str.
+    }
     /**
      * read the IP address automatically
      * @return

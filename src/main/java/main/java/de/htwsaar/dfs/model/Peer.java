@@ -103,6 +103,13 @@ public class Peer {
 		}
 	
 		
+		public Peer(Zone ownZone, String ip_adresse, CopyOnWriteArrayList<Peer> routingTable) {
+			super();
+			this.ownZone = ownZone;
+			this.ip_adresse = ip_adresse;
+			this.routingTable = routingTable;
+		}
+
 		public Zone getOwnZone() {
 			return ownZone;
 		}
