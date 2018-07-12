@@ -20,7 +20,6 @@ import main.java.de.htwsaar.dfs.model.MyPeer;
 import main.java.de.htwsaar.dfs.model.Parser;
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.Zone;
-import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 import main.java.de.htwsaar.dfs.bootstrap.service.PeerService;
 
 /**

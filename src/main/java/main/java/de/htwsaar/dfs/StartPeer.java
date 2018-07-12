@@ -21,13 +21,8 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.MyPeer;
-import main.java.de.htwsaar.dfs.model.Parser;
 import main.java.de.htwsaar.dfs.model.Peer;
 
 
@@ -71,29 +66,16 @@ public class StartPeer {
 		Response response 
 		  = invocationBuilder
 		  .post(Entity.entity(peer, MediaType.APPLICATION_JSON));
-		System.out.println(response.getStatus());
-        String str = response.readEntity(String.class);
-       
-	//	Peer newp = new Peer(response.getEntity(Peer.class));
-//		System.out.println(newp);
-		System.out.println(readJson(str));
+		System.out.print(response.getStatus()+" ==>>");
+		MyPeer newp = response.readEntity(MyPeer.class);
+		System.out.println("new Peer :" + newp );
 		
 //		joinAllNeighbors(str);
 	}
-    private static MyPeer readJson(final String str) throws JsonParseException, JsonMappingException, IOException {
-//    	JsonReader jsonReader = Json.createReader( new StringReader(str));
-//    	JsonObject j = jsonReader.readObject();
-    	Parser parser = new Parser();
-    	MyPeer p= new ObjectMapper().readValue(str,MyPeer.class);
-    	System.out.println(p.toString());
-//    	j.get
-       //Peer p= new Peer( ((Zone)j.get("ownZone")), j.getString("ip_adresse"),(CopyOnWriteArrayList<Peer>)j.get("routingTable"));
-       return p;
-   }
     
-    private static void joinAllNeighbors(String str) {
-    	//List<String> neighbors =  str.s
-    }
+//    private static void joinAllNeighbors(String str) {
+//    	//List<String> neighbors =  str.s
+//    }
     /**
      * read the IP address automatically
      * @return
