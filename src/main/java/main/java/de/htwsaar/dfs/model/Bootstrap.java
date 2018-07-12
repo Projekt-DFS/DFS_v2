@@ -52,8 +52,8 @@ public class Bootstrap extends Peer {
 			e.printStackTrace();
 		}
 
-		this.inet = main.java.de.htwsaar.dfs.utils.StaticFunctions.getRightIP();//InetAddress.getLocalHost();
-		this.ip_adresse = inet.getHostAddress();
+//		this.inet = main.java.de.htwsaar.dfs.utils.StaticFunctions.getRightIP();//InetAddress.getLocalHost();
+//		this.ip_adresse = inet.getHostAddress();
 		
 		//Create a new Zone
 		createZone(new Point2D.Double(0.0, 0.0), new Point2D.Double(1.0, 1.0));

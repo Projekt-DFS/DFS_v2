@@ -81,7 +81,7 @@ public class StartPeer {
        
 	//	Peer newp = new Peer(response.getEntity(Peer.class));
 //		System.out.println(newp);
-		System.out.println(str);
+		System.out.println(readJson(str));
 		
 //		joinAllNeighbors(str);
 	}

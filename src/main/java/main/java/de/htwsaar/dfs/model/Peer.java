@@ -62,8 +62,6 @@ public class Peer {
 	// Aktuelle IP-Adresse des Servers
 	@XmlTransient
 	public String ip_adresse;
-	@XmlTransient
-	public static InetAddress inet;
 	//Liste alle Nachbarn
 	
 	private CopyOnWriteArrayList<Peer> routingTable = new CopyOnWriteArrayList<>();
@@ -98,11 +96,6 @@ public class Peer {
 		/**
 		 * Creates new Peer with ip address only
 		 */
-		public Peer (InetAddress inet) {
-			this.inet = inet;
-			this.ip_adresse = inet.getHostAddress();
-		}
-		
 		public Peer (String ip_adress) {
 			this.ip_adresse = ip_adress;
 		}
@@ -126,14 +119,6 @@ public class Peer {
 
 		public String getIp_adresse() {
 			return ip_adresse;
-		}
-	
-		public InetAddress getInet() {
-			return inet;
-		}
-
-		public void setInet(InetAddress inet) {
-			this.inet = inet;
 		}
 
 		public static int getPort() {
@@ -159,15 +144,15 @@ public class Peer {
 		 * @throws UnknownHostException 
 		 */
 		
-		public static String getIP() {
+		public String getIP() {
 			
 			try {
-				inet = InetAddress.getLocalHost();
+				ip_adresse = InetAddress.getLocalHost().getHostAddress();
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			return inet.getHostAddress();
+			return ip_adresse;
 		}
 		
 		public CopyOnWriteArrayList<Peer> getRoutingTable() {
@@ -197,7 +182,7 @@ public class Peer {
 			
 			
 				if(x >= ownZone.getBottomLeft().getX() && x <= ownZone.getBottomRight().getX() && y >= ownZone.getBottomRight().getY() && y <= ownZone.getUpperRight().getY()) {
-				 return Peer.getIP();
+				 return this.getIP();
 				}
 				else
 				{

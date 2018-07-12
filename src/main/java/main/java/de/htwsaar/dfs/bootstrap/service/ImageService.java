@@ -27,7 +27,7 @@ public class ImageService {
 	
 	Bootstrap bootstrap = StartBootstrap.bootstrap;
 	//URI for Image
-	private String baseUri = "http://" + Bootstrap.getIP() + ":" + Bootstrap.port +"/bootstrap/v1/";
+	private String baseUri = "http://" + bootstrap.getIP() + ":" + Bootstrap.port +"/bootstrap/v1/";
 	
 	public ImageService(){	}
 	
