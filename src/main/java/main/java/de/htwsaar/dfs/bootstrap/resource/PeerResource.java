@@ -150,7 +150,9 @@ public class PeerResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	//unmoglich
 	public Peer createPeer(Peer peer) throws ClientProtocolException, IOException{
-		return ps.createPeer(peer.getIp_adresse());
+		Peer nP= ps.createPeer(peer.getIp_adresse());
+		System.out.println("new Peer successfully created :" + nP);
+		return nP;
 	}
 	
 	

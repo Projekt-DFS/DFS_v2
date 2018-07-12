@@ -104,10 +104,11 @@ public class Peer {
 	
 		
 		public Peer(Zone ownZone, String ip_adresse, CopyOnWriteArrayList<Peer> routingTable) {
-			super();
+			
 			this.ownZone = ownZone;
 			this.ip_adresse = ip_adresse;
 			this.routingTable = routingTable;
+			System.out.println(this.ownZone);
 		}
 
 		public Zone getOwnZone() {
@@ -593,7 +594,7 @@ public class Peer {
 		 * @throws ClientProtocolException 
 		 */
 		public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
-			System.out.println("Peer vor createPeer(): " + this);
+			System.out.println("Bootstrap vor createPeer(): " + this);
 			Peer newPeer = new Peer(newPeerAdress);
 			//newPeer.setIp_adresse(newPeerAdress);
 			if(getRoutingTable().size() == 0) {
@@ -605,7 +606,7 @@ public class Peer {
 			}
 //			System.out.println("Peer nach createPeer() : " + this);
 //			System.out.println("newPeer nach createPeer() : " + newPeer);
-			System.out.println("Peer with adress "+ newPeer.getIp_adresse()+" has joined the network");
+//			System.out.println("Peer with adress "+ newPeer.getIp_adresse()+" has joined the network");
 			
 			return newPeer;
 		}
