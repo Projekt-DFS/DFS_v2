@@ -34,7 +34,7 @@ public class StartPeer {
 	
 	public static Peer peer = new Peer();
 	public static Bootstrap bt;
-	private static String bootstrapIP = "192.168.1.6";
+	private static String bootstrapIP = "192.168.1.5";
 
 	public StartPeer(String bootstrapIP) {
 		StartPeer.bootstrapIP = bootstrapIP;	
