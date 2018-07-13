@@ -15,7 +15,8 @@ public class MyPeer{
 	public CopyOnWriteArrayList<MyPeer> routingTable = new CopyOnWriteArrayList<>();
 	
 	public MyPeer(){}
-	MyPeer( Peer peer){
+	
+	public MyPeer( Peer peer){
 		 
 		 //convert point2double to arrays
 		 bottomLeft = new Point(peer.getOwnZone().getBottomLeft().getX(),
@@ -40,6 +41,11 @@ public class MyPeer{
 		for ( Peer p : peer.getRoutingTable())
 			routingTable.add(new MyPeer(p));
 	}
+	
+	public MyPeer parsePeer(Peer peer) {
+		return new MyPeer(peer);
+	}
+	
 	@Override
 	public String toString() {
 		return "MyPeer [port=" + port + ", ip=" + ip + ", bottomLeft=" + bottomLeft + ", bottomRight=" + bottomRight

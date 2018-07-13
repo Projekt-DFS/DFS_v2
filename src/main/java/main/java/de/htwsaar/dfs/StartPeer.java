@@ -25,7 +25,12 @@ import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.MyPeer;
 import main.java.de.htwsaar.dfs.model.Peer;
 
-
+/**
+ * Main Class
+ * Starts a PeerToPeer API
+ * @author Aude Nana
+ *
+ */
 public class StartPeer {
 	
 	public static Peer peer = new Peer();
@@ -55,8 +60,16 @@ public class StartPeer {
         return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP() +":" + Peer.port+ "/p2p/v1/"), rc);
     }
     
-    private static void joinPeer() throws ClientProtocolException, IOException {
-		final String bootstrapURL ="http://" +bootstrapIP + ":4434/bootstrap/v1/createPeer";
+    /**
+     * This method sent a joinRequest to a peer. Once a peer is started , the request 
+     * will be sent to the bootstrap first
+     * @param ip : the ip of the destination peer
+     * @param api : the api that is install on the destinationpeer
+     * @throws ClientProtocolException
+     * @throws IOException
+     */
+    private static void joinPeer(String ip, String api) throws ClientProtocolException, IOException {
+		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
 		   
 		peer= new Peer(getIP());
 		Client client = ClientBuilder.newClient();
@@ -69,9 +82,34 @@ public class StartPeer {
 		System.out.print(response.getStatus()+" ==>>");
 		MyPeer newp = response.readEntity(MyPeer.class);
 		System.out.println("new Peer :" + newp );
+		if(newp != null) {
+		//	addMeAsNeighbor(ip, newp, bootstrap);
+		}
 		
 //		joinAllNeighbors(str);
 	}
+    
+    /**
+     * Once the peer has become her own zone from to the bootstrap, it will
+     * make another request to the bootstrap to be add as neighbors by the bootstrap too.
+     * @param ip
+     * @param p : the peer that have been created (this peer)
+     * @param api
+     * @throws UnknownHostException
+     */
+    private static void addMeAsNeighbor(String ip, Peer p , String api) throws UnknownHostException {
+    	final String url = "http://" +ip + ":4434/" +api +"/v1/neighbors";
+		Client client = ClientBuilder.newClient();
+		WebTarget webTarget = client.target(url);
+		Invocation.Builder invocationBuilder 
+		  = webTarget.request(MediaType.APPLICATION_JSON);
+		Response response 
+		  = invocationBuilder
+		  .post(Entity.entity(p, MediaType.APPLICATION_JSON));
+		System.out.print(response.getStatus()+" ==>>");
+		MyPeer newp = response.readEntity(MyPeer.class);
+		System.out.println("new Peer :" + newp );
+    }
     
 //    private static void joinAllNeighbors(String str) {
 //    	//List<String> neighbors =  str.s
@@ -92,7 +130,7 @@ public class StartPeer {
      */
     public static void main(String[] args) throws IOException {
         startServer();
-        joinPeer();
+        joinPeer(bootstrapIP, "bootstrap");
         System.in.read();
        
       

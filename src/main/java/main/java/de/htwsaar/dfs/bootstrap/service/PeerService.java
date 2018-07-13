@@ -35,7 +35,7 @@ public class PeerService {
 	public Peer addPeer(Peer newPeer) {
 		bootstrap.mergeRoutingTableSinglePeer(newPeer);
 		//neighbors.put(neighbors.size() + 1, newPeer);
-		return newPeer;
+		return bootstrap;
 	}
 
 	public Peer updatePeer(Peer p) {

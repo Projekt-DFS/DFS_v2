@@ -20,8 +20,6 @@ import java.util.LinkedList;
 import javax.imageio.ImageIO;
 
 
-
-
 /**
  * Main Class
  * Starts the Bootstrap Server
