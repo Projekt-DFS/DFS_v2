@@ -27,7 +27,9 @@ import main.java.de.htwsaar.dfs.utils.RestUtils;
 public class ImageService {
 	
 	Peer peer = StartPeer.peer;
-	Bootstrap bootstrap = new Bootstrap();
+	
+	//Dies muss weg !!!
+	private Bootstrap bootstrap = new Bootstrap();
 	//URI for Image
 	private String baseUri = "http://" + peer.getIp_adresse()+ ":" + Peer.port +"/p2p/v1/";
 	
@@ -97,13 +99,13 @@ public class ImageService {
 	}
 	
 	public void deleteImage(String username, String imageName) {
-		 bootstrap.deleteImageContainer(username, imageName);
+		 peer.deleteImageContainer(username, imageName);
 		
 	}
 
 	public Metadata getMetadata(String username, String imageName) 
 			throws FileNotFoundException, ClassNotFoundException, IOException {
-		ImageContainer ic = bootstrap.loadImageContainer(username, imageName);
+		ImageContainer ic = peer.loadImageContainer(username, imageName);
 		Metadata metadata = new Metadata(ic.getUsername(), ic.getDate(), ic.getLocation(), ic.getTagList());
 		return metadata;
 	}
@@ -116,7 +118,7 @@ public class ImageService {
 			m = metadata.getLocation();
 		if(metadata.getTagList() != null)
 			t= metadata.getTagList();
-		bootstrap.editMeta(username, imageName, m, t);
+		peer.editMeta(username, imageName, m, t);
 		return metadata;
 	}
 

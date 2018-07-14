@@ -1,6 +1,5 @@
 package main.java.de.htwsaar.dfs.bootstrap.resource;
 
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class PeerResource {
 	private PeerService ps = new PeerService();
 	
 	/**
-	 * This method returns all neighbors of a peer
+	 * This method returns all neighbors of the peer
 	 * @return
 	 */
 	@GET
@@ -44,7 +43,7 @@ public class PeerResource {
 	}
 	
 	/**
-	 * This method allows to add a new peer in the neigbor list of a peer
+	 * This method allows to add a new peer in the neighbor list of the peer
 	 * @param peer
 	 * @return
 	 */
@@ -56,21 +55,6 @@ public class PeerResource {
 		ps.addPeer(peer);
 		return peer;
 	}
-	
-	/**
-	 * This method allows to update a peer 
-	 * @param peer
-	 * @return
-	 */
-	@PUT
-	@Path("/update")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON )
-	public Peer updatePeer(Peer peer) {
-		ps.updatePeer(peer);
-		return peer;
-	}
-
 
 	/**
 	 * This method returns a special peer from the neighbors 
@@ -78,7 +62,7 @@ public class PeerResource {
 	 * @return
 	 */
 	@GET
-	@Path("/peers/{peerId}")
+	@Path("/neighbors/{neighborId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Peer getPeer(@PathParam("peerId") int pid){
 		return ps.getPeer(pid);
@@ -93,7 +77,6 @@ public class PeerResource {
 	@DELETE
 	@Path("/peers/{peerId}")
 	@Produces(MediaType.TEXT_PLAIN)
-	//kommt später 
 	public String deletePeer(@PathParam("peerId") int pid){
 		 return ps.deletePeer(pid);
 	}
@@ -106,14 +89,12 @@ public class PeerResource {
 	@GET
 	@Path("/ownzone")
 	@Produces(MediaType.APPLICATION_JSON)
-	//unmoglich
 	public Zone getOwnZone(){
 		return ps.getOwnZone();
 	}
 	
 	/**
 	 * this method allows to update the own zone of the peer
-	 * @param pid
 	 * @param zone
 	 * @return
 	 */
@@ -121,25 +102,50 @@ public class PeerResource {
 	@Path("/ownzone")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON )
-	//unmoeglich
 	public Zone updateOwnZone( Zone zone) {
 		ps.updateOwnZone( zone);
 		return zone;
 	}
 	
+	/**
+	 * This method returns the Image resource of the peer.
+	 * It Allows clients to read, update and delete Images that are save in the peer
+	 * @return
+	 */
 	@GET
-	@Path("/{peerId}/images")
+	@Path("/images")
 	@Produces(MediaType.APPLICATION_JSON)
-	//unmoglich
 	public ImageResource getImageResouce(){
 		return new ImageResource();
 	}
 	
+
+	/**
+	 * This method allows to update the peer . 
+	 * The peer will take the Value of the parameter peer
+	 * @param peer
+	 * @return
+	 */
+	@PUT
+	@Path("/update")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON )
+	public Peer updatePeer(Peer peer) {
+		ps.updatePeer(peer);
+		return peer;
+	}
+
+	/**
+	 * This method gives another peer a zone. 
+	 * @param peer: this Peer only have an IP adresse
+	 * @return a Peer with his new Zone 
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
 	@POST
 	@Path("/createPeer")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	//unmoglich
 	public MyPeer createPeer(Peer peer) throws ClientProtocolException, IOException{
 		MyPeer nP= new MyPeer(ps.createPeer(peer.getIp_adresse()));
 		System.out.println("new Peer successfully created :" + nP);

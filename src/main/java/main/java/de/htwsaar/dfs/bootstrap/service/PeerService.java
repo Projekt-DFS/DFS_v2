@@ -1,7 +1,6 @@
 package main.java.de.htwsaar.dfs.bootstrap.service;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
@@ -39,8 +38,10 @@ public class PeerService {
 	}
 
 	public Peer updatePeer(Peer p) {
-		bootstrap.setOwnZone(p.getOwnZone());
-		bootstrap.setRoutingTable(p.getRoutingTable());
+		if( p.getOwnZone() != null)
+			bootstrap.setOwnZone(p.getOwnZone());
+		if(p.getRoutingTable().size() !=0)
+			bootstrap.setRoutingTable(p.getRoutingTable());
 		return bootstrap;
 	}
 
@@ -57,7 +58,8 @@ public class PeerService {
 	}
 
 	public Zone updateOwnZone(Zone zone) {
-		bootstrap.setOwnZone(zone);
+		if(zone != null)
+			bootstrap.setOwnZone(zone);
 		return zone;
 	}
 

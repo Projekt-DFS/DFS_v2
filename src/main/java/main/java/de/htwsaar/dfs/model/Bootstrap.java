@@ -14,6 +14,14 @@ import java.io.ObjectOutputStream;
 import java.net.UnknownHostException;
 import java.util.*;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -313,28 +321,27 @@ public class Bootstrap extends Peer {
 	}
 	
 	private void forwardMessage(String zielIpAdress, String username, ImageContainer ic) throws ClientProtocolException, IOException {
-		final String bootstrapURL ="http://" + zielIpAdress + ":4434/bootstrap/v1/images/"+username;
 		
-		Image post =  new Image(ic.getImageName(), new Metadata(), RestUtils.encodeToString(ic.getImage(), ".jpg"), null);
-	    System.out.println("IPadresse dieses Rechners : "+post);
-
-	    HttpClient httpClient = HttpClientBuilder.create().build();
-	    HttpPost httpost = new HttpPost(bootstrapURL);
-	    httpost.setEntity(new StringEntity("{\"filters\":true}"));
-	    httpost.setHeader("Accept", "application/json");
-	    httpost.setHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
-	    HttpResponse response = httpClient.execute(httpost);
-	    
-	    /*     
-	    HttpClient httpClient = HttpClientBuilder.create().build();
-	    HttpPost request = new HttpPost(bootstrapURL);
-	    request.addHeader("content-type", "application/json");
-	    request.setEntity(entity);
-	    
-	    HttpResponse response = httpClient.execute(request);
-	    */
-	    System.out.println("New Peer tries to join he nework.......");
+		if ( this.getIP().equals(zielIpAdress))
+			saveImageContainer(ic);
 		
+		else {
+			final String url ="http://" + zielIpAdress + ":4434/p2p/v1/images/"+username;
+			Image image =  new Image(ic.getImageName()
+					, new Metadata(ic.getUsername(), ic.getDate(), ic.getLocation(), ic.getTagList())
+					, RestUtils.encodeToString(ic.getImage(), ".jpg"), null);
+		   
+			Client client = ClientBuilder.newClient();
+			WebTarget webTarget = client.target(url);
+			Invocation.Builder invocationBuilder 
+			  = webTarget.request(MediaType.APPLICATION_JSON);
+			Response response 
+			  = invocationBuilder
+			  .post(Entity.entity(image, MediaType.APPLICATION_JSON));
+			System.out.print(response.getStatus()+" ==>>");
+			Image responseImage = response.readEntity(Image.class);
+			System.out.println("Image :" + image );
+		}
 	}
 	
 	/**

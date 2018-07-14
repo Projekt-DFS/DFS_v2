@@ -22,7 +22,6 @@ public class PeerService {
 	public PeerService(){	}
 
 	public List<Peer> getAllNeighbors() {
-		System.out.println("test service");
 		return peer.getRoutingTable();
 		//return new ArrayList<>(neighbors.values());
 	}
@@ -38,11 +37,11 @@ public class PeerService {
 		return newPeer;
 	}
 
-	public Peer updatePeer(int pid, Peer peer) {
-		if( !peer.isNeighbour(peer))// !neighbors.containsKey(pid))
-			return null;
-		peer.mergeRoutingTableSinglePeer(peer);
-		//neighbors.replace(pid, peer);
+	public Peer updatePeer( Peer p) {
+		if( p.getOwnZone() != null)
+			peer.setOwnZone(p.getOwnZone());
+		if(p.getRoutingTable().size() !=0)
+			peer.setRoutingTable(p.getRoutingTable());
 		return peer;
 	}
 
@@ -59,7 +58,8 @@ public class PeerService {
 	}
 
 	public Zone updateOwnZone(Zone zone) {
-		peer.setOwnZone(zone);
+		if(zone != null)
+			peer.setOwnZone(zone);
 		return zone;
 	}
 
