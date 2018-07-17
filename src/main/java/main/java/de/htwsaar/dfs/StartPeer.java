@@ -68,6 +68,26 @@ public class StartPeer {
      * @throws ClientProtocolException
      * @throws IOException
      */
+//    private static void joinPeer(String ip, String api) throws ClientProtocolException, IOException {
+//		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
+//		   
+//		peer= new Peer(getIP());
+//		Client client = ClientBuilder.newClient();
+//		WebTarget webTarget = client.target(bootstrapURL);
+//		Invocation.Builder invocationBuilder 
+//		  = webTarget.request(MediaType.APPLICATION_JSON);
+//		Response response 
+//		  = invocationBuilder
+//		  .post(Entity.entity(peer, MediaType.APPLICATION_JSON));
+//		System.out.print(response.getStatus()+" ==>>");
+//		MyPeer newp = response.readEntity(MyPeer.class);
+//		System.out.println("new Peer :" + newp );
+//		if(newp != null) {
+//		//	addMeAsNeighbor(ip, newp, bootstrap);
+//		}
+//		
+////		joinAllNeighbors(str);
+//	}
     private static void joinPeer(String ip, String api) throws ClientProtocolException, IOException {
 		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
 		   
@@ -80,7 +100,7 @@ public class StartPeer {
 		  = invocationBuilder
 		  .post(Entity.entity(peer, MediaType.APPLICATION_JSON));
 		System.out.print(response.getStatus()+" ==>>");
-		MyPeer newp = response.readEntity(MyPeer.class);
+		Peer newp = response.readEntity(Peer.class);
 		System.out.println("new Peer :" + newp );
 		if(newp != null) {
 		//	addMeAsNeighbor(ip, newp, bootstrap);

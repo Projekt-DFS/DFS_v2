@@ -146,8 +146,13 @@ public class PeerResource {
 	@Path("/createPeer")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public MyPeer createPeer(Peer peer) throws ClientProtocolException, IOException{
-		MyPeer nP= new MyPeer(ps.createPeer(peer.getIp_adresse()));
+//	public MyPeer createPeer(Peer peer) throws ClientProtocolException, IOException{
+//		MyPeer nP= new MyPeer(ps.createPeer(peer.getIp_adresse()));
+//		System.out.println("new Peer successfully created :" + nP);
+//		return nP;
+//	}
+	public Peer createPeer(Peer peer) throws ClientProtocolException, IOException{
+		Peer nP= ps.createPeer(peer.getIp_adresse());
 		System.out.println("new Peer successfully created :" + nP);
 		return nP;
 	}

@@ -230,19 +230,21 @@ public class Peer {
 	 * @param newPeer
 	 */
 	public void updateRoutingTables(Peer newPeer) {
-		
+		try{System.out.println("test");
 		newPeer.mergeRoutingTableSinglePeer(this);
-	    
+		System.out.println("testmerge3");
 		// oldPeer becomes neighbour of new Peer
-//	    this.mergeRoutingTableSinglePeer(newPeer);
-//	    System.out.println("upd+"+this);
+	    this.mergeRoutingTableSinglePeer(newPeer);
+	   // System.out.println("upd+"+ this);
 	    
 	    // newPeer gets the routingTable from oldPeer
 	    newPeer.mergeRoutingTableWithList(routingTable);
 	    
-	    System.out.println("newpeer: "+newPeer);
+	    System.out.println("newpeer: " + newPeer );
 //	     newPeer becomes neighbour of oldPeer
-
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	    /**
 	     * each Peer of oldPeer's routingTable gets newPeer as a temporary neighbour
 	     * Peers from oldPeer's old routingTable check if oldPeer and newPeer are neighbours
@@ -270,7 +272,9 @@ public class Peer {
 	 * @param potentialNeighbour
 	 */
 	public void mergeRoutingTableSinglePeer(Peer potentialNeighbour) {
+		System.out.println("testmerge");
 		routingTable.add(potentialNeighbour);
+		System.out.println("testmerge2");
 	}
 	
 	/**
