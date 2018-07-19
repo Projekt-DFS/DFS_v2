@@ -28,7 +28,7 @@ public class ImageContainer implements Serializable {
 	
 	private String imageName;
 	private String path;
-	private Point2D.Double coordinate;
+	private Point coordinate;
 	
 	
 	//Meta-Data
@@ -79,7 +79,7 @@ public class ImageContainer implements Serializable {
 		return imageName;
 	}
 	
-	public Point2D.Double getCoordinate() {
+	public Point getCoordinate() {
 		return coordinate;
 	}
 	

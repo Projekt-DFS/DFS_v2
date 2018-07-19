@@ -211,12 +211,12 @@ public class Peer {
 	public Peer splitZone(Peer newPeer) {
 	    if (ownZone.isSquare()) {
 	        
-	    	newPeer.createZone(new Point2D.Double(ownZone.calculateCentrePoint().getX(), ownZone.getBottomRight().getY()), ownZone.getUpperRight());
-	    	ownZone.setZone(ownZone.getBottomLeft(), new Point2D.Double(ownZone.calculateCentrePoint().getX(), ownZone.getUpperLeft().getY()));    
+	    	newPeer.createZone(new Point(ownZone.calculateCentrePoint().getX(), ownZone.getBottomRight().getY()), ownZone.getUpperRight());
+	    	ownZone.setZone(ownZone.getBottomLeft(), new Point(ownZone.calculateCentrePoint().getX(), ownZone.getUpperLeft().getY()));    
 	    } else {
 	        
-	    	newPeer.createZone(ownZone.getBottomLeft(), (new Point2D.Double(ownZone.getBottomRight().getX(), ownZone.calculateCentrePoint().getY())));
-	        ownZone.setZone(new Point2D.Double(ownZone.getUpperLeft().getX(), ownZone.calculateCentrePoint().getY()), ownZone.getUpperRight());    
+	    	newPeer.createZone(ownZone.getBottomLeft(), (new Point(ownZone.getBottomRight().getX(), ownZone.calculateCentrePoint().getY())));
+	        ownZone.setZone(new Point(ownZone.getUpperLeft().getX(), ownZone.calculateCentrePoint().getY()), ownZone.getUpperRight());    
 	    }
 	    updateRoutingTables(newPeer);
 	    
@@ -230,9 +230,9 @@ public class Peer {
 	 * @param newPeer
 	 */
 	public void updateRoutingTables(Peer newPeer) {
-		try{System.out.println("test");
+		//try{System.out.println("test");
 		newPeer.mergeRoutingTableSinglePeer(this);
-		System.out.println("testmerge3");
+		//System.out.println("testmerge3");
 		// oldPeer becomes neighbour of new Peer
 	    this.mergeRoutingTableSinglePeer(newPeer);
 	   // System.out.println("upd+"+ this);
@@ -240,11 +240,11 @@ public class Peer {
 	    // newPeer gets the routingTable from oldPeer
 	    newPeer.mergeRoutingTableWithList(routingTable);
 	    
-	    System.out.println("newpeer: " + newPeer );
+	    //System.out.println("newpeer: " + newPeer );
 //	     newPeer becomes neighbour of oldPeer
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
+		//}catch (Exception e) {
+		//	e.printStackTrace();
+		//}
 	    /**
 	     * each Peer of oldPeer's routingTable gets newPeer as a temporary neighbour
 	     * Peers from oldPeer's old routingTable check if oldPeer and newPeer are neighbours
@@ -272,9 +272,9 @@ public class Peer {
 	 * @param potentialNeighbour
 	 */
 	public void mergeRoutingTableSinglePeer(Peer potentialNeighbour) {
-		System.out.println("testmerge");
+		//System.out.println("testmerge");
 		routingTable.add(potentialNeighbour);
-		System.out.println("testmerge2");
+		//System.out.println("testmerge2");
 	}
 	
 	/**
@@ -323,7 +323,7 @@ public class Peer {
     * @param bottomLeft Point in the Coordinate system
     * @param upperRight Point in the Coordinate system
     */
-   public void createZone(Point2D.Double bottomLeft, Point2D.Double upperRight) {
+   public void createZone(Point bottomLeft, Point upperRight) {
         ownZone = new Zone();
         ownZone.setZone(bottomLeft, upperRight);
     }
@@ -336,8 +336,8 @@ public class Peer {
      * Generates a random Point in the Coordinate system
      * @return randomPoint in the coordinate space
      */
-    public Point2D.Double generateRandomPoint() {
-    	Point2D.Double randomPoint = new Point2D.Double(Math.random(), Math.random());
+    public Point generateRandomPoint() {
+    	Point randomPoint = new Point(Math.random(), Math.random());
     	return randomPoint;
     }
    
@@ -484,7 +484,7 @@ public class Peer {
 		 * Sends the ImageContainer object
 		 * @param ic
 		 */
-		public void sendImageContainer(ImageContainer ic, Point2D.Double destinationCoordiante) {
+		public void sendImageContainer(ImageContainer ic, Point destinationCoordiante) {
 			//TODO implement
 		}
 	
@@ -509,7 +509,7 @@ public class Peer {
 		 * @param destinationCoordinate
 		 * @return 
 		 */
-			public Peer shortestPath(Point2D.Double destinationCoordinate) {
+			public Peer shortestPath(Point destinationCoordinate) {
 				
 				double smallestSquare = this.getRoutingTable().get(0).getZone().calculateCentrePoint().distanceSq(destinationCoordinate);
 				Peer closestNeighbour = this.getRoutingTable().get(0);
@@ -530,7 +530,7 @@ public class Peer {
 		 * @param destinationCoordinate
 		 * @return
 		 */
-		public boolean lookup(Point2D.Double destinationCoordinate) {
+		public boolean lookup(Point destinationCoordinate) {
 			if (this.getOwnZone().getBottomLeft().getX() <= destinationCoordinate.getX() 
 					&& this.getOwnZone().getUpperRight().getX() >= destinationCoordinate.getX()
 					&& this.getOwnZone().getBottomLeft().getY() <= destinationCoordinate.getY()
@@ -547,7 +547,7 @@ public class Peer {
 		 * @param destinationCoordinate
 		 * @return
 		 */
-		public Peer routing(Point2D.Double destinationCoordinate) {
+		public Peer routing(Point destinationCoordinate) {
 			if (lookup(destinationCoordinate)) {
 				return this;
 			} else {
@@ -562,7 +562,7 @@ public class Peer {
 		 * @param randomPoint
 		 * @return
 		 */
-		public Peer joinRequest(Point2D.Double randomPoint) {
+		public Peer joinRequest(Point randomPoint) {
 			return routing(randomPoint).splitZone(this);
 		}
 	

@@ -30,5 +30,10 @@ public class Point {
 		this.y = y;
 	}
 	
+	public double distanceSq(Point point) {
+		return Math.pow(this.x - point.getX(), 2) + Math.pow(this.y - point.getY(), 2);
+	}
+	
+	//public double distanceSq(x1, x2, y1, y2)
 	
 }

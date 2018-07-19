@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Zone {
-    private Point2D.Double bottomLeft, bottomRight, upperLeft, upperRight, center;
+    private Point bottomLeft, bottomRight, upperLeft, upperRight, center;
     private Interval leftY, rightY, bottomX, upperX;
     
     public Zone() {
@@ -14,7 +14,7 @@ public class Zone {
     
     //Konstruktor
     
-    public Zone(Point2D.Double bottomLeft, Point2D.Double bottomRight, Point2D.Double upperLeft, Point2D.Double upperRight) {
+    public Zone(Point bottomLeft, Point bottomRight, Point upperLeft, Point upperRight) {
     	this.bottomLeft = bottomLeft;
     	this.bottomRight = bottomRight;
     	this.upperLeft = upperLeft;
@@ -23,7 +23,7 @@ public class Zone {
     	calculateAxis(bottomLeft, upperRight);
     }
     
-    public void setZone(Point2D.Double bottomLeft, Point2D.Double upperRight) {
+    public void setZone(Point bottomLeft, Point upperRight) {
         this.bottomLeft = bottomLeft;
         this.upperRight = upperRight;
         
@@ -34,12 +34,12 @@ public class Zone {
     }
     
     public void calculateRest() {
-        upperLeft = new Point2D.Double(bottomLeft.getX(), upperRight.getY());
-        bottomRight = new Point2D.Double(upperRight.getX(), bottomLeft.getY());
+        upperLeft = new Point(bottomLeft.getX(), upperRight.getY());
+        bottomRight = new Point(upperRight.getX(), bottomLeft.getY());
     }
     
-    public Point2D.Double calculateCentrePoint() {
-        return new Point2D.Double(((bottomRight.getX() - bottomLeft.getX()) / 2) + bottomLeft.getX(), ((upperRight.getY() - bottomRight.getY()) / 2) + bottomRight.getY());
+    public Point calculateCentrePoint() {
+        return new Point(((bottomRight.getX() - bottomLeft.getX()) / 2) + bottomLeft.getX(), ((upperRight.getY() - bottomRight.getY()) / 2) + bottomRight.getY());
     }
     
     /**
@@ -59,7 +59,7 @@ public class Zone {
 				           " upperLeft: " + upperLeft + " upperRight: " + upperRight;
 	}
     
-    public void calculateAxis(Point2D.Double bottomLeft, Point2D.Double upperRight) {
+    public void calculateAxis(Point bottomLeft, Point upperRight) {
     	leftY = new Interval();
     	leftY.setInterval(bottomLeft.getY(), upperRight.getY(), bottomLeft.getX());
     	
@@ -91,23 +91,23 @@ public class Zone {
     	return bottomX;
     }
 
-	public void setBottomLeft(Point2D.Double bottomLeft) {
+	public void setBottomLeft(Point bottomLeft) {
 		this.bottomLeft = bottomLeft;
 	}
 
-	public void setBottomRight(Point2D.Double bottomRight) {
+	public void setBottomRight(Point bottomRight) {
 		this.bottomRight = bottomRight;
 	}
 
-	public void setUpperLeft(Point2D.Double upperLeft) {
+	public void setUpperLeft(Point upperLeft) {
 		this.upperLeft = upperLeft;
 	}
 
-	public void setUpperRight(Point2D.Double upperRight) {
+	public void setUpperRight(Point upperRight) {
 		this.upperRight = upperRight;
 	}
 
-	public void setCenter(Point2D.Double center) {
+	public void setCenter(Point center) {
 		this.center = center;
 	}
 
@@ -144,22 +144,22 @@ public class Zone {
         return getHeight() == getWidth();
     }
     
-    public Point2D.Double getUpperLeft() {
+    public Point getUpperLeft() {
         return upperLeft;
     }
     
-    public Point2D.Double getBottomLeft() {
+    public Point getBottomLeft() {
         return bottomLeft;
     }
     
-    public Point2D.Double getBottomRight() {
+    public Point getBottomRight() {
         return bottomRight;
     }
     
-    public Point2D.Double getUpperRight() {
+    public Point getUpperRight() {
         return upperRight;
     }
-    public Point2D.Double getCenter(){
+    public Point getCenter(){
     	return center;
     }
     

@@ -8,6 +8,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 import java.awt.*;
+import main.java.de.htwsaar.dfs.model.Point;
 
 public class StaticFunctions {
 
@@ -16,7 +17,7 @@ public class StaticFunctions {
 	 * @param coordinate the Coordinate to transform 
 	 * @return the String
 	 */
-	public static String pointToString(Point2D.Double coordinate) {
+	public static String pointToString(Point coordinate) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(String.valueOf(coordinate.getX())).append(",").append(String.valueOf(coordinate.getY()));
 		return sb.toString();
@@ -30,17 +31,17 @@ public class StaticFunctions {
 	 * @param userName
 	 * @return coordinatePoint
 	 */
-	public static Point2D.Double hashToPoint(String userName, String imageName) {
+	public static Point hashToPoint(String userName, String imageName) {
 		final double multiplier = 1.0 / 2147483648.0;
 		Double x, y;
 		String xPointHashString, yPointHashString;
-		Point2D.Double coordinatePoint;
+		Point coordinatePoint;
 		
 		xPointHashString = imageName + userName;
 		yPointHashString = userName + imageName;
 		x = Math.abs(xPointHashString.hashCode() * multiplier);
 		y = Math.abs(yPointHashString.hashCode() * multiplier);
-		coordinatePoint = new Point2D.Double(x, y);
+		coordinatePoint = new Point(x, y);
 		
 		return coordinatePoint;
 	}

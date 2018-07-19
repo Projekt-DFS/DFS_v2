@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.Bootstrap;
+import main.java.de.htwsaar.dfs.model.Point;
 
 /**
  * @author Thomas Spanier
@@ -139,13 +140,13 @@ public class PeerTest {
 	 */
 	@Test
 	public void testShortestPath() {
-		assertEquals(true, bs.shortestPath(new Point2D.Double(0.9, 0.2)) == p6);
+		assertEquals(true, bs.shortestPath(new Point(0.9, 0.2)) == p6);
 				
 	}
 	
 	@Test
 	public void testRouting() {
-		assertEquals(true, bs.routing(new Point2D.Double(0.9, 0.2)) == p6);
+		assertEquals(true, bs.routing(new Point(0.9, 0.2)) == p6);
 	}
 	
 	
