@@ -80,11 +80,6 @@ public class StartPeer {
 		System.out.print(response.getStatus()+" ==>>");
 		Peer newp = response.readEntity(Peer.class);
 		System.out.println("new Peer :" + newp );
-		if(newp != null) {
-		//	addMeAsNeighbor(ip, newp, bootstrap);
-		}
-		
-//		joinAllNeighbors(str);
 	}
     
     /**
@@ -109,9 +104,7 @@ public class StartPeer {
 		System.out.println("new Peer :" + newp );
     }
     
-//    private static void joinAllNeighbors(String str) {
-//    	//List<String> neighbors =  str.s
-//    }
+
     /**
      * read the IP address automatically
      * @return
