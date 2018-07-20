@@ -22,7 +22,6 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import main.java.de.htwsaar.dfs.model.Bootstrap;
-import main.java.de.htwsaar.dfs.model.MyPeer;
 import main.java.de.htwsaar.dfs.model.Peer;
 
 /**
@@ -48,7 +47,6 @@ public class StartPeer {
 	
     public static HttpServer startServer() throws UnknownHostException {
         // create a resource config that scans for JAX-RS resources and providers
-        // in de.htwsaar.dfs.iosbootstrap package
         final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.peer.resource");
         rc.register(MultiPartFeature.class);
         rc.register(LoggingFilter.class);
@@ -68,26 +66,6 @@ public class StartPeer {
      * @throws ClientProtocolException
      * @throws IOException
      */
-//    private static void joinPeer(String ip, String api) throws ClientProtocolException, IOException {
-//		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
-//		   
-//		peer= new Peer(getIP());
-//		Client client = ClientBuilder.newClient();
-//		WebTarget webTarget = client.target(bootstrapURL);
-//		Invocation.Builder invocationBuilder 
-//		  = webTarget.request(MediaType.APPLICATION_JSON);
-//		Response response 
-//		  = invocationBuilder
-//		  .post(Entity.entity(peer, MediaType.APPLICATION_JSON));
-//		System.out.print(response.getStatus()+" ==>>");
-//		MyPeer newp = response.readEntity(MyPeer.class);
-//		System.out.println("new Peer :" + newp );
-//		if(newp != null) {
-//		//	addMeAsNeighbor(ip, newp, bootstrap);
-//		}
-//		
-////		joinAllNeighbors(str);
-//	}
     private static void joinPeer(String ip, String api) throws ClientProtocolException, IOException {
 		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
 		   
@@ -127,7 +105,7 @@ public class StartPeer {
 		  = invocationBuilder
 		  .post(Entity.entity(p, MediaType.APPLICATION_JSON));
 		System.out.print(response.getStatus()+" ==>>");
-		MyPeer newp = response.readEntity(MyPeer.class);
+		Peer newp = response.readEntity(Peer.class);
 		System.out.println("new Peer :" + newp );
     }
     

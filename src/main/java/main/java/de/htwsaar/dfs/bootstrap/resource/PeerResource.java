@@ -2,6 +2,7 @@ package main.java.de.htwsaar.dfs.bootstrap.resource;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -15,7 +16,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.http.client.ClientProtocolException;
 
-import main.java.de.htwsaar.dfs.model.MyPeer;
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.Zone;
 import main.java.de.htwsaar.dfs.bootstrap.service.PeerService;
@@ -64,7 +64,7 @@ public class PeerResource {
 	@GET
 	@Path("/neighbors/{neighborId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Peer getPeer(@PathParam("peerId") int pid){
+	public Peer getPeer(@PathParam("neighborId") int pid){
 		return ps.getPeer(pid);
 	}
 	
@@ -75,9 +75,9 @@ public class PeerResource {
 	 */
 	
 	@DELETE
-	@Path("/peers/{peerId}")
+	@Path("/neighbors/{neighborId}")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String deletePeer(@PathParam("peerId") int pid){
+	public String deletePeer(@PathParam("neighborId") int pid){
 		 return ps.deletePeer(pid);
 	}
 	
@@ -146,13 +146,9 @@ public class PeerResource {
 	@Path("/createPeer")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-//	public MyPeer createPeer(Peer peer) throws ClientProtocolException, IOException{
-//		MyPeer nP= new MyPeer(ps.createPeer(peer.getIp_adresse()));
-//		System.out.println("new Peer successfully created :" + nP);
-//		return nP;
-//	}
 	public Peer createPeer(Peer peer) throws ClientProtocolException, IOException{
 		Peer nP= ps.createPeer(peer.getIp_adresse());
+		//nP.setRoutingTable(new CopyOnWriteArrayList<>());
 		System.out.println("new Peer successfully created :" + nP);
 		return nP;
 	}

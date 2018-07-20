@@ -230,21 +230,16 @@ public class Peer {
 	 * @param newPeer
 	 */
 	public void updateRoutingTables(Peer newPeer) {
-		//try{System.out.println("test");
+	
 		newPeer.mergeRoutingTableSinglePeer(this);
-		//System.out.println("testmerge3");
 		// oldPeer becomes neighbour of new Peer
 	    this.mergeRoutingTableSinglePeer(newPeer);
-	   // System.out.println("upd+"+ this);
 	    
 	    // newPeer gets the routingTable from oldPeer
 	    newPeer.mergeRoutingTableWithList(routingTable);
 	    
-	    //System.out.println("newpeer: " + newPeer );
 //	     newPeer becomes neighbour of oldPeer
-		//}catch (Exception e) {
-		//	e.printStackTrace();
-		//}
+	
 	    /**
 	     * each Peer of oldPeer's routingTable gets newPeer as a temporary neighbour
 	     * Peers from oldPeer's old routingTable check if oldPeer and newPeer are neighbours
@@ -576,23 +571,19 @@ public class Peer {
 		public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
 			System.out.println("Bootstrap vor createPeer(): " + this);
 			Peer newPeer = new Peer(newPeerAdress);
-			//newPeer.setIp_adresse(newPeerAdress);
 			if(getRoutingTable().size() == 0) {
 				newPeer = splitZone(newPeer);
 				
 			} else {
 				newPeer.mergeRoutingTableWithList(getRoutingTable());
 				newPeer.joinRequest(newPeer.generateRandomPoint());
-			}
-//			System.out.println("Peer nach createPeer() : " + this);
-//			System.out.println("newPeer nach createPeer() : " + newPeer);
-//			System.out.println("Peer with adress "+ newPeer.getIp_adresse()+" has joined the network");
-			
+			}		
+		    System.out.println("Bootstrap nach create Peer: "+ this);
 			return newPeer;
 		}
 		
 		public String toString() {
-			return "[ ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTable + "]";
+			return "[ ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTableToString()+ "]";
 		}
 	
 	
