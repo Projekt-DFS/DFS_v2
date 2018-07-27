@@ -1,5 +1,7 @@
 package main.java.de.htwsaar.dfs.model;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -8,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement
-public class Point {
+public class Point implements Serializable {
 
 	double x;
 	double y;
