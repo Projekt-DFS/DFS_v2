@@ -71,9 +71,10 @@ public class Peer {
 //		}
 		
 		public Peer (Peer copie) {
-			this.ownZone = copie.ownZone;
-			this.ip_adresse= copie.ip_adresse;
-			this.routingTable = copie.routingTable;
+			Zone zone = copie.getOwnZone();
+			this.ownZone = new Zone(zone.getBottomLeft(), zone.getBottomRight(), zone.getUpperLeft(), zone.getUpperRight());
+			this.ip_adresse = copie.getIp_adresse();
+			this.routingTable = new CopyOnWriteArrayList<>(copie.routingTable);
 		}
 		
 		public Peer () {		
@@ -231,9 +232,12 @@ public class Peer {
 	 */
 	public void updateRoutingTables(Peer newPeer) {
 	
-		newPeer.mergeRoutingTableSinglePeer(this);
+		Peer peer2= new Peer(newPeer);
+		Peer peer3 =new Peer(this);
+		System.out.println(peer2);
+		newPeer.mergeRoutingTableSinglePeer(peer3);
 		// oldPeer becomes neighbour of new Peer
-	    this.mergeRoutingTableSinglePeer(newPeer);
+	    this.mergeRoutingTableSinglePeer(peer2);
 	    
 	    // newPeer gets the routingTable from oldPeer
 	    newPeer.mergeRoutingTableWithList(routingTable);

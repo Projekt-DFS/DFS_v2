@@ -80,6 +80,8 @@ public class StartPeer {
 		System.out.print(response.getStatus()+" ==>>");
 		Peer newp = response.readEntity(Peer.class);
 		System.out.println("new Peer :" + newp );
+		peer = newp;
+		System.out.println("My Peer :" + peer );
 	}
     
     /**
