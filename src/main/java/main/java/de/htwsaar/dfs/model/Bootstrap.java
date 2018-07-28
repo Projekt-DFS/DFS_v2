@@ -331,8 +331,10 @@ public class Bootstrap extends Peer {
 	 */
 	private void forwardCreateImage(String zielIpAdress, String username, ImageContainer ic) throws ClientProtocolException, IOException {
 		
-		if ( this.getIP().equals(zielIpAdress))
+		if ( this.getIP().equals(zielIpAdress)) {
 			saveImageContainer(ic);
+			System.out.println("New Image successfully added!");
+		}
 		
 		else {
 			final String url ="http://" + zielIpAdress + ":4434/p2p/v1/images/"+username;

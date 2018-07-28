@@ -10,17 +10,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.imageio.ImageIO;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-
 import java.net.InetAddress;
 
 import java.net.UnknownHostException;
@@ -146,64 +141,6 @@ public class Peer {
 	    	return routingTable;
 	    }
 		
-		
-		/**
-		 * @author Mario Anklam 26.06.18
-		 * Routing-algorithmus
-		 * @param x Koordinate des gesuchten Punktes
-		 * @param y Koordinate des gesuchten Punktes
-		 * @return IP-Adresse vom zonen-verantwortlichen Peer
-		 */
-		public  String checkZone (double x, double y) {
-			
-				
-				String zielPeer_IP_Adress ="";
-				String webContextPath="routing"; //-->> du kannst das hier sparen
-				String baseUrl = ""; //-->> Wenn es kein nachbarn gibt am besten nutzt du 
-				// diesen Pfad zum testen. Sonnst hast du ein leeres URI das kann nicht funktionieren
-				//"http://" + getIP() + ":"+ getPort()+ "/iosbootstrap/v1" + "/peers/" + 1;
-				double smalest_square=0d;
-				
-				double tmp_square;
-				tmp_square = ownZone.distanz(ownZone.getCenter().getX(), ownZone.getCenter().getY(), x, y);
-			
-			
-				if(x >= ownZone.getBottomLeft().getX() && x <= ownZone.getBottomRight().getX() && y >= ownZone.getBottomRight().getY() && y <= ownZone.getUpperRight().getY()) {
-				 return this.getIP();
-				}
-				else
-				{
-					for(int i = 0; i < routingTable.size(); i++) {
-					//for(Map.Entry<Long, Zone> entry : routingTable.entrySet()) {
-						smalest_square = ownZone.distanz(routingTable.get(i).getZone().getCenter().getX(), routingTable.get(i).getZone().getCenter().getY(), x, y);
-					//	smalest_square = ownZone.distanz(entry.getValue().getCenter().getX(), entry.getValue().getCenter().getY(), x, y);
-						if(smalest_square < tmp_square) {
-							tmp_square = smalest_square;
-							baseUrl = "http://"+ routingTable.get(i).getIP() + ":"+routingTable.get(i).getPort()+ "/iosbootstrap/v1" + "/peers/" + i;
-							//baseUrl ="http://"+ longToIp(entry.getKey())+":4434/start/";
-						     // String baseUrl        = "http://"+ip_adresse+":"+port;
-						}
-					}
-
-					      Client c = ClientBuilder.newClient();
-					      WebTarget  target = c.target( baseUrl );
-					      //---> So bekommst du das Peer Objekt
-					      Peer zielPeer = target.request().get().readEntity(Peer.class);
-					      zielPeer_IP_Adress = zielPeer.getIp_adresse();
-					      System.out.println(zielPeer_IP_Adress);
-//					      zielPeer_IP_Adress = (target.path(webContextPath).queryParam("x",x).queryParam("y", y).request( MediaType.TEXT_PLAIN ).get( String.class ));
-//					      //System.out.println( target.path( webContextPath ));
-			
-					}
-				
-				return zielPeer_IP_Adress;
-}
-		
-		
-		
-		
-		
-	
 	
 	/**
 	 * Splits the Peer's Zone and transfers one half to the new Peer
