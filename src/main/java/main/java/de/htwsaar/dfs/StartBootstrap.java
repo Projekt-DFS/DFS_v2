@@ -72,13 +72,7 @@ public class StartBootstrap {
 	      }
 	      
 	    } 
-	    System.out.println(bootstrap.getAllUsers());
-	      try {
-			System.out.println(bootstrap.getPaths("user2"));
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	   
 	}
 
     
