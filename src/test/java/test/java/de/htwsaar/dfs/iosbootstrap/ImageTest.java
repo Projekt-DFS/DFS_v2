@@ -44,7 +44,7 @@ public class ImageTest {
 		img = ImageIO.read(new File("twins.jpg"));
 		photographer = "Thomas";
 		tagList.add("babys");
-		bt.createImage(img, Bootstrap.getUser("imageTestUser1").getName(), "img_001", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("imageTestUser1").getName(), "twins.jpg", photographer, date, tagList);
 		
 		
 		img = ImageIO.read(new File("Classdiagram.jpg"));
@@ -53,7 +53,7 @@ public class ImageTest {
 		tagList.add("UML");
 		tagList.add("software");
 		tagList.add("diagram");
-		bt.createImage(img, Bootstrap.getUser("imageTestUser2").getName(), "img_001", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("imageTestUser2").getName(), "Classdiagram.jpg", photographer, date, tagList);
 		
 		
 		
@@ -63,7 +63,7 @@ public class ImageTest {
 		tagList.removeIf(s -> true);
 		tagList.add("Kaufbelege");
 		tagList.add("money");
-		bt.createImage(img, Bootstrap.getUser("imageTestUser1").getName(), "img_002", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("imageTestUser1").getName(), "coins.jpg", photographer, date, tagList);
 		
 		
 		
@@ -77,9 +77,9 @@ public class ImageTest {
 		bt.deleteUser("imageTestUser2");
 	}
 
+	
 	@Test
 	public void testGetImageContainers() {
-		//fail("Not yet implemented");
 		try {
 			ArrayList<ImageContainer> ics = bt.getAllImageContainers("imageTestUser2");
 			assertEquals(1, ics.size());
@@ -97,7 +97,7 @@ public class ImageTest {
 	
 	@Test
 	public void testDeleteImage() {
-		bt.deleteImage("imageTestUser1", "img_001");
+		bt.deleteImage("imageTestUser1", "twins.jpg");
 		ArrayList<ImageContainer> ics;
 		try {
 			ics = bt.getAllImageContainers("imageTestUser1");
@@ -111,11 +111,24 @@ public class ImageTest {
 	}
 	
 	@Test
-	public void test() {
+	public void testGetThumbnail() {
 		try {
-			ImageContainer ic = bt.loadImageContainer("imageTestUser1", "img_001");
-			System.out.println(ic.getThumbnailPath());
+			ImageContainer ic = bt.loadImageContainer("imageTestUser1", "coins.jpg");
+			assertEquals("images/imageTestUser1/coins_thumbnail.jpg", ic.getThumbnailPath());
 			
+			
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	@Test
+	public void testGetPath() {
+		try {
+			ImageContainer ic = bt.loadImageContainer("imageTestUser1", "coins.jpg");
+			assertEquals("images/imageTestUser1/coins", ic.getPath());
 			
 			
 		} catch (ClassNotFoundException | IOException e) {

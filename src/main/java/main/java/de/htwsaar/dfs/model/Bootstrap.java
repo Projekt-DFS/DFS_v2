@@ -308,7 +308,7 @@ public class Bootstrap extends Peer {
 		
 		try {
 			//forwardMessage(routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse , username,ic);
-			System.out.println(routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse);
+			//System.out.println(routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse);
 			routing(StaticFunctions.hashToPoint(username, imageName)).saveImageContainer(ic);
 			exportUserList();							//Updates the UserList, incl Link to new Image
 		} catch (IOException e) {
@@ -348,7 +348,6 @@ public class Bootstrap extends Peer {
 	 * @param imageName
 	 * @return Message, if image is deleted, or not
 	 */
-	
 	public String deleteImage(String username, String imageName) {
 		User user = getUser(username);
 		try {

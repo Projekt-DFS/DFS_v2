@@ -28,6 +28,7 @@ public class ImageContainer implements Serializable {
 	
 	private String imageName;
 	private String path;
+	private String ending;
 	private Point coordinate;
 	
 	
@@ -84,13 +85,12 @@ public class ImageContainer implements Serializable {
 	}
 	
 	public String getPath() {
-		//TODO
 		return path;
 	}
 	
 	public String getThumbnailPath() {
 		//TODO
-		return path + "_thumbnail";
+		return path + "_thumbnail" + ending;
 	}
 	
 	// get-methods meta
@@ -142,11 +142,19 @@ public class ImageContainer implements Serializable {
 	}
 	
 	public void setPath() {
+		StringBuffer imageNameWithoutEnding = new StringBuffer();
+		String[] nameArray =  imageName.split("[.]");
+		
+		imageNameWithoutEnding.append(nameArray[0]);
+		for(int i=1; i < nameArray.length - 2; i++) {
+			imageNameWithoutEnding.append("." + nameArray[i]);
+		}
+		
 		StringBuffer fileName = new StringBuffer();
 		fileName.append("images/").append(username).append("/")
-		.append(imageName);
+		.append(imageNameWithoutEnding.toString());
 		
-		
+		this.ending = "." + nameArray[nameArray.length - 1];
 		this.path = fileName.toString();
 	}
 	
@@ -238,6 +246,20 @@ public class ImageContainer implements Serializable {
 		private void createThumbnail(BufferedImage img) {
 			Image temp = img.getScaledInstance(img.getWidth() / 4, img.getHeight() / 4, BufferedImage.SCALE_SMOOTH);
 			thumbnail = StaticFunctions.toBufferedImage(temp);
+		}
+
+
+
+
+		public String getEnding() {
+			return ending;
+		}
+
+
+
+
+		public void setEnding(String ending) {
+			this.ending = ending;
 		}
 	
 	

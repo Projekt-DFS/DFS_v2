@@ -390,11 +390,11 @@ public class Peer {
 			out.close();
 			
 			//Save image
-			File outputFile = new File(ic.getPath() + ".jpg");
+			File outputFile = new File(ic.getPath() + ic.getEnding());
 			ImageIO.write(ic.getImage(), "jpg", outputFile);
 			
 			//Save thumbnail
-			outputFile = new File(ic.getPath() + "_thumbnail.jpg");
+			outputFile = new File(ic.getPath() + "_thumbnail" + ic.getEnding());
 			ImageIO.write(ic.getThumbnail(), "jpg", outputFile);	
 		}
 		
@@ -411,11 +411,24 @@ public class Peer {
 			//Point2D.Double coordinate = StaticFunctions.hashToPoint(username, imageName);
 			
 			//Get location
+			
+			
+			StringBuffer imageNameWithoutEnding = new StringBuffer();
+			String[] nameArray =  imageName.split("[.]");
+			
+			imageNameWithoutEnding.append(nameArray[0]);
+			for(int i=1; i < nameArray.length - 2; i++) {
+				imageNameWithoutEnding.append("." + nameArray[i]);
+			}
+			
+			
+			
 			StringBuffer fileName = new StringBuffer();
 			fileName.append("images/").append(username).append("/")
-					.append(imageName);
+					.append(imageNameWithoutEnding.toString());
+			
 			//Load image
-			File inputFile = new File(fileName.toString() + ".jpg");
+			File inputFile = new File(fileName.toString() + "." + nameArray[nameArray.length-1]);
 			BufferedImage img = ImageIO.read(inputFile);
 			
 			//Load imageContainer and set image and thumbnail 
@@ -435,15 +448,24 @@ public class Peer {
 			//TODO routing
 			//Point2D.Double coordinate = StaticFunctions.hashToPoint(username, imageName);
 			
+			StringBuffer imageNameWithoutEnding = new StringBuffer();
+			String[] nameArray =  imageName.split("[.]");
+			
+			imageNameWithoutEnding.append(nameArray[0]);
+			for(int i=1; i < nameArray.length - 2; i++) {
+				imageNameWithoutEnding.append("." + nameArray[i]);
+			}
+			
+			
 			//Get location
 			StringBuffer fileName = new StringBuffer();
 			fileName.append("images/").append(username).append("/")
-					.append(imageName);
+					.append(imageNameWithoutEnding);
 			//Load image
-			File inputFile = new File(fileName.toString() + ".jpg");
-			System.out.println(inputFile.delete());
+			File inputFile = new File(fileName.toString() + "." + nameArray[nameArray.length-1]);
+			inputFile.delete();
 			
-			inputFile = new File(fileName.toString() + "_thumbnail.jpg");
+			inputFile = new File(fileName.toString() + "_thumbnail." + nameArray[nameArray.length-1]);
 			inputFile.delete();
 			
 			inputFile = new File(fileName.toString() + ".data");
