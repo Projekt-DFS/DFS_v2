@@ -307,9 +307,9 @@ public class Bootstrap extends Peer {
 		user.insertIntoImageList(imageName);
 		
 		try {
-			//forwardMessage(routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse , username,ic);
-			//System.out.println(routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse);
-			routing(StaticFunctions.hashToPoint(username, imageName)).saveImageContainer(ic);
+			forwardMessage(routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse , username,ic);
+			System.out.println("Destination peer ist : " + routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse);
+			//routing(StaticFunctions.hashToPoint(username, imageName)).saveImageContainer(ic);
 			exportUserList();							//Updates the UserList, incl Link to new Image
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -318,7 +318,7 @@ public class Bootstrap extends Peer {
 		
 	}
 	
-	
+
 	private void forwardMessage(String zielIpAdress, String username, ImageContainer ic) throws ClientProtocolException, IOException {
 		
 		if ( this.getIP().equals(zielIpAdress))
@@ -339,7 +339,7 @@ public class Bootstrap extends Peer {
 			  .post(Entity.entity(image, MediaType.APPLICATION_JSON));
 			System.out.print(response.getStatus()+" ==>>");
 			Image responseImage = response.readEntity(Image.class);
-			System.out.println("Image :" + image );
+			System.out.println("Image :" + responseImage );
 		}
 	}
 	

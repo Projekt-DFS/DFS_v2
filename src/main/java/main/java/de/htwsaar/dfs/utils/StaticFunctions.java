@@ -43,6 +43,7 @@ public class StaticFunctions {
 		y = Math.abs(yPointHashString.hashCode() * multiplier);
 		coordinatePoint = new Point(x, y);
 		
+		System.out.println("Das Bild "+ imageName + "Hat die Koordinaten: "+ coordinatePoint);
 		return coordinatePoint;
 	}
 	

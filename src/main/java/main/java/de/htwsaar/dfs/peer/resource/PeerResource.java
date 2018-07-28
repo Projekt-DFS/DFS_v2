@@ -33,6 +33,16 @@ public class PeerResource {
 	private PeerService ps = new PeerService();
 	
 	/**
+	 * This method returns all informations about the peer
+	 * @return
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Peer getPeer(){
+		return ps.getPeer();
+	}
+	
+	/**
 	 * This method returns all neighbors of the peer
 	 * @return
 	 */

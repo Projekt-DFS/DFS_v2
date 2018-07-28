@@ -21,6 +21,11 @@ public class PeerService {
 	
 	public PeerService(){}
 
+
+	public Peer getPeer() {
+		return bootstrap;
+	} 
+	
 	public List<Peer> getAllNeighbors() {
 		return bootstrap.getRoutingTable();
 		//return new ArrayList<>(neighbors.values());
