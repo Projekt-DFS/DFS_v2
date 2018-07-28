@@ -44,12 +44,7 @@ public class ImageService {
 		List<Image> result = new ArrayList<>();
 		ArrayList <ImageContainer> list = bootstrap.getAllImageContainers(username);
 		for( ImageContainer ic : list) {
-			Image img = new Image();
-			img.setImageName(ic.getImageName());
-			img.setThumbnail(baseUri + ic.getThumbnailPath() + "/download");
-			img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
-			img.setImageSource(baseUri + ic.getPath() + ic.getEnding() + "/download");
-			result.add(img);
+			result.add(convertIcToImg(ic, username));
 		}
 		return result; 
 	}
@@ -71,12 +66,7 @@ public class ImageService {
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
-		Image img = new Image( ic.getImageName().toString(), 
-				(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList())),
-				baseUri + ic.getPath()+ ".jpg/download", 
-				baseUri + ic.getThumbnailPath()+ ".jpg/download");
-		
-		return img;
+		return convertIcToImg(ic, username);
 	}
 	
 	public Image addImage(String username, Image image) {
@@ -86,7 +76,7 @@ public class ImageService {
 		bootstrap.createImage(RestUtils.decodeToImage(image.getImageSource()),
 				username, image.getImageName(), image.getMetaData().getLocation(),new Date(),
 				image.getMetaData().getTagList());
-		return image;
+		return getImage(username, image.getImageName());
 	}
 	
 	public Image updateImage(String username, String imageName, Image image) {
@@ -102,8 +92,10 @@ public class ImageService {
 	public Metadata getMetadata(String username, String imageName) 
 			throws FileNotFoundException, ClassNotFoundException, IOException {
 		ImageContainer ic = bootstrap.loadImageContainer(username, imageName);
-		Metadata metadata = new Metadata(ic.getUsername(), ic.getDate(), ic.getLocation(), ic.getTagList());
-		return metadata;
+		
+		return new Metadata(ic.getUsername()
+				, ic.getDate(), ic.getLocation()
+				, ic.getTagList());
 	}
 
 	public Metadata updateMetadata(String username, String imageName, Metadata metadata) 
@@ -142,5 +134,20 @@ public class ImageService {
 		return img;
 	}
 
+	/**
+	 * 
+	 * This method convert an ImageContainer to Image
+	 * @param ic
+	 * @param username
+	 * @return
+	 */
+	private Image convertIcToImg(ImageContainer ic , String username) {
+		Image img = new Image();
+		img.setImageName(ic.getImageName());
+		img.setThumbnail(baseUri + ic.getThumbnailPath() + "/download");
+		img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
+		img.setImageSource(baseUri + ic.getPath() + ic.getEnding() + "/download");
+		return img;
+	}
 	
 }
