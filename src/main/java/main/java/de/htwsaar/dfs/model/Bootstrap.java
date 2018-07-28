@@ -307,8 +307,9 @@ public class Bootstrap extends Peer {
 		user.insertIntoImageList(imageName);
 		
 		try {
-			forwardMessage(routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse , username,ic);
-			System.out.println("Destination peer ist : " + routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse);
+			String zielIpAdress = routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse ;
+			forwardCreateImage(zielIpAdress, username,ic);
+			System.out.println("Destination peer ist : " + zielIpAdress);
 			//routing(StaticFunctions.hashToPoint(username, imageName)).saveImageContainer(ic);
 			exportUserList();							//Updates the UserList, incl Link to new Image
 		} catch (IOException e) {
@@ -319,7 +320,15 @@ public class Bootstrap extends Peer {
 	}
 	
 
-	private void forwardMessage(String zielIpAdress, String username, ImageContainer ic) throws ClientProtocolException, IOException {
+	/**
+	 * This method forward the createImage Request to another peer
+	 * @param zielIpAdress
+	 * @param username
+	 * @param ic
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	private void forwardCreateImage(String zielIpAdress, String username, ImageContainer ic) throws ClientProtocolException, IOException {
 		
 		if ( this.getIP().equals(zielIpAdress))
 			saveImageContainer(ic);
@@ -328,7 +337,7 @@ public class Bootstrap extends Peer {
 			final String url ="http://" + zielIpAdress + ":4434/p2p/v1/images/"+username;
 			Image image =  new Image(ic.getImageName()
 					, new Metadata(ic.getUsername(), ic.getDate(), ic.getLocation(), ic.getTagList())
-					, RestUtils.encodeToString(ic.getImage(), ".jpg"), null);
+					, RestUtils.encodeToString(ic.getImage(), ic.getEnding()), null);
 		   
 			Client client = ClientBuilder.newClient();
 			WebTarget webTarget = client.target(url);

@@ -34,7 +34,7 @@ public class StartPeer {
 	
 	public static Peer peer = new Peer();
 	public static Bootstrap bt;
-	private static String bootstrapIP = "192.168.1.6";
+	private static String bootstrapIP = "192.168.1.7";
 
 	public StartPeer(String bootstrapIP) {
 		StartPeer.bootstrapIP = bootstrapIP;	
@@ -82,6 +82,7 @@ public class StartPeer {
 		System.out.println("new Peer :" + newp );
 		peer = newp;
 		System.out.println("My Peer :" + peer );
+		
 	}
     
     /**
@@ -104,6 +105,7 @@ public class StartPeer {
 		System.out.print(response.getStatus()+" ==>>");
 		Peer newp = response.readEntity(Peer.class);
 		System.out.println("new Peer :" + newp );
+		peer = newp;
     }
     
 
