@@ -1,17 +1,17 @@
 
 package main.java.de.htwsaar.dfs.model;
 
-import java.awt.geom.Point2D;
 import java.util.Date;
 import java.util.LinkedList;
+
+import java.io.*;
+import java.awt.image.BufferedImage;
+import java.awt.Image;
 
 import main.java.de.htwsaar.dfs.exceptions.EmptyStringException;
 import main.java.de.htwsaar.dfs.model.User;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
-import java.io.*;
-import java.awt.image.BufferedImage;
-import java.awt.Image;
 
 /**
  * @author Thomas Spanier
@@ -236,7 +236,7 @@ public class ImageContainer implements Serializable {
 		 * @param img the original image
 		 */
 		private void createThumbnail(BufferedImage img) {
-			Image temp = img.getScaledInstance(img.getWidth() / 10, img.getHeight() / 10, BufferedImage.SCALE_SMOOTH);
+			Image temp = img.getScaledInstance(img.getWidth() / 4, img.getHeight() / 4, BufferedImage.SCALE_SMOOTH);
 			thumbnail = StaticFunctions.toBufferedImage(temp);
 		}
 	
