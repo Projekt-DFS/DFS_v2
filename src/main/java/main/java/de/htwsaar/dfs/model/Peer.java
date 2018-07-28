@@ -468,6 +468,7 @@ public class Peer {
 			inputFile = new File(fileName.toString() + "_thumbnail." + nameArray[nameArray.length-1]);
 			inputFile.delete();
 			
+			
 			inputFile = new File(fileName.toString() + ".data");
 			inputFile.delete();
 			

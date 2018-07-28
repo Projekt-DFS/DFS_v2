@@ -158,6 +158,7 @@ public class ImageContainer implements Serializable {
 		this.path = fileName.toString();
 	}
 	
+	
 	//set-methods meta
 	public void setLocation(String location) {
 		this.location= location;

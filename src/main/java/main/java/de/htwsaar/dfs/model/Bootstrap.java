@@ -318,6 +318,7 @@ public class Bootstrap extends Peer {
 		
 	}
 	
+	
 	private void forwardMessage(String zielIpAdress, String username, ImageContainer ic) throws ClientProtocolException, IOException {
 		
 		if ( this.getIP().equals(zielIpAdress))

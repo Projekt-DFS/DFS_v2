@@ -110,6 +110,7 @@ public class ImageTest {
 		
 	}
 	
+	
 	@Test
 	public void testGetThumbnail() {
 		try {
