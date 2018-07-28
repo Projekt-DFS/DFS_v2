@@ -95,7 +95,7 @@ public class ImageService {
 	}
 	
 	public void deleteImage(String username, String imageName) {
-		 bootstrap.deleteImageContainer(username, imageName);
+		 bootstrap.deleteImage(username, imageName);
 		
 	}
 
