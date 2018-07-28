@@ -48,7 +48,7 @@ public class ImageService {
 			img.setImageName(ic.getImageName());
 			img.setThumbnail(baseUri + ic.getThumbnailPath() + "/download");
 			img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
-			img.setImageSource(baseUri + ic.getPath()  + "/download");
+			img.setImageSource(baseUri + ic.getPath() + ic.getEnding() + "/download");
 			result.add(img);
 		}
 		return result; 
@@ -73,8 +73,8 @@ public class ImageService {
 		}
 		Image img = new Image( ic.getImageName().toString(), 
 				(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList())),
-				baseUri + ic.getPath()+ "/download", 
-				baseUri + ic.getThumbnailPath()+ "/download");
+				baseUri + ic.getPath()+ ".jpg/download", 
+				baseUri + ic.getThumbnailPath()+ ".jpg/download");
 		
 		return img;
 	}
