@@ -148,7 +148,6 @@ public class PeerResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Peer createPeer(Peer peer) throws ClientProtocolException, IOException{
 		Peer nP= ps.createPeer(peer.getIp_adresse());
-		//nP.setRoutingTable(new CopyOnWriteArrayList<>());
 		System.out.println("new Peer successfully created :" + nP);
 		return nP;
 	}
