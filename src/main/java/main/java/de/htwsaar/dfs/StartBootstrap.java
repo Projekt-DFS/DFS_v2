@@ -41,7 +41,7 @@ public class StartBootstrap {
         final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.bootstrap.resource");
         rc.register(MultiPartFeature.class);
         rc.register(LoggingFilter.class);
-        rc.register(SecurityFilter.class);
+        //rc.register(SecurityFilter.class); //TODO temporary deactivated
 
                
         // create and start a new instance of grizzly http server
@@ -72,13 +72,7 @@ public class StartBootstrap {
 	      }
 	      
 	    } 
-	    System.out.println(bootstrap.getAllUsers());
-	      try {
-			System.out.println(bootstrap.getPaths("user2"));
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	   
 	}
 
     
