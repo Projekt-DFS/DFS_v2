@@ -327,6 +327,7 @@ public class Bootstrap extends Peer {
 	 * @param ic
 	 * @throws ClientProtocolException
 	 * @throws IOException
+	 * @author Aude Nana
 	 */
 	private void forwardCreateImage(String zielIpAdress, String username, ImageContainer ic) throws ClientProtocolException, IOException {
 		
