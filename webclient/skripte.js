@@ -37,8 +37,6 @@
 
 	    userName = document.getElementById("userName").value
 		password = document.getElementById("password").value
-        userName = "user2";
-		password = "password";
 
 		updateLinks();
 		updateAuthentication();
