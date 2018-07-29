@@ -84,18 +84,23 @@ public class ImageService {
 	}
 	
 	
-	public Image addImage(String username, Image image) {
+	public Image addImage(String username, Image image) throws IOException {
 		if(image.getMetaData() == null) {
 			image.setMetaData(new Metadata(username));	
 		}
-		bootstrap.createImage(RestUtils.decodeToImage(image.getImageSource()),
-				username, image.getImageName(), image.getMetaData().getLocation(),new Date(),
-				image.getMetaData().getTagList());
+//		bootstrap.createImage(RestUtils.decodeToImage(image.getImageSource()),
+//				username, image.getImageName(), image.getMetaData().getLocation(),new Date(),
+//				image.getMetaData().getTagList());
+		
+		peer.saveImageContainer(new ImageContainer(RestUtils.decodeToImage(image.getImageSource()),
+				username, image.getImageName(), image.getMetaData().getLocation(), new Date(),
+				image.getMetaData().getTagList()
+				));
 		return image;
 	}
 	
 	
-	public Image updateImage(String username, String imageName, Image image) {
+	public Image updateImage(String username, String imageName, Image image) throws IOException {
 		//pruefen ob image existiert
 		return addImage(username, image);
 	}

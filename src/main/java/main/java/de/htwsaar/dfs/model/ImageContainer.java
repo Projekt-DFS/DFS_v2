@@ -177,6 +177,7 @@ public class ImageContainer implements Serializable {
 	}
 	
 	public void setTagList(LinkedList<String> tagList) {
+		this.tagList = new LinkedList<String>();
 		for(String tag : tagList) {
 			this.tagList.add(tag);
 		}

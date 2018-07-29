@@ -52,17 +52,16 @@ public class ImageResource {
 	 * @param username
 	 * @param image
 	 * @return
+	 * @throws IOException 
 	 */
 	//funktioniert
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON )
-	public Response addImage(@PathParam("username") String username, Image image) {
+	public String addImage(@PathParam("username") String username, Image image) throws IOException {
 		System.out.println("AddImage request");
 		Image img = imageService.addImage(username, image);	
-		return Response.status(Status.CREATED)
-					.entity(img)
-					.build();
+		return "succeed";
 		
 	}
 
@@ -127,6 +126,7 @@ public class ImageResource {
 	 * @param imageName
 	 * @param image
 	 * @return
+	 * @throws IOException 
 	 */
 	@PUT
 	@Path("/{imagename}")
@@ -134,7 +134,7 @@ public class ImageResource {
 	@Produces(MediaType.APPLICATION_JSON )
 	//funktioniert zum teil es fehlt noch zu prufen ob das Bild schon existiert
 	public Image updateImage(@PathParam("username") String username, 
-			@PathParam("imageName") String imageName, Image image) {
+			@PathParam("imageName") String imageName, Image image) throws IOException {
 		return imageService.updateImage(username,imageName, image);
 	}
 	
