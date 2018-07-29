@@ -338,20 +338,16 @@ public class Bootstrap extends Peer {
 		
 		else {
 			final String url ="http://" + zielIpAdress + ":4434/p2p/v1/images/"+username;
-			Image image =  new Image(ic.getImageName()
-					, new Metadata(ic.getUsername(), ic.getDate(), ic.getLocation(), ic.getTagList())
-					, RestUtils.encodeToString(ic.getImage(), ic.getEnding()), null);
+			Image image =  new Image(ic.getImageName(), new Metadata(ic.getUsername(), ic.getDate(), ic.getLocation(), ic.getTagList()), RestUtils.encodeToString(ic.getImage(), "jpg"), null);
 		   
 			Client client = ClientBuilder.newClient();
 			WebTarget webTarget = client.target(url);
-			Invocation.Builder invocationBuilder 
-			  = webTarget.request(MediaType.APPLICATION_JSON);
-			Response response 
-			  = invocationBuilder
-			  .post(Entity.entity(image, MediaType.APPLICATION_JSON));
+			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+			Response response = invocationBuilder.post(Entity.entity(image, MediaType.APPLICATION_JSON));
 			System.out.print(response.getStatus()+" ==>>");
 			Image responseImage = response.readEntity(Image.class);
 			System.out.println("Image :" + responseImage );
+			client.close();
 		}
 	}
 	
