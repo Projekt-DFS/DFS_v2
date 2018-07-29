@@ -171,7 +171,6 @@ public class Peer {
 	
 		Peer peer2= new Peer(newPeer);
 		Peer peer3 =new Peer(this);
-		System.out.println(peer2);
 		newPeer.mergeRoutingTableSinglePeer(peer3);
 		// oldPeer becomes neighbour of new Peer
 	    this.mergeRoutingTableSinglePeer(peer2);
