@@ -94,6 +94,7 @@ public class ImageService {
 		return image;
 	}
 	
+	
 	public Image updateImage(String username, String imageName, Image image) {
 		//pruefen ob image existiert
 		return addImage(username, image);

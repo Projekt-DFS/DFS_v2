@@ -76,7 +76,7 @@ public class ImageService {
 		bootstrap.createImage(RestUtils.decodeToImage(image.getImageSource()),
 				username, image.getImageName(), image.getMetaData().getLocation(),new Date(),
 				image.getMetaData().getTagList());
-		return getImage(username, image.getImageName());
+		return image;
 	}
 	
 	public Image updateImage(String username, String imageName, Image image) {

@@ -310,7 +310,7 @@ public class Bootstrap extends Peer {
 			String zielIpAdress = routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse ;
 			forwardCreateImage(zielIpAdress, username,ic);
 			System.out.println("Destination peer ist : " + zielIpAdress);
-			//routing(StaticFunctions.hashToPoint(username, imageName)).saveImageContainer(ic);
+//			routing(StaticFunctions.hashToPoint(username, imageName)).saveImageContainer(ic);
 			exportUserList();							//Updates the UserList, incl Link to new Image
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -345,8 +345,8 @@ public class Bootstrap extends Peer {
 			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 			Response response = invocationBuilder.post(Entity.entity(image, MediaType.APPLICATION_JSON));
 			System.out.print(response.getStatus()+" ==>>");
-			Image responseImage = response.readEntity(Image.class);
-			System.out.println("Image :" + responseImage );
+//			Image responseImage = response.readEntity(Image.class);
+//			System.out.println("Image :" + responseImage );
 			client.close();
 		}
 	}

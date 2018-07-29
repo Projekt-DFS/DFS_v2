@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import java.awt.image.BufferedImage;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -156,7 +157,7 @@ public class Peer {
 	    	newPeer.createZone(ownZone.getBottomLeft(), (new Point(ownZone.getBottomRight().getX(), ownZone.calculateCentrePoint().getY())));
 	        ownZone.setZone(new Point(ownZone.getUpperLeft().getX(), ownZone.calculateCentrePoint().getY()), ownZone.getUpperRight());    
 	    }
-	    updateRoutingTables(newPeer);
+	    newPeer = updateRoutingTables(newPeer);
 	    
 	    return newPeer;
 	}
@@ -167,12 +168,13 @@ public class Peer {
 	 * updates routingTables of all Peers affected
 	 * @param newPeer
 	 */
-	public void updateRoutingTables(Peer newPeer) {
+	public Peer updateRoutingTables(Peer newPeer) {
 	
 		Peer peer2= new Peer(newPeer);
 		Peer peer3 =new Peer(this);
-		newPeer.mergeRoutingTableSinglePeer(peer3);
 		// oldPeer becomes neighbour of new Peer
+		newPeer.mergeRoutingTableSinglePeer(peer3);
+		//newPeer becomes neighbour of oldPeer
 	    this.mergeRoutingTableSinglePeer(peer2);
 	    
 	    // newPeer gets the routingTable from oldPeer
@@ -200,6 +202,7 @@ public class Peer {
 	    
 	    eliminateNeighbours(this);
 	    eliminateNeighbours(newPeer);
+	    return newPeer;
 	}
 	
 	/**
@@ -548,9 +551,7 @@ public class Peer {
 		public String toString() {
 			return "[ ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTableToString()+ "]";
 		}
-	
-	
 		
-	
+
 	
 }
