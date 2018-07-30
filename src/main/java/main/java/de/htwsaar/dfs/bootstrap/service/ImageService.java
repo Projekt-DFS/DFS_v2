@@ -54,10 +54,12 @@ public class ImageService {
 		if(image.getMetaData() == null) {
 			image.setMetaData(new Metadata(username));	
 		}
-		bootstrap.createImage(RestUtils.decodeToImage(image.getImageSource()),
+//		bootstrap.createImage(RestUtils.decodeToImage(image.getImageSource()),
+//				username, image.getImageName(), image.getMetaData().getLocation(),new Date(),
+//				image.getMetaData().getTagList());
+		return bootstrap.createImage(RestUtils.decodeToImage(image.getImageSource()),
 				username, image.getImageName(), image.getMetaData().getLocation(),new Date(),
-				image.getMetaData().getTagList());
-		return image;
+				image.getMetaData().getTagList());//image;
 	}
 	
 	public Image updateImage(String username, String imageName, Image image) {
