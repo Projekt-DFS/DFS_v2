@@ -306,20 +306,18 @@ public class Bootstrap extends Peer {
 		ImageContainer ic = new ImageContainer(img, username, imageName, photographer, date, tagList);
 		user.insertIntoImageList(imageName);
 		
-		Image img1 = null;
+		Image image = null;
 		
 		try {
 			String zielIpAdress = routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse ;
-			img1 = forwardCreateImage(zielIpAdress, username,ic);
+			image = forwardCreateImage(zielIpAdress, username,ic);
 			System.out.println("Destination peer ist : " + zielIpAdress);
 			exportUserList();							//Updates the UserList, incl Link to new Image
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
-		return img1;
-		
+		return image;
 	}
-	
 
 	/**
 	 * This method forward the createImage Request to another peer

@@ -50,8 +50,6 @@ public class StartPeer {
         final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.peer.resource");
         rc.register(MultiPartFeature.class);
         rc.register(LoggingFilter.class);
-        //rc.register(SecurityFilter.class);
-
                
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
