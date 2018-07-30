@@ -9,7 +9,14 @@ import java.util.Base64;
 import javax.imageio.ImageIO;
 
 import main.java.de.htwsaar.dfs.model.Image;
+import main.java.de.htwsaar.dfs.model.ImageContainer;
+import main.java.de.htwsaar.dfs.model.Metadata;
 
+/**
+ * 
+ * @author Aude Nana
+ *
+ */
 public class RestUtils {
 
 	/**
@@ -56,6 +63,22 @@ public class RestUtils {
         return image;
     }
 
+
+	/**
+	 * 
+	 * This method convert an ImageContainer to Image
+	 * @param ic
+	 * @param username
+	 * @return
+	 */
+	public static Image convertIcToImg(String baseUri, ImageContainer ic , String username) {
+		Image img = new Image();
+		img.setImageName(ic.getImageName());
+		img.setThumbnail(baseUri + ic.getThumbnailPath() + "/download");
+		img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
+		img.setImageSource(baseUri + ic.getPath() + ic.getEnding() + "/download");
+		return img;
+	}
 	
 	/**
 	 * This method tests the image's fied 

@@ -34,7 +34,7 @@ public class StartPeer {
 	
 	public static Peer peer = new Peer();
 	public static Bootstrap bt;
-	private static String bootstrapIP = "192.168.0.81";
+	private static String bootstrapIP = "192.168.1.7";
 
 	public StartPeer(String bootstrapIP) {
 		StartPeer.bootstrapIP = bootstrapIP;	
@@ -50,7 +50,7 @@ public class StartPeer {
         final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.peer.resource");
         rc.register(MultiPartFeature.class);
         rc.register(LoggingFilter.class);
-        rc.register(SecurityFilter.class);
+        //rc.register(SecurityFilter.class);
 
                
         // create and start a new instance of grizzly http server

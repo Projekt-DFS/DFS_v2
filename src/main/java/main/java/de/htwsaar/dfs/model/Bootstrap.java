@@ -298,7 +298,7 @@ public class Bootstrap extends Peer {
 	 * @param date the date when the image was shot
 	 * @param tagList a list of tags
 	 */
-	public ImageContainer createImage(BufferedImage img, String username, String imageName, 
+	public Image createImage(BufferedImage img, String username, String imageName, 
 			String photographer, Date date, LinkedList<String> tagList) {
 		
 		User user = getUser(username);
@@ -306,15 +306,17 @@ public class Bootstrap extends Peer {
 		ImageContainer ic = new ImageContainer(img, username, imageName, photographer, date, tagList);
 		user.insertIntoImageList(imageName);
 		
+		Image img1 = null;
+		
 		try {
 			String zielIpAdress = routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse ;
-			forwardCreateImage(zielIpAdress, username,ic);
+			img1 = forwardCreateImage(zielIpAdress, username,ic);
 			System.out.println("Destination peer ist : " + zielIpAdress);
 			exportUserList();							//Updates the UserList, incl Link to new Image
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
-		return ic;
+		return img1;
 		
 	}
 	
@@ -328,26 +330,33 @@ public class Bootstrap extends Peer {
 	 * @throws IOException
 	 * @author Aude Nana
 	 */
-	private void forwardCreateImage(String zielIpAdress, String username, ImageContainer ic) throws ClientProtocolException, IOException {
+	private Image forwardCreateImage(String zielIpAdress, String username, ImageContainer ic) throws ClientProtocolException, IOException {
 		
+		final String SUCCEED = "New Image successfully added!";
+		
+		Image image =  new Image(ic.getImageName(), new Metadata(ic.getUsername(), 
+				ic.getDate(), ic.getLocation(), ic.getTagList()),
+				RestUtils.encodeToString(ic.getImage(), "jpg"), null);
+		   
 		if ( this.getIP().equals(zielIpAdress)) {
 			saveImageContainer(ic);
-			System.out.println("New Image successfully added!");
+			System.out.println(SUCCEED);
 		}
 		
 		else {
 			final String url ="http://" + zielIpAdress + ":4434/p2p/v1/images/"+username;
-			Image image =  new Image(ic.getImageName(), new Metadata(ic.getUsername(), ic.getDate(), ic.getLocation(), ic.getTagList()), RestUtils.encodeToString(ic.getImage(), "jpg"), null);
-		   
+			
 			Client client = ClientBuilder.newClient();
 			WebTarget webTarget = client.target(url);
 			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 			Response response = invocationBuilder.post(Entity.entity(image, MediaType.APPLICATION_JSON));
-			System.out.print(response.getStatus()+" ==>>");
-//			Image responseImage = response.readEntity(Image.class);
-//			System.out.println("Image :" + responseImage );
+			if(response.getStatus()==200) {
+				image = response.readEntity(Image.class);
+				System.out.println(SUCCEED);
+			}
 			client.close();
 		}
+		return image;
 	}
 	
 	/**

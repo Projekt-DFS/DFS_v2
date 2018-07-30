@@ -39,7 +39,7 @@ public class ImageService {
 		List<Image> result = new ArrayList<>();
 		ArrayList <ImageContainer> list = bootstrap.getAllImageContainers(username);
 		for( ImageContainer ic : list) {
-			result.add(convertIcToImg(ic, username));
+			result.add(RestUtils.convertIcToImg(baseUri, ic, username));
 		}
 		return result; 
 	}
@@ -51,7 +51,7 @@ public class ImageService {
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
-		return convertIcToImg(ic, username);
+		return RestUtils.convertIcToImg(baseUri, ic, username);
 	}
 	
 	
@@ -124,20 +124,5 @@ public class ImageService {
 		return img;
 	}
 
-	/**
-	 * 
-	 * This method convert an ImageContainer to Image
-	 * @param ic
-	 * @param username
-	 * @return
-	 */
-	private Image convertIcToImg(ImageContainer ic , String username) {
-		Image img = new Image();
-		img.setImageName(ic.getImageName());
-		img.setThumbnail(baseUri + ic.getThumbnailPath() + "/download");
-		img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
-		img.setImageSource(baseUri + ic.getPath() + ic.getEnding() + "/download");
-		return img;
-	}
 	
 }
