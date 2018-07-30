@@ -310,7 +310,6 @@ public class Bootstrap extends Peer {
 			String zielIpAdress = routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse ;
 			forwardCreateImage(zielIpAdress, username,ic);
 			System.out.println("Destination peer ist : " + zielIpAdress);
-//			routing(StaticFunctions.hashToPoint(username, imageName)).saveImageContainer(ic);
 			exportUserList();							//Updates the UserList, incl Link to new Image
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -434,6 +433,8 @@ public class Bootstrap extends Peer {
 		
 		return;
 	}
+	
+	
 
 }
 

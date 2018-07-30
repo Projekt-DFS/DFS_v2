@@ -30,16 +30,7 @@ public class ImageService {
 	private String baseUri = "http://" + bootstrap.getIP() + ":" + Bootstrap.port +"/bootstrap/v1/";
 	
 	public ImageService(){	}
-	
-	
-	/**
-	 * This Method return a copy of all the images 
-	 * that are actually in the database without metadata
-	 * @return
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 */
-	
+
 	public List<Image> getAllImages( String username) throws ClassNotFoundException, IOException{
 		List<Image> result = new ArrayList<>();
 		ArrayList <ImageContainer> list = bootstrap.getAllImageContainers(username);
@@ -49,16 +40,6 @@ public class ImageService {
 		return result; 
 	}
 
-	
-	/**
-	 * This method returns a special image as object
-	 * @param username
-	 * @param imageName
-	 * @return
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 * @throws FileNotFoundException 
-	 */
 	public Image getImage(String username , String imageName)  {
 		ImageContainer ic = null;
 		try {

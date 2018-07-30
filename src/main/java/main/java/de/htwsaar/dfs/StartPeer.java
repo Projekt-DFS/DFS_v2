@@ -79,34 +79,10 @@ public class StartPeer {
 		  .post(Entity.entity(peer, MediaType.APPLICATION_JSON));
 		System.out.print(response.getStatus()+" ==>>");
 		Peer newp = response.readEntity(Peer.class);
-		System.out.println("new Peer :" + newp );
 		peer = newp;
 		System.out.println("My Peer :" + peer );
 		
 	}
-    
-    /**
-     * Once the peer has become her own zone from to the bootstrap, it will
-     * make another request to the bootstrap to be add as neighbors by the bootstrap too.
-     * @param ip
-     * @param p : the peer that have been created (this peer)
-     * @param api
-     * @throws UnknownHostException
-     */
-    private static void addMeAsNeighbor(String ip, Peer p , String api) throws UnknownHostException {
-    	final String url = "http://" +ip + ":4434/" +api +"/v1/neighbors";
-		Client client = ClientBuilder.newClient();
-		WebTarget webTarget = client.target(url);
-		Invocation.Builder invocationBuilder 
-		  = webTarget.request(MediaType.APPLICATION_JSON);
-		Response response 
-		  = invocationBuilder
-		  .post(Entity.entity(p, MediaType.APPLICATION_JSON));
-		System.out.print(response.getStatus()+" ==>>");
-		Peer newp = response.readEntity(Peer.class);
-		System.out.println("new Peer :" + newp );
-		peer = newp;
-    }
     
 
     /**

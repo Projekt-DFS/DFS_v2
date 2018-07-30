@@ -31,56 +31,27 @@ public class ImageService {
 	//Dies muss weg !!!
 	private Bootstrap bootstrap = new Bootstrap();
 	//URI for Image
-	private String baseUri = "http://" + peer.getIp_adresse()+ ":" + Peer.port +"/p2p/v1/";
+	private String baseUri = "http://" + peer.getIP()+ ":" + Peer.port +"/p2p/v1/";
 	
 	public ImageService(){	}
-	
-	
-	/**
-	 * This Method return a copy of all the images 
-	 * that are actually in the database without metadata
-	 * @return
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 */
 	
 	public List<Image> getAllImages( String username) throws ClassNotFoundException, IOException{
 		List<Image> result = new ArrayList<>();
 		ArrayList <ImageContainer> list = bootstrap.getAllImageContainers(username);
 		for( ImageContainer ic : list) {
-			Image img = new Image();
-			img.setThumbnail(baseUri + ic.getThumbnailPath() + ".jpg/download");
-			img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
-			img.setImageSource(baseUri + ic.getPath()  + ".jpg/download");
-			result.add(img);
+			result.add(convertIcToImg(ic, username));
 		}
 		return result; 
 	}
-	
 
-	
-	/**
-	 * This method returns a special image as object
-	 * @param username
-	 * @param imageName
-	 * @return
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 * @throws FileNotFoundException 
-	 */
 	public Image getImage(String username , String imageName)  {
 		ImageContainer ic = null;
 		try {
-			ic = peer.loadImageContainer(username, imageName);
+			ic = bootstrap.loadImageContainer(username, imageName);
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
-		Image img = new Image( ic.getImageName().toString(), 
-				(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList())),
-				baseUri + ic.getPath()+ ".jpg/download", 
-				baseUri + ic.getThumbnailPath()+ ".jpg/download");
-		
-		return img;
+		return convertIcToImg(ic, username);
 	}
 	
 	
@@ -96,7 +67,7 @@ public class ImageService {
 				username, image.getImageName(), image.getMetaData().getLocation(), new Date(),
 				image.getMetaData().getTagList()
 				));
-		return image;
+		return getImage(username, image.getImageName());
 	}
 	
 	
@@ -153,5 +124,20 @@ public class ImageService {
 		return img;
 	}
 
+	/**
+	 * 
+	 * This method convert an ImageContainer to Image
+	 * @param ic
+	 * @param username
+	 * @return
+	 */
+	private Image convertIcToImg(ImageContainer ic , String username) {
+		Image img = new Image();
+		img.setImageName(ic.getImageName());
+		img.setThumbnail(baseUri + ic.getThumbnailPath() + "/download");
+		img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
+		img.setImageSource(baseUri + ic.getPath() + ic.getEnding() + "/download");
+		return img;
+	}
 	
 }

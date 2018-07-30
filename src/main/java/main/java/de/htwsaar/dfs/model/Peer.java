@@ -17,6 +17,14 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.imageio.ImageIO;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import java.net.InetAddress;
 
 import java.net.UnknownHostException;
@@ -26,6 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.http.client.ClientProtocolException;
 
+import main.java.de.htwsaar.dfs.utils.RestUtils;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 
@@ -551,6 +560,68 @@ public class Peer {
 		public String toString() {
 			return "[ ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTableToString()+ "]";
 		}
+		
+		
+		private ImageContainer getImageContainer(String username, String imageName) 
+				throws ClientProtocolException, IOException, ClassNotFoundException {
+			
+			String zielIpAdress = routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse ;
+			System.out.println("Destination peer ist : " + zielIpAdress);
+			if ( this.getIP().equals(zielIpAdress)) {
+				return loadImageContainer(username, imageName);
+			}
+			else {
+				return forwardRequest( zielIpAdress, username, null , "GET_IMAGE" );
+			
+			}
+		}
+		
+		/**
+		 * This method forward the createImage Request to another peer
+		 * @param zielIpAdress
+		 * @param username
+		 * @param ic
+		 * @throws ClientProtocolException
+		 * @throws IOException
+		 * @author Aude Nana
+		 */
+		private ImageContainer forwardRequest(String zielIpAdress, String username, ImageContainer ic, String request) throws ClientProtocolException, IOException {
+			
+			String url="";
+			Client client = ClientBuilder.newClient();
+			
+			//Only those request are possible
+			final String ADD_IMAGE = "ADD_IMAGE";
+			final String GET_IMAGE = "GET_IMAGE";
+			
+			Image image =  new Image(ic.getImageName(), new Metadata(ic.getUsername(), 
+					ic.getDate(), ic.getLocation(), ic.getTagList()), 
+					RestUtils.encodeToString(ic.getImage(), "jpg"), null);
+		
+			switch (request) {
+			
+				//Routing CreateImage
+				case ADD_IMAGE : 
+						url ="http://" + zielIpAdress + ":4434/p2p/v1/images/"+username;
+						Response responseAdd = client.target(url).
+								request(MediaType.APPLICATION_JSON)
+								.post(Entity.entity(image, MediaType.APPLICATION_JSON));
+						client.close();
+						break;
+					
+					//Routing getImage()
+				case GET_IMAGE :
+						url ="http://" + zielIpAdress + ":4434/p2p/v1/images/"+username+"/"+image.getImageName();
+						Response responseGet = client.target(url).
+								request(MediaType.APPLICATION_JSON)
+								.post(Entity.entity(image, MediaType.APPLICATION_JSON));
+						client.close();
+						return null;
+					
+			}
+			return ic;
+			
+		}		
 		
 
 	

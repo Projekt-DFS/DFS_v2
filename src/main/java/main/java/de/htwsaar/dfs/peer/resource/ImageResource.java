@@ -15,8 +15,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import main.java.de.htwsaar.dfs.model.Image;
 import main.java.de.htwsaar.dfs.model.Metadata;
@@ -58,10 +56,9 @@ public class ImageResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON )
-	public String addImage(@PathParam("username") String username, Image image) throws IOException {
-		System.out.println("AddImage request");
-		Image img = imageService.addImage(username, image);	
-		return "succeed";
+	public Image addImage(@PathParam("username") String username, Image image) throws IOException {
+		System.out.println("AddImage request");	
+		return imageService.addImage(username, image);
 		
 	}
 
