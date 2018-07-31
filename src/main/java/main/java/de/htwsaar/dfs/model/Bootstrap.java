@@ -1,6 +1,5 @@
 package main.java.de.htwsaar.dfs.model;
 
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -22,14 +21,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
 
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.User;
@@ -299,19 +291,19 @@ public class Bootstrap extends Peer {
 	 * @param tagList a list of tags
 	 */
 	public Image createImage(BufferedImage img, String username, String imageName, 
-			String photographer, Date date, LinkedList<String> tagList) {
+			String location, Date date, LinkedList<String> tagList) {
 		
 		User user = getUser(username);
 		
-		ImageContainer ic = new ImageContainer(img, username, imageName, photographer, date, tagList);
+		ImageContainer ic = new ImageContainer(img, username, imageName, location, date, tagList);
 		user.insertIntoImageList(imageName);
 		
 		Image image = null;
 		
 		try {
-			String zielIpAdress = routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse ;
-			image = forwardCreateImage(zielIpAdress, username,ic);
-			System.out.println("Destination peer ist : " + zielIpAdress);
+			String destinationPeerIP = routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse ;
+			image = forwardCreateImage(destinationPeerIP, username,ic);
+			System.out.println("Destination peer is : " + destinationPeerIP);
 			exportUserList();							//Updates the UserList, incl Link to new Image
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -320,29 +312,37 @@ public class Bootstrap extends Peer {
 	}
 
 	/**
-	 * This method forward the createImage Request to another peer
-	 * @param zielIpAdress
+	 * This method forward the createImage Request to another peer 
+	 * @param destinationPeerIP
 	 * @param username
-	 * @param ic
+	 * @param imageContainer
+	 * @return image that has been created
 	 * @throws ClientProtocolException
 	 * @throws IOException
-	 * @author Aude Nana
+	 * @author Aude Nana 28.07.2017
 	 */
-	private Image forwardCreateImage(String zielIpAdress, String username, ImageContainer ic) throws ClientProtocolException, IOException {
+	private Image forwardCreateImage(String destinationPeerIP, String username, ImageContainer imageContainer) throws ClientProtocolException, IOException {
 		
-		final String SUCCEED = "New Image successfully added!";
+		final String SUCCEED = "New image successfully added!";
 		
-		Image image =  new Image(ic.getImageName(), new Metadata(ic.getUsername(), 
-				ic.getDate(), ic.getLocation(), ic.getTagList()),
-				RestUtils.encodeToString(ic.getImage(), "jpg"), null);
-		   
-		if ( this.getIP().equals(zielIpAdress)) {
-			saveImageContainer(ic);
+		//build an Image from imageContainer
+		Image image =  new Image(imageContainer.getImageName(), 
+				new Metadata(imageContainer.getUsername(),
+						imageContainer.getDate(), 
+						imageContainer.getLocation(),
+						imageContainer.getTagList()),
+				RestUtils.encodeToString(imageContainer.getImage(), "jpg"),
+				null);
+		  
+		//if the Peer of destination is the actually peer, save the image here  
+		if ( this.getIP().equals(destinationPeerIP)) {
+			saveImageContainer(imageContainer);
 			System.out.println(SUCCEED);
 		}
 		
+		//if not , make a post request to the peer of destination and save the image there
 		else {
-			final String url ="http://" + zielIpAdress + ":4434/p2p/v1/images/"+username;
+			final String url ="http://" + destinationPeerIP + ":4434/p2p/v1/images/"+username;
 			
 			Client client = ClientBuilder.newClient();
 			WebTarget webTarget = client.target(url);
@@ -429,6 +429,22 @@ public class Bootstrap extends Peer {
 		return ics;
 	}
 	
+	/**
+	 * This method collected all images from a user in differents peers
+	 * @author Aude Nana 30.07.2018
+	 * @param username
+	 * @return
+	 */
+	private ArrayList<Image> getAllImages(String username) {
+		ArrayList<Image> images = new ArrayList<>();
+		images.addAll(getAllImages(username));
+		for ( Peer p : getRoutingTable()) {
+			ArrayList<Image> list = new ArrayList<>();
+			//mageContainers
+			images.addAll( list	);
+		}
+		return images;
+	}
 	
 	/**
 	 * returns the metadata of an image

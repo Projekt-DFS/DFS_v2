@@ -77,7 +77,7 @@ public class ImageService {
 	}
 	
 	public void deleteImage(String username, String imageName) {
-		 peer.deleteImageContainer(username, imageName);
+		 bootstrap.deleteImage(username, imageName);
 		
 	}
 

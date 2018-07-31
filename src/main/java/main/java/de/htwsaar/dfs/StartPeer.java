@@ -21,7 +21,6 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.Peer;
 
 /**
@@ -33,7 +32,6 @@ import main.java.de.htwsaar.dfs.model.Peer;
 public class StartPeer {
 	
 	public static Peer peer = new Peer();
-	public static Bootstrap bt;
 	private static String bootstrapIP = "192.168.1.7";
 
 	public StartPeer(String bootstrapIP) {
@@ -65,9 +63,13 @@ public class StartPeer {
      * @throws IOException
      */
     private static void joinPeer(String ip, String api) throws ClientProtocolException, IOException {
+    	
+    	//every join request commes to the bootstrap first
 		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
-		   
+		
+		//Build a Peer only with IP. The Bootstrap will give him a zone.
 		peer= new Peer(getIP());
+		
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target(bootstrapURL);
 		Invocation.Builder invocationBuilder 
@@ -75,9 +77,9 @@ public class StartPeer {
 		Response response 
 		  = invocationBuilder
 		  .post(Entity.entity(peer, MediaType.APPLICATION_JSON));
-		System.out.print(response.getStatus()+" ==>>");
-		Peer newp = response.readEntity(Peer.class);
-		peer = newp;
+		System.out.println("Response Code : " + response.getStatus());
+		peer = response.readEntity(Peer.class);
+		
 		System.out.println("My Peer :" + peer );
 		
 	}
