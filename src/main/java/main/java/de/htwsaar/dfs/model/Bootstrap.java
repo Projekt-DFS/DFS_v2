@@ -437,12 +437,12 @@ public class Bootstrap extends Peer {
 	 * @return
 	 */
 	public ArrayList<Image> getAllImages(String username) {
+		System.out.println("test");
 		ArrayList<Image> images = new ArrayList<>();
-		images.addAll(getAllImages(username));
 		for ( Peer p : getRoutingTable()) {
 			ArrayList<Image> list = new ArrayList<>();
-			System.out.println("Get Images from : " + p.getIp_adresse());
 			list = forwardGetImages(p.getIp_adresse(), username);
+			System.out.println("Get Images from : " + p.getIp_adresse());
 			images.addAll( list	);
 		}
 		return images;
@@ -468,6 +468,7 @@ public class Bootstrap extends Peer {
 		if(response.getStatus()==200) {
 			results = (ArrayList<Image>) response.readEntity(new GenericType<ArrayList<Image>>() {
 	        });
+			System.out.println(response.toString());
 		}
 		client.close();
 		return results;

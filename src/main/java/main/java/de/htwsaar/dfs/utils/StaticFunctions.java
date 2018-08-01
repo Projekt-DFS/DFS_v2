@@ -1,6 +1,5 @@
 package main.java.de.htwsaar.dfs.utils;
 
-import java.awt.geom.Point2D;
 import java.awt.image.*;
 import java.net.Inet4Address;
 import java.net.InetAddress;

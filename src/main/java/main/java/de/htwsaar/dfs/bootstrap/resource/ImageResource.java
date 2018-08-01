@@ -57,12 +57,9 @@ public class ImageResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON )
-	public Response addImage(@PathParam("username") String username, Image image) {
+	public Image addImage(@PathParam("username") String username, Image image) {
 		System.out.println("AddImage request");
-		Image img = imageService.addImage(username, image);	
-		return Response.status(Status.CREATED)
-					.entity(img)
-					.build();
+		return imageService.addImage(username, image);
 		
 	}
 
