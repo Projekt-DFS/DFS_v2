@@ -37,6 +37,7 @@ public class ImageService {
 		for( ImageContainer ic : list) {
 			result.add(RestUtils.convertIcToImg(baseUri, ic, username));
 		}
+		result.addAll(bootstrap.getAllImages(username));
 		return result; 
 	}
 

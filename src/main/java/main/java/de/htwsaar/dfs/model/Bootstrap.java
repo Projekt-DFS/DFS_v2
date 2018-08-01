@@ -18,6 +18,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -430,20 +431,46 @@ public class Bootstrap extends Peer {
 	}
 	
 	/**
-	 * This method collected all images from a user in differents peers
+	 * This method collected all images from a user in different peers
 	 * @author Aude Nana 30.07.2018
 	 * @param username
 	 * @return
 	 */
-	private ArrayList<Image> getAllImages(String username) {
+	public ArrayList<Image> getAllImages(String username) {
 		ArrayList<Image> images = new ArrayList<>();
 		images.addAll(getAllImages(username));
 		for ( Peer p : getRoutingTable()) {
 			ArrayList<Image> list = new ArrayList<>();
-			//mageContainers
+			System.out.println("Get Images from : " + p.getIp_adresse());
+			list = forwardGetImages(p.getIp_adresse(), username);
 			images.addAll( list	);
 		}
 		return images;
+	}
+	
+	/**
+	 * This method forwarded the get Image request to all neighbors peers
+	 * @author Aude Nana 02.08.2018
+	 * @param neighborIP
+	 * @param username
+	 * @return
+	 */
+	private ArrayList<Image> forwardGetImages(String neighborIP,String username ){
+	
+		ArrayList<Image> results = new ArrayList<>();
+		//make a get request to the neighbor and get the images that are saved there
+		final String url ="http://" + neighborIP + ":4434/p2p/v1/images/"+username;
+					
+		Client client = ClientBuilder.newClient();
+		WebTarget webTarget = client.target(url);
+		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.get();
+		if(response.getStatus()==200) {
+			results = (ArrayList<Image>) response.readEntity(new GenericType<ArrayList<Image>>() {
+	        });
+		}
+		client.close();
+		return results;
 	}
 	
 	/**
