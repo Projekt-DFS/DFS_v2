@@ -488,8 +488,8 @@ public class Peer {
 						}
 					}
 					
-//					return closestNeighbour.routing(destinationCoordinate);
-					return closestNeighbour;
+					return closestNeighbour.routing(destinationCoordinate);
+//					return closestNeighbour;
 				}
 	
 		/**
@@ -517,17 +517,18 @@ public class Peer {
 		 */
 		public Peer routing(Point destinationCoordinate) {
 			// Temporärer Peer zur Zwischenspeicherung
-			Peer tmpPeer = new Peer();
+//			Peer tmpPeer = new Peer();
 			if (lookup(destinationCoordinate)) {
 				return this;
 			} else {
-				tmpPeer = shortestPath(destinationCoordinate);
-				String baseUrl ="http://"+ tmpPeer.getIp_adresse()+":4434/p2p/v1/routing";
-				Client c = ClientBuilder.newClient();
-			    WebTarget  target = c.target( baseUrl );
-			    tmpPeer = target.queryParam("destinationPoint",destinationCoordinate).request( MediaType.APPLICATION_JSON).get( Peer.class );
-				c.close();
-				return tmpPeer;
+				return shortestPath(destinationCoordinate);
+//				tmpPeer = shortestPath(destinationCoordinate);
+//				String baseUrl ="http://"+ tmpPeer.getIp_adresse()+":4434/p2p/v1/routing";
+//				Client c = ClientBuilder.newClient();
+//			    WebTarget  target = c.target( baseUrl );
+//			    tmpPeer = target.queryParam("destinationPoint",destinationCoordinate).request( MediaType.APPLICATION_JSON).get( Peer.class );
+//				c.close();
+//				return tmpPeer;
 			}
 		}
 		
