@@ -460,6 +460,7 @@ public class Peer {
 		 * @throws IOException 
 		 * @throws ClassNotFoundException 
 		 * @throws FileNotFoundException 
+		 * @author Thomas Spanier
 		 */
 		public void editMeta(String username, String imageName, String location, LinkedList<String> tagList) throws FileNotFoundException, ClassNotFoundException, IOException {
 			//TODO routing

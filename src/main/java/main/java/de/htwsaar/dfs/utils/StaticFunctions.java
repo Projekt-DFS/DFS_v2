@@ -29,6 +29,7 @@ public class StaticFunctions {
 	 * @param imageName
 	 * @param userName
 	 * @return coordinatePoint
+	 * @author Thomas Spanier & Raphaela Wagner
 	 */
 	public static Point hashToPoint(String userName, String imageName) {
 		final double multiplier = 1.0 / 2147483648.0;
@@ -51,6 +52,7 @@ public class StaticFunctions {
 	 * Creates a BufferedImage out of an Image
 	 * @param img the Image to Change
 	 * @return the BufferedImage
+	 * @author Thomas Spanier
 	 */
 	public static BufferedImage toBufferedImage(Image img)
 	{
@@ -75,6 +77,7 @@ public class StaticFunctions {
 	/**
 	 * returns a non-loopback IP-Address
 	 * @return a non-loopback IP-Address
+	 * @author Thomas Spanier
 	 */
 	public static InetAddress getRightIP() {
 		Enumeration<NetworkInterface> e;

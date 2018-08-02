@@ -33,9 +33,7 @@ public class User implements Serializable {
 	 * @param name
 	 * @param password
 	 */
-	//public User(int id, String name, String password) {
 	public User(long id, String name, String password) {
-		//TODO id sinnvoll?
 		imageList = new HashSet<String>();
 		this.id=id;
 		setName(name);
