@@ -8,6 +8,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import main.java.de.htwsaar.dfs.StartPeer;
 import main.java.de.htwsaar.dfs.model.Peer;
+import main.java.de.htwsaar.dfs.model.Point;
 import main.java.de.htwsaar.dfs.model.Zone;
 
 /**
@@ -69,6 +70,10 @@ public class PeerService {
 
 	public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
 	    return peer.createPeer(newPeerAdress);
+	}
+	
+	public Peer routing(Point destinationPoint) {
+		return peer.routing(destinationPoint);
 	}
 
 }

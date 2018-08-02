@@ -8,6 +8,7 @@ import org.apache.http.client.ClientProtocolException;
 import main.java.de.htwsaar.dfs.StartBootstrap;
 import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.Peer;
+import main.java.de.htwsaar.dfs.model.Point;
 import main.java.de.htwsaar.dfs.model.Zone;
 
 /**
@@ -70,6 +71,10 @@ public class PeerService {
 
 	public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
 		return bootstrap.createPeer(newPeerAdress);
+	}
+	
+	public Peer routing(Point destinationPoint) {
+		return bootstrap.routing(destinationPoint);
 	}
 
 }

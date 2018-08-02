@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.client.ClientProtocolException;
 
 import main.java.de.htwsaar.dfs.model.Peer;
+import main.java.de.htwsaar.dfs.model.Point;
 import main.java.de.htwsaar.dfs.model.Zone;
 import main.java.de.htwsaar.dfs.bootstrap.service.PeerService;
 
@@ -159,6 +160,17 @@ public class PeerResource {
 		Peer nP= ps.createPeer(peer.getIp_adresse());
 		System.out.println("new Peer successfully created :" + nP);
 		return nP;
+	}
+	
+	/**
+	 * This method returns a Peer Object witch is near to the coordinates
+	 * @ return peer Object
+	 */
+	@GET
+	@Path("/routing")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Peer routing(Point destinationPoint) {
+		return ps.routing(destinationPoint);
 	}
 	
 	

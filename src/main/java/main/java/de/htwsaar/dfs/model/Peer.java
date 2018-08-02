@@ -515,10 +515,18 @@ public class Peer {
 		 * @return
 		 */
 		public Peer routing(Point destinationCoordinate) {
+			// Temporärer Peer zur Zwischenspeicherung
+			Peer tmpPeer = new Peer();
 			if (lookup(destinationCoordinate)) {
 				return this;
 			} else {
-				return shortestPath(destinationCoordinate);
+				tmpPeer = shortestPath(destinationCoordinate);
+				String baseUrl ="http://"+ tmpPeer.getIp_adresse()+":4434/p2p/v1/routing";
+				Client c = ClientBuilder.newClient();
+			    WebTarget  target = c.target( baseUrl );
+			    tmpPeer = target.queryParam("destinationPoint",destinationCoordinate).request( MediaType.APPLICATION_JSON).get( Peer.class );
+				
+				return tmpPeer;
 			}
 		}
 		
