@@ -2,7 +2,6 @@ package main.java.de.htwsaar.dfs.bootstrap.resource;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -166,9 +165,10 @@ public class PeerResource {
 	 * This method returns a Peer Object witch is near to the coordinates
 	 * @ return peer Object
 	 */
-	@GET
+	@POST
 	@Path("/routing")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Peer routing(Point destinationPoint) {
 		return ps.routing(destinationPoint);
 	}

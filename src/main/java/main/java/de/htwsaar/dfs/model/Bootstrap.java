@@ -331,7 +331,7 @@ public class Bootstrap extends Peer {
 		try {
 			String destinationPeerIP = routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse ;
 			image = forwardCreateImage(destinationPeerIP, username,ic);
-			//System.out.println("Destination peer is : " + destinationPeerIP);
+//			System.out.println("Destination peer is : " + destinationPeerIP);
 			exportUserList();							//Updates the UserList, incl Link to new Image
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -365,7 +365,7 @@ public class Bootstrap extends Peer {
 		//if the Peer of destination is the actually peer, save the image here  
 		if ( this.getIP().equals(destinationPeerIP)) {
 			saveImageContainer(imageContainer);
-			//System.out.println(SUCCEED);
+//			System.out.println(SUCCEED);
 		}
 		
 		//if not , make a post request to the peer of destination and save the image there
@@ -378,7 +378,7 @@ public class Bootstrap extends Peer {
 			Response response = invocationBuilder.post(Entity.entity(image, MediaType.APPLICATION_JSON));
 			if(response.getStatus()==200) {
 				image = response.readEntity(Image.class);
-				//System.out.println(SUCCEED);
+//				System.out.println(SUCCEED);
 			}
 			client.close();
 		}
@@ -467,15 +467,13 @@ public class Bootstrap extends Peer {
 	 * @param username
 	 * @return
 	 */
-	public ArrayList<Image> getAllImages(String username) {
-		System.out.println("test");
-		ArrayList<Image> images = new ArrayList<>();
+	public List<Image> getAllImages(String username) {
+		List<Image> images = new ArrayList<>();
 		System.out.println(routingTableToString());
 		for ( Peer p : getRoutingTable()) {
-			System.out.println("Get Images from : " + p.getIp_adresse());
-			ArrayList<Image> list = new ArrayList<>();
+			List<Image> list = new ArrayList<>();
 			list = forwardGetImages(p.getIp_adresse(), username);
-			System.out.println("2Get Images from : " + p.getIp_adresse());
+			System.out.println("Get Images from : " + p.getIp_adresse());
 			images.addAll( list	);
 		}
 		return images;
@@ -488,9 +486,9 @@ public class Bootstrap extends Peer {
 	 * @param username
 	 * @return
 	 */
-	private ArrayList<Image> forwardGetImages(String neighborIP,String username ){
+	private List<Image> forwardGetImages(String neighborIP,String username ){
 	
-		ArrayList<Image> results = new ArrayList<>();
+		List<Image> results = new ArrayList<>();
 		//make a get request to the neighbor and get the images that are saved there
 		final String url ="http://" + neighborIP + ":4434/p2p/v1/images/"+username;
 					
@@ -498,10 +496,12 @@ public class Bootstrap extends Peer {
 		WebTarget webTarget = client.target(url);
 		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.get();
+		System.out.println(response.getStatus());
+		System.out.println(response.toString());
 		if(response.getStatus()==200) {
-			results = (ArrayList<Image>) response.readEntity(new GenericType<ArrayList<Image>>() {
+			results = (ArrayList<Image>) response.readEntity(new GenericType<List<Image>>() {
 	        });
-			System.out.println(response.toString());
+			
 		}
 		client.close();
 		return results;

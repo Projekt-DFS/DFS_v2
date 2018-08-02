@@ -43,7 +43,7 @@ public class ImageService {
 			}
 		}
 		
-		//result.addAll(bootstrap.getAllImages(username));
+//		result.addAll(bootstrap.getAllImages(username));
 		return result; 
 	}
 

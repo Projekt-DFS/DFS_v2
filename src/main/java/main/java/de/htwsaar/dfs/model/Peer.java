@@ -237,7 +237,7 @@ public class Peer {
 		StringBuilder sb = new StringBuilder();
 		
 		for (Peer p : routingTable) {
-			sb.append(StaticFunctions.getRightIP()).append(" ").append(p.getZone()).append(System.lineSeparator());
+			sb.append(p.getIp_adresse()).append(" ").append(p.getZone()).append(System.lineSeparator());
 		}
 		
 		return sb.toString();	

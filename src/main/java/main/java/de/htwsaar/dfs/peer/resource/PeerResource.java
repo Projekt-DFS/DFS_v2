@@ -168,9 +168,10 @@ public class PeerResource {
 	 * This method returns a Peer Object witch is near to the coordinates
 	 * @ return peer Object
 	 */
-	@GET
+	@POST
 	@Path("/routing")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Peer routing(Point destinationPoint) {
 		return ps.routing(destinationPoint);
 	}
