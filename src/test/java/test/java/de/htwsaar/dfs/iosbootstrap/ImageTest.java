@@ -46,7 +46,6 @@ public class ImageTest {
 		tagList.add("babys");
 		bt.createImage(img, Bootstrap.getUser("imageTestUser1").getName(), "twins.jpg", photographer, date, tagList);
 		
-		
 		img = ImageIO.read(new File("Classdiagram.jpg"));
 		photographer = "eclipse";
 		tagList.removeIf(s -> true);

@@ -42,6 +42,9 @@ import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
  * @author Thomas Spanier
+ * @author Raphaela Wagner
+ * @author Aude Nana
+ * @author Mario Anklam
  *
  */
 @XmlRootElement
@@ -62,21 +65,6 @@ public class Peer {
 	
 	
 		//Constructor
-		/**
-		 * Creates a new Peer in oldPeer's Zone
-		 * @param oldPeer
-		 */
-//		public Peer(Peer oldPeer) {
-//			try {
-//				this.inet = InetAddress.getLocalHost();
-//			} catch (UnknownHostException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			oldPeer.splitZone(this);
-//			
-//		}
-		
 		public Peer (Peer copie) {
 			Zone zone = copie.getOwnZone();
 			this.ownZone = new Zone(zone.getBottomLeft(), zone.getBottomRight(), zone.getUpperLeft(), zone.getUpperRight());
@@ -137,7 +125,6 @@ public class Peer {
 		 * @return the local ip-address of the peer
 		 * @throws UnknownHostException 
 		 */
-		
 		public String getIP() {
 			
 			try {
@@ -319,9 +306,10 @@ public class Peer {
 		/**
 		 * Saves an ImageContainer including the image and the thumbnail on the hdd
 		 * @param ic the imageContainer to be saved
+		 * @author Thomas Spanier
 		 */
 		public static void saveImageContainer(ImageContainer ic) throws IOException {
-			int i=0;
+			int i = 0, j = 0;
 			//Create folders if they do not already exist
 			File folder = new File("images");
 			if(!folder.exists()) {
@@ -332,12 +320,39 @@ public class Peer {
 				userFolder.mkdir();
 			}
 			
-			//Save imageContainer
-			File file = new File(ic.getPath() + "data");
+			File file = new File(ic.getPath() + ".data");
+			//If File already exists, a generated number will be added
 			while (file.exists()) {
+				String newPath;
+				if( i > 0 ) {
+					j= (int)Math.log10(i);
+					newPath = ic.getPath().substring(0, ic.getPath().length() - j - 1) + i++;
+					
+					
+				} else {
+					newPath = ic.getPath() + i++;
+				}
 				
-				file = new File(ic.getPath() + i++ + "data");
+				
+				file = new File(newPath + ".data");
+				
+				String[] tmp = newPath.split("[/]");
+				String newImageName = tmp[tmp.length -1];
+				ic.setFileName(newImageName + ic.getEnding());
+				ic.setPath(newPath);
+				ic.setCoordinate();
+
+				
+				
 			}
+			/*
+			System.out.println("imageName	: " + ic.getImageName());
+			System.out.println("Path		: " + ic.getPath());
+			System.out.println("Coordinate	: " + ic.getCoordinate());
+			System.out.println();
+			*/
+			
+			//Save imageContainer
 			ObjectOutputStream out;
 			out = new ObjectOutputStream(
 					new BufferedOutputStream(
@@ -347,11 +362,11 @@ public class Peer {
 			
 			
 			//Save image
-			File outputFile = new File(ic.getPath() + i + ic.getEnding());
+			File outputFile = new File(ic.getPath() + ic.getEnding());
 			ImageIO.write(ic.getImage(), "jpg", outputFile);
 			
 			//Save thumbnail
-			outputFile = new File(ic.getPath() + i + "_thumbnail" + ic.getEnding());
+			outputFile = new File(ic.getPath() + "_thumbnail" + ic.getEnding());
 			ImageIO.write(ic.getThumbnail(), "jpg", outputFile);	
 		}
 		
@@ -362,14 +377,10 @@ public class Peer {
 		 * @throws IOException 
 		 * @throws FileNotFoundException 
 		 * @throws ClassNotFoundException 
+		 * @author Thomas Spanier
 		 */
 		public ImageContainer loadImageContainer(String username, String imageName) throws FileNotFoundException, IOException, ClassNotFoundException {
-			//TODO routing
-			//Point2D.Double coordinate = StaticFunctions.hashToPoint(username, imageName);
-			
 			//Get location
-			
-			
 			StringBuffer imageNameWithoutEnding = new StringBuffer();
 			String[] nameArray =  imageName.split("[.]");
 			
@@ -400,7 +411,12 @@ public class Peer {
 			
 		}
 		
-		
+		/**
+		 * Deletes the imageContainer
+		 * @param username
+		 * @param imageName
+		 * @author Thomas Spanier
+		 */
 		public void deleteImageContainer(String username, String imageName) {
 			//TODO routing
 			//Point2D.Double coordinate = StaticFunctions.hashToPoint(username, imageName);

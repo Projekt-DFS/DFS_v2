@@ -66,15 +66,17 @@ public class PlayGround {
 		img = ImageIO.read(new File("twins.jpg"));
 		photographer = "Thomas";
 		tagList.add("babys");
-		bt.createImage(img, Bootstrap.getUser("test1").getName(), "img_001", photographer, date, tagList);
-		bt.createImage(img, Bootstrap.getUser("test1").getName(), "img_001", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("test1").getName(), "twins.jpg", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("test1").getName(), "twins.jpg", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("test1").getName(), "twins.jpg", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("test1").getName(), "twins.jpg", photographer, date, tagList);
 		
 		img = ImageIO.read(new File("coins.jpg"));
 		photographer = "amazon";
 		tagList.removeFirst();
 		tagList.add("Kaufbelege");
 		tagList.add("money");
-		bt.createImage(img, Bootstrap.getUser("test2").getName(), "img_002", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("test2").getName(), "img_002.jpg", photographer, date, tagList);
 		System.out.println(bt.getPaths("test2"));
 		try {
 			System.out.println("tagList:" + bt.loadImageContainer("test2", "img_002").getTagList());
@@ -93,7 +95,7 @@ public class PlayGround {
 		ics = bt.getAllImageContainers("test2");
 		System.out.println("TagList: " + ics.get(0).getTags());
 		
-		ImageContainer coins = bt.loadImageContainer("test2", "img_002");
+		ImageContainer coins = bt.loadImageContainer("test2", "img_002.jpg");
 		System.out.println(coins.getTags());
 		
 		

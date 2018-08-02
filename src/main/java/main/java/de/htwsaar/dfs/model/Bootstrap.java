@@ -304,7 +304,7 @@ public class Bootstrap extends Peer {
 		try {
 			String destinationPeerIP = routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse ;
 			image = forwardCreateImage(destinationPeerIP, username,ic);
-			System.out.println("Destination peer is : " + destinationPeerIP);
+			//System.out.println("Destination peer is : " + destinationPeerIP);
 			exportUserList();							//Updates the UserList, incl Link to new Image
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -338,7 +338,7 @@ public class Bootstrap extends Peer {
 		//if the Peer of destination is the actually peer, save the image here  
 		if ( this.getIP().equals(destinationPeerIP)) {
 			saveImageContainer(imageContainer);
-			System.out.println(SUCCEED);
+			//System.out.println(SUCCEED);
 		}
 		
 		//if not , make a post request to the peer of destination and save the image there
@@ -351,7 +351,7 @@ public class Bootstrap extends Peer {
 			Response response = invocationBuilder.post(Entity.entity(image, MediaType.APPLICATION_JSON));
 			if(response.getStatus()==200) {
 				image = response.readEntity(Image.class);
-				System.out.println(SUCCEED);
+				//System.out.println(SUCCEED);
 			}
 			client.close();
 		}
