@@ -488,7 +488,8 @@ public class Peer {
 						}
 					}
 					
-					return closestNeighbour.routing(destinationCoordinate);
+//					return closestNeighbour.routing(destinationCoordinate);
+					return closestNeighbour;
 				}
 	
 		/**
@@ -525,7 +526,7 @@ public class Peer {
 				Client c = ClientBuilder.newClient();
 			    WebTarget  target = c.target( baseUrl );
 			    tmpPeer = target.queryParam("destinationPoint",destinationCoordinate).request( MediaType.APPLICATION_JSON).get( Peer.class );
-				
+				c.close();
 				return tmpPeer;
 			}
 		}
