@@ -321,7 +321,7 @@ public class Peer {
 		 * @param ic the imageContainer to be saved
 		 */
 		public static void saveImageContainer(ImageContainer ic) throws IOException {
-			
+			int i=0;
 			//Create folders if they do not already exist
 			File folder = new File("images");
 			if(!folder.exists()) {
@@ -333,18 +333,25 @@ public class Peer {
 			}
 			
 			//Save imageContainer
-			ObjectOutputStream out = new ObjectOutputStream(
+			File file = new File(ic.getPath() + "data");
+			while (file.exists()) {
+				
+				file = new File(ic.getPath() + i++ + "data");
+			}
+			ObjectOutputStream out;
+			out = new ObjectOutputStream(
 					new BufferedOutputStream(
-							new FileOutputStream(ic.getPath() + ".data")));
+							new FileOutputStream(file)));
 			out.writeObject(ic);
 			out.close();
 			
+			
 			//Save image
-			File outputFile = new File(ic.getPath() + ic.getEnding());
+			File outputFile = new File(ic.getPath() + i + ic.getEnding());
 			ImageIO.write(ic.getImage(), "jpg", outputFile);
 			
 			//Save thumbnail
-			outputFile = new File(ic.getPath() + "_thumbnail" + ic.getEnding());
+			outputFile = new File(ic.getPath() + i + "_thumbnail" + ic.getEnding());
 			ImageIO.write(ic.getThumbnail(), "jpg", outputFile);	
 		}
 		
@@ -426,39 +433,10 @@ public class Peer {
 		
 		
 
-		/**
-		 * 
-		 * @param path
-		 * @return
-		 * @throws IOException 
-		 * @throws ClassNotFoundException 
-		 */
-		/*public ImageContainer loadImageContainer(String path) throws IOException, ClassNotFoundException {
-			
-			File inputFile = new File(path + ".jpg");
-			BufferedImage img = ImageIO.read(inputFile);
-			
-			//Load imageContainer and set image and thumbnail 
-			ImageContainer ic;
-			ObjectInputStream in= new ObjectInputStream(
-					new BufferedInputStream(
-							new FileInputStream(path + ".data")));
-			ic= (ImageContainer)in.readObject();
-			ic.setImage(img);
-			in.close();
-			return ic;
-		}*/
 		
 		
 		
-			
-		/**
-		 * Sends the ImageContainer object
-		 * @param ic
-		 */
-		public void sendImageContainer(ImageContainer ic, Point destinationCoordiante) {
-			//TODO implement
-		}
+		
 	
 	
 		/**

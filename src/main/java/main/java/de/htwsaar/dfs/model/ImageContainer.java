@@ -44,23 +44,21 @@ public class ImageContainer implements Serializable {
 	/**
 	 * Constructor
 	 * Sets image object
+	 * @author Thomas Spanier
 	 */
 	public ImageContainer(BufferedImage img, String username, String imageName, 
 			String location, Date date, LinkedList<String> tagList) {
 		
-		
-		
-		
 		setImage(img);
 		setFileName(imageName);
-		setCoordinate();
-		
+			
 		setLocation(location);
 		setUsername(username);
 		setDate(date);
 		this.tagList = new LinkedList<String>();
 		setTagList(tagList);
 		setPath();
+		setCoordinate();
 		
 	}
 		
@@ -141,6 +139,12 @@ public class ImageContainer implements Serializable {
 		
 	}
 	
+	/**
+	 * Sets the Path where the image will be stored
+	 * The image will be stored in /images/<username>/<imagename>.<ending> 
+	 * e.g. images/testuser1/testimage01.jpg
+	 * @author Thomas Spanier
+	 */
 	public void setPath() {
 		StringBuffer imageNameWithoutEnding = new StringBuffer();
 		String[] nameArray =  imageName.split("[.]");
@@ -190,6 +194,7 @@ public class ImageContainer implements Serializable {
 		/**
 		 * adds a new Tag
 		 * @param newtag
+		 * @author Thomas Spanier
 		 */
 		public void addTag(String newtag) {
 			//Deny empty tags
@@ -208,6 +213,7 @@ public class ImageContainer implements Serializable {
 		/**
 		 * Deletes a tag
 		 * @param deletetag
+		 * @author Thomas Spanier
 		 */
 		public void deleteTag(String deletetag) {
 			//TODO Exception tag not found
@@ -223,6 +229,7 @@ public class ImageContainer implements Serializable {
 		 * Edits a tag
 		 * @param oldTag
 		 * @param newTag
+		 * @author Thomas Spanier
 		 */
 		public void editTag(String oldTag, String newTag) {
 			//Deny empty tags
@@ -244,6 +251,7 @@ public class ImageContainer implements Serializable {
 		/**
 		 * creates a Thumbnail and saves it in this object
 		 * @param img the original image
+		 * @author Thomas Spanier
 		 */
 		private void createThumbnail(BufferedImage img) {
 			Image temp = img.getScaledInstance(img.getWidth() / 4, img.getHeight() / 4, BufferedImage.SCALE_SMOOTH);

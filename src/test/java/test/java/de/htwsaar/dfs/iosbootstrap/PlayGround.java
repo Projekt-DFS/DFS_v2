@@ -67,7 +67,7 @@ public class PlayGround {
 		photographer = "Thomas";
 		tagList.add("babys");
 		bt.createImage(img, Bootstrap.getUser("test1").getName(), "img_001", photographer, date, tagList);
-		
+		bt.createImage(img, Bootstrap.getUser("test1").getName(), "img_001", photographer, date, tagList);
 		
 		img = ImageIO.read(new File("coins.jpg"));
 		photographer = "amazon";
