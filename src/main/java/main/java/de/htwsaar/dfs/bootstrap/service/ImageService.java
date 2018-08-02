@@ -33,10 +33,16 @@ public class ImageService {
 
 	public List<Image> getAllImages( String username) throws ClassNotFoundException, IOException{
 		List<Image> result = new ArrayList<>();
-		ArrayList <ImageContainer> list = bootstrap.getAllImageContainers(username);
-		for( ImageContainer ic : list) {
-			result.add(RestUtils.convertIcToImg(baseUri, ic, username));
+		
+		//check if folder exist
+		File userFolder = new File("images/" + username);
+		if(userFolder.exists()) {
+			ArrayList <ImageContainer> list = bootstrap.getAllImageContainers(username);
+			for( ImageContainer ic : list) {
+				result.add(RestUtils.convertIcToImg(baseUri, ic, username));
+			}
 		}
+		
 		//result.addAll(bootstrap.getAllImages(username));
 		return result; 
 	}

@@ -470,10 +470,12 @@ public class Bootstrap extends Peer {
 	public ArrayList<Image> getAllImages(String username) {
 		System.out.println("test");
 		ArrayList<Image> images = new ArrayList<>();
+		System.out.println(routingTableToString());
 		for ( Peer p : getRoutingTable()) {
+			System.out.println("Get Images from : " + p.getIp_adresse());
 			ArrayList<Image> list = new ArrayList<>();
 			list = forwardGetImages(p.getIp_adresse(), username);
-			System.out.println("Get Images from : " + p.getIp_adresse());
+			System.out.println("2Get Images from : " + p.getIp_adresse());
 			images.addAll( list	);
 		}
 		return images;
