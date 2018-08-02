@@ -7,26 +7,45 @@
 	var userName;
 	var password;
 	var ip;
-
     var auth = "";
     
     var loggedIn = false;
 
-    var json;
-    var imageArray = new Array();
+    var json = new Array();
 
-    var page = 0;
+	var page = 0;
 
+	var images = new Array();
+
+
+	//Image-Objekt
+	function Image(json){
+		this.created = json.created,
+		this.location = json.location,
+		this.thumbnail = json.thumbnail,
+		this.imageSource = json.imageSource,
+		this.imageName = json.imageName,
+		this.metaData = json.metaData,
+		this.owner = json.owner,
+		this.tagList = json.tagList,
+		this.thumbnailBlobUrl = "",
+		this.imageSourceBlobUrl = ""
+	} 
+
+	//Links
 	function updateLinks(){
         ip = window.location.hostname;
 		getImageInfoLink = "http://" + ip + ":4434/bootstrap/v1/images/" + userName;
 		uploadLink       = "http://" + ip + ":4434/bootstrap/v1/images/" + userName;
-		deletionLink     = "http://" + ip + ":4434/bootstrap/v1/images/" + userName; // + "?imageName=";   // + Name=bild1, bild2,...
+		deletionLink     = "http://" + ip + ":4434/bootstrap/v1/images/" + userName + "?imageName="; // + "?imageName=";   // + Name=bild1, bild2,...
 		setMetaDataLink  = "http://" + ip + ":4434/bootstrap/v1/images/" + userName; // + "?imageName=";   // + $imageName/metadata"
         graphicsLink     = "http://" + ip + ":4434/bootstrap/v1/webclient/graphics/";
         logoutLink       = "http://" + ip + ":4434/bootstrap/v1/webclient/";
 	}
 
+
+
+//---------------Funktionen---------------//	
 	function updateAuthentication(){
 		var userNameAndPwBase64 = userName + ":" + password;
 		userNameAndPwBase64 = btoa(userNameAndPwBase64);
@@ -34,9 +53,15 @@
 	}
 
 	function getImageInfo(){
+		
+		if(!loggedIn){
+			userName = document.getElementById("userName").value;
+			password = document.getElementById("password").value;
+		}
 
-	    userName = document.getElementById("userName").value
-		password = document.getElementById("password").value
+		userName = "user2";
+		password = "password";
+		
 
 		updateLinks();
 		updateAuthentication();
@@ -60,25 +85,51 @@
                 loggedIn = true;
                 createNavi();
                 document.getElementById("LoginButton").innerHTML="Logout";
-                document.getElementById("LoginButton").setAttribute("onClick", "logout()");
+				document.getElementById("LoginButton").setAttribute("onClick", "logout()");
+				document.getElementById("LoginButton").setAttribute("class", "logout");
                 createImages();
 			}
 		});
         request.send();
 	}
 
-
 	function createNavi(){
-		if(json == null || !loggedIn){
+		if(json == null || !loggedIn || document.getElementById("upload") != null){
 			return;
 		}
 
-        document.getElementById("userData").outerHTML="";
+		if(!loggedIn){	
+			document.getElementById("userData").outerHTML="";
+		}
+
 
 		var uploadButton = document.createElement("BUTTON");
-        uploadButton.innerHTML = "Upload";
-        document.getElementById("navigator").appendChild(uploadButton);
+		
+		uploadButton.setAttribute("id", "upload");
+		uploadButton.setAttribute("onclick", "document.getElementById('upload-input').click();");
+		uploadButton.innerHTML = "Upload";
+		
+		var uploadInput = document.createElement("INPUT");
+		uploadInput.setAttribute("type", "file");
+		uploadInput.setAttribute("id", "upload-input");
+		uploadInput.setAttribute("style", "display: none;");
+		uploadInput.setAttribute("accept", "image/jpeg, image/png");
+		uploadInput.setAttribute("onchange", "uploadImage()");	
+		uploadInput.setAttribute("multiple", "true");	
+		uploadButton.innerHTML = uploadInput.outerHTML + "Upload";
+		document.getElementById("navigator").appendChild(uploadButton);
 
+		var deleteButton = document.createElement("BUTTON");
+		deleteButton.setAttribute("id", "delete");
+		deleteButton.setAttribute("onclick", "deleteMarkedImages()");
+		deleteButton.innerHTML = "Delete";
+		document.getElementById("navigator").appendChild(deleteButton);
+
+		var refreshButton = document.createElement("BUTTON");
+		refreshButton.setAttribute("id", "refresh");
+		refreshButton.setAttribute("onclick", "getImageInfo()");
+		refreshButton.innerHTML = "Refresh";
+		document.getElementById("navigator").appendChild(refreshButton);
 
 		var arrowLeft = document.createElement("IMG");
 		var arrowRight = document.createElement("IMG");
@@ -88,26 +139,14 @@
 		arrowRight.setAttribute("onClick", "goRight()");
 		arrowLeft.setAttribute("src", graphicsLink + "arrow_left.png");
 		arrowRight.setAttribute("src", graphicsLink + "arrow_right.png");
-		document.getElementById("navigator").appendChild(arrowRight);
-		document.getElementById("navigator").appendChild(arrowLeft);
+
+		var arrowDiv = document.createElement("DIV");
+		arrowDiv.setAttribute("id", "arrowDiv");
+		arrowDiv.appendChild(arrowLeft);
+		arrowDiv.appendChild(arrowRight);
+		document.getElementById("navigator").appendChild(arrowDiv);
+		
 	}
-
-    function goLeft(){
-        if(page==0){
-            return;
-        }
-        page--;
-        createImages();
-    }
-
-    function goRight(){
-        if(page >= json.length / 16 -1){
-            return;
-        }
-        page++;
-        createImages();
-    }
-
 
 	function createImages(){
 
@@ -121,35 +160,27 @@
             document.getElementById("pictureDiv").innerHTML = null;
         }
 		
-
-		for(var i = 0  + page * 16; i <= 15 * (page + 1) + page; i++) {
+		for(var i = 0  + page * 16; i < 16 * (page + 1); i++) {
 			if(json[i] == null){
 				break;
-            }
+			}
 
-            var imageContainer = document.createElement("A");
-            imageContainer.setAttribute("href", json[i].imageSource);
-            
-            imageContainer.innerHTML = "<img class='picture' src=" + json[i].imageSource + ">"
+			var image = new Image(json[i]);
+			images.push(image);
+			getThumbnailToUrl(json[i].imageSource, i);
+		}
+		
+	}
 
-            document.getElementById("pictureDiv").appendChild(imageContainer);
-        }
-    }
-    
-    function sleep(milliseconds) {
-        var start = new Date().getTime();
-        for (var i = 0; i < 1e7; i++) {
-          if ((new Date().getTime() - start) > milliseconds){
-            break;
-          }
-        }
-      }
 
-   /* function getImage(linkToImage){
+	function getThumbnailToUrl(linkToImage, i){
         var request = new XMLHttpRequest();
 		
-		request.open("GET", linkToImage);
+		request.open("GET", linkToImage, true);
 		request.setRequestHeader("Authorization", auth);
+		request.responseType = "arraybuffer";
+
+		thumbnailUrl = null;
 
 		request.addEventListener('load', function(event) {
 			if (request.status != 200){
@@ -161,14 +192,147 @@
 				}
 			}
 			else{
-				var image = request.response;
-                imageArray.push(image);
+				var blob = new Blob([request.response], {type: "image/jpeg"});
+				var url = URL.createObjectURL(blob);
+				images[i].thumbnailBlobUrl = url;
+				showImage(i);
 			}
 		});
-        request.send();
-    } */
+		request.send();
+	} 
+
+	function showImage(i){
+		var imgTag = document.createElement("IMG");
+		imgTag.setAttribute("class", "picture");
+		imgTag.setAttribute("src", images[i].thumbnailBlobUrl);
+		imgTag.setAttribute("onClick", "markImage(" + i + ")");
+		imgTag.setAttribute("id", "img_" + i);
+		
+		var imageContainer = document.createElement("A");
+		imageContainer.innerHTML = imgTag.outerHTML;
+		document.getElementById("pictureDiv").appendChild(imageContainer);	
+
+	}
 
 
-    function logout(){
-        window.location.href = logoutLink;
+	function uploadImage() {
+		var fileArray = document.getElementById('upload-input').files;
+
+		for(var i = 0; i < fileArray.length; i++){
+			readAndUpload(fileArray[i]);
+		}	
+	}
+
+
+	function readAndUpload(file) {
+		var name = file.name;
+
+		var reader = new FileReader();  
+		reader.onload = function (e) {
+
+			var baseToImageSource = e.target.result.substring(23, reader.result.length);
+			var request = new XMLHttpRequest();
+			
+			request.open("POST", uploadLink);
+			request.setRequestHeader("Authorization", auth);
+			request.setRequestHeader("Content-Type", "application/json");
+
+
+			jsonString = {
+				"imageSource":baseToImageSource,
+				"imageName":name+".jpg" //wenn thomas das mit den namen geregelt hat, wird es file.name(.jpg)
+			}
+
+			request.addEventListener('load', function(event) {
+				if (request.status != 201){
+					console.log("Upload failed \nStatus Code: "+ request.status);
+				}
+				else{
+					console.log("Upload successful :-)");
+				}
+			});
+			request.send(JSON.stringify(jsonString));
+		};
+		reader.readAsDataURL(file);
+	}
+
+	function markImage(i){
+		var img = document.getElementById("img_" + i);
+		img.setAttribute("class", "picture marked");
+		img.setAttribute("onclick", "unmarkImage(" + i + ")");
+		img.setAttribute("value", i);
+	}
+
+	function unmarkImage(i){
+		var img = document.getElementById("img_" + i);
+		img.setAttribute("class", "picture");
+		img.setAttribute("onclick", "markImage(" + i + ")");
+		img.removeAttribute("value");
+	}
+
+	function deleteMarkedImages(){
+		var markedImages = document.getElementsByClassName("picture marked");
+		
+		var requestLink = deletionLink;
+		var queryString = "";
+
+		for(var i = 0; i < markedImages.length; i++){
+			var value = markedImages[i].getAttribute("value");
+			
+			queryString += images[value].imageName;
+
+			if(i != markedImages.length - 1){
+				queryString += ",";
+			}
+		}
+
+		requestLink += queryString;
+
+		console.log(requestLink);
+
+		var request = new XMLHttpRequest();
+			
+		request.open("DELETE", requestLink);
+		request.setRequestHeader("Authorization", auth);
+
+		request.addEventListener('load', function(event) {
+			if (request.status != 204){
+				console.log("Deletion failed\nStatus Code: "+ request.status);
+			}
+			else{
+				console.log("Deletion successful");
+			}
+		});
+		request.send();
+	}
+
+	function goLeft(){
+        if(page==0){
+            return;
+        }
+        page--;
+        createImages();
     }
+
+    function goRight(){
+        if(page >= json.length / 16 -1){
+            return;
+        }
+        page++;
+        createImages();
+	}
+	
+    function logout(){
+		loggedIn = false;
+		page = 0;
+        window.location.href = logoutLink;
+	}
+
+	function sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+          if ((new Date().getTime() - start) > milliseconds){
+            break;
+          }
+        }
+      }
