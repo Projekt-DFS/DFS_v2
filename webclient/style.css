@@ -4,15 +4,21 @@
 	
 body{
 	padding: 0px;
-	width: 1080px;
+	width: 100%;
 	margin: auto;
-	background-color: rgba(243, 239, 224, 0.705);
+	background-color: rgba(243, 239, 224, 1);
 }
 
 div.form{
-	margin-top: 60px;
+	max-width: 100%;
+	margin-top: 40px;
+	
 }
 
+div#userData{
+	width: 1080px;
+	margin: auto;
+}
 
 label.userDataLabels{
 	width: 80px;
@@ -21,7 +27,24 @@ label.userDataLabels{
 }
 
 div.navi{
-	width: max-width;
+	width: 1080px;
+	height: 90px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div.navi.sticky{
+	width: 1080px;
+	height: 90px;
+
+	margin: auto;
+
+	top: 1;
+
+	background-color: rgba(243, 239, 224, 0.5);
+	border-bottom: solid black 1.5px;
+
+	margin-bottom: 20px;
 }
 
 #arrowDiv{
@@ -32,7 +55,8 @@ div.navi{
 }
 
 div.pictures{
-	width: max-width;
+	width: 1080px;
+	margin: auto;
 }
 
 button{

@@ -84,9 +84,6 @@
 				json = JSON.parse(request.responseText);
                 loggedIn = true;
                 createNavi();
-                document.getElementById("LoginButton").innerHTML="Logout";
-				document.getElementById("LoginButton").setAttribute("onClick", "logout()");
-				document.getElementById("LoginButton").setAttribute("class", "logout");
                 createImages();
 			}
 		});
@@ -102,6 +99,7 @@
 			document.getElementById("userData").outerHTML="";
 		}
 
+		document.getElementById("userData").innerHTML = null;
 
 		var uploadButton = document.createElement("BUTTON");
 		
@@ -145,6 +143,12 @@
 		arrowDiv.appendChild(arrowLeft);
 		arrowDiv.appendChild(arrowRight);
 		document.getElementById("navigator").appendChild(arrowDiv);
+
+		document.getElementById("navigator").setAttribute("class", "navi sticky");
+
+		document.getElementById("LoginButton").innerHTML="Logout";
+		document.getElementById("LoginButton").setAttribute("onClick", "logout()");
+		document.getElementById("LoginButton").setAttribute("class", "logout");
 		
 	}
 
@@ -211,7 +215,7 @@
 		var imageContainer = document.createElement("A");
 		imageContainer.innerHTML = imgTag.outerHTML;
 		document.getElementById("pictureDiv").appendChild(imageContainer);	
-
+		
 	}
 
 
@@ -240,11 +244,11 @@
 
 			jsonString = {
 				"imageSource":baseToImageSource,
-				"imageName":name+".jpg" //wenn thomas das mit den namen geregelt hat, wird es file.name(.jpg)
+				"imageName":name 
 			}
 
 			request.addEventListener('load', function(event) {
-				if (request.status != 201){
+				if (request.status != 200){
 					console.log("Upload failed \nStatus Code: "+ request.status);
 				}
 				else{
@@ -301,6 +305,7 @@
 			}
 			else{
 				console.log("Deletion successful");
+				getImageInfo();
 			}
 		});
 		request.send();
