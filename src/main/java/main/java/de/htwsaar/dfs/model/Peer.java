@@ -567,5 +567,69 @@ public class Peer {
 		public String toString() {
 			return "[ ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTableToString()+ "]";
 		}
+		
+		/**
+		 * @author Raphaela Wagner
+		 * @return
+		 * @throws FileNotFoundException
+		 * @throws ClassNotFoundException
+		 * @throws IOException
+		 */
+		public ArrayList<ImageContainer> findImagesToTransfer() throws FileNotFoundException, ClassNotFoundException, IOException {
+			File directory = new File("images/");
+			File[] userList = directory.listFiles();
+			
+			ArrayList<ImageContainer> transferList = new ArrayList<>();
+			
+			for (File userFile : userList) {
+				for(File imageFile : userFile.listFiles()) {
+					if(imageFile.toString().endsWith(".data")) {
+						
+						ImageContainer ic = this.loadImageContainer(userFile.toString(), imageFile.toString());
+						
+						if(!containsPoint(ic.getCoordinate())) {
+							transferList.add(ic);
+						}
+					}
+					
+				}
+			}
+			
+			return transferList;
+		}
+		
+		/**
+		 * @author Raphaela Wagner 03.08.2018
+		 * @param p
+		 * @return
+		 */
+		
+		public boolean containsPoint(Point p) {
+			return ownZone.getBottomRight().getX() > p.getX() && p.getX() > ownZone.getUpperLeft().getX() 
+					&& ownZone.getUpperLeft().getY() > p.getY() && p.getY() > ownZone.getBottomRight().getY();
+		}
+		
+		/**
+		 * @author Raphaela Wagner 03.08.2018
+		 * @param transferList
+		 * @param newPeer
+		 * @throws IOException 
+		 */
+		public void transferPairs(ArrayList<ImageContainer> transferList) {
+			for(ImageContainer ic : transferList) {
+				//saveImageContainer(ic);
+			}
+
+		}
+		
+		/**
+		 * @author Raphaela Wagner 03.08.2018
+		 * @param transferList
+		 */
+		public void deletePairs(ArrayList<ImageContainer> transferList) {
+			for(ImageContainer ic : transferList) {
+				this.deleteImageContainer(ic.getUsername(), ic.getImageName());
+			}
+		}
 	
 }
