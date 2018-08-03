@@ -617,7 +617,12 @@ public class Peer {
 		 */
 		public void transferPairs(ArrayList<ImageContainer> transferList) {
 			for(ImageContainer ic : transferList) {
-				//saveImageContainer(ic);
+				try {
+					Peer.saveImageContainer(ic);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 		}
