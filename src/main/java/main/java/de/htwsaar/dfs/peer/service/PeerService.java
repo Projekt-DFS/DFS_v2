@@ -50,11 +50,11 @@ public class PeerService {
 		return peer;
 	}
 
-	public String deletePeer(int pid) {
-		Peer p = peer.getRoutingTable().get(pid);
-		if( p == null)
-			return "Peer not found ";
-		p.eliminateNeighbours(peer);;
+	public String deletePeer(String ip) {
+		for ( Peer neighbor : peer.getRoutingTable()) {
+			if( neighbor.getIp_adresse().equals(ip));
+			peer.eliminateNeighbours(neighbor);
+		}
 		return "Peer successfully removed!";
 	}
 

@@ -2,6 +2,7 @@ package main.java.de.htwsaar.dfs.bootstrap.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -24,11 +25,13 @@ public class PeerService {
 
 
 	public Peer getPeer() {
-		return bootstrap;
+		Peer p = new Peer(bootstrap);
+		return p;//bootstrap;
 	} 
 	
 	public List<Peer> getAllNeighbors() {
-		return bootstrap.getRoutingTable();
+		CopyOnWriteArrayList< Peer> list = new CopyOnWriteArrayList<>(bootstrap.getRoutingTable());
+		return list;//bootstrap.getRoutingTable();
 		//return new ArrayList<>(neighbors.values());
 	}
 
@@ -51,12 +54,18 @@ public class PeerService {
 		return bootstrap;
 	}
 
-	public String deletePeer(int pid) {
-		Peer p = bootstrap.getRoutingTable().get(pid);
-		if( p == null)
-			return "Peer not found ";
-		p.eliminateNeighbours(bootstrap);
-		return "Peer successfully removed!";
+	public String deletePeer(String ip) {
+		for ( Peer neighbor : bootstrap.getRoutingTable()) {
+			System.out.println(neighbor.getIp_adresse());
+			System.out.println(ip);
+			if( neighbor.getIp_adresse().equals(ip)) {
+				
+			bootstrap.eliminateNeighbours(neighbor);
+			return "Peer successfully removed!";
+	
+		}}
+			return "No";
+		
 	}
 
 	public Zone getOwnZone() {
@@ -76,5 +85,6 @@ public class PeerService {
 	public Peer routing(Point destinationPoint) {
 		return bootstrap.routing(destinationPoint);
 	}
+	
 
 }

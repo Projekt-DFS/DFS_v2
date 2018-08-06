@@ -143,6 +143,29 @@ public class Peer {
 	
 	/**
 	 * Splits the Peer's Zone and transfers one half to the new Peer
+	 * @author Thomas Spanier & Raphaela Wagner
+	 * @return new Zone for the new Peer
+	 */
+	public Zone splitZone() {
+		Zone newZone = new Zone();;
+		if (ownZone.isSquare()) {
+	        
+	    	newZone.setZone(new Point(ownZone.calculateCentrePoint().getX(), ownZone.getBottomRight().getY()), ownZone.getUpperRight());
+	    	ownZone.setZone(ownZone.getBottomLeft(), new Point(ownZone.calculateCentrePoint().getX(), ownZone.getUpperLeft().getY()));    
+	    } else {
+	        
+	    	newZone.setZone(ownZone.getBottomLeft(), (new Point(ownZone.getBottomRight().getX(), ownZone.calculateCentrePoint().getY())));
+	        ownZone.setZone(new Point(ownZone.getUpperLeft().getX(), ownZone.calculateCentrePoint().getY()), ownZone.getUpperRight());    
+	    }
+		System.out.println("Neue Zone: " + newZone);
+	    return newZone;
+	}
+		
+		
+		
+	/**
+	 * @deprecated
+	 * Splits the Peer's Zone and transfers one half to the new Peer
 	 * @param newPeer
 	 */
 	public Peer splitZone(Peer newPeer) {
@@ -162,19 +185,67 @@ public class Peer {
 	
 	// Methods for routingTable updating
 	
+	
+	/**
+	 * Wird auf JEDEM Nachbars Peer aufgerufen
+	 * @return
+	 */
+	public void initializeRoutingTable(Peer newPeer) {
+		newPeer.mergeRoutingTableWithList(routingTable);
+		newPeer.mergeRoutingTableSinglePeer(this);
+		
+		
+	}
+	
+	public void checkNeighboursOldPeer() {
+		for(Peer neighbour : routingTable) {
+			if(!neighbour.isNeighbour(this)) {
+				
+				//TODO: Anfrage über REST zum Loeschen der RoutingTableEintraege
+		
+				final String neighBorIP ="http://"+ neighbour.getIp_adresse()+":4434/p2p/v1/neighbors?ip_adresse="+this.getIp_adresse();
+				Client c = ClientBuilder.newClient();
+			    WebTarget  target = c.target( neighBorIP );
+			    Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
+			    Response response = invocationBuilder.delete();
+			    System.out.println("Response:" + response.getStatus());
+				c.close();
+				this.routingTable.remove(neighbour);
+			}
+		}
+	}
+		
+	
+	public void checkNeighboursNewPeer() {
+		for(Peer neighbour : routingTable) {
+			if(!neighbour.isNeighbour(this)) {
+				this.routingTable.remove(neighbour);
+				
+			} else {
+				//TODO: Anfrage über REST zum Eintragen
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * updates routingTables of all Peers affected
 	 * @param newPeer
 	 */
 	public Peer updateRoutingTables(Peer newPeer) {
 			
-			//Peer peer2= new Peer(newPeer);
-			//Peer peer3 =new Peer(this);
+			Peer peer2= new Peer(newPeer);
+			Peer peer3 =new Peer(this);
 			// oldPeer becomes neighbour of new Peer
 			newPeer.mergeRoutingTableWithList(routingTable);
-			newPeer.mergeRoutingTableSinglePeer(this);
+			newPeer.mergeRoutingTableSinglePeer(peer3);
 			//newPeer becomes neighbour of oldPeer
-		    this.mergeRoutingTableSinglePeer(newPeer);
+		    this.mergeRoutingTableSinglePeer(peer2);
 		    
 		    // newPeer gets the routingTable from oldPeer
 		    
@@ -517,11 +588,11 @@ public class Peer {
 		 */
 		public Peer routing(Point destinationCoordinate) {
 			// Temporärer Peer zur Zwischenspeicherung
-//			Peer tmpPeer = new Peer();
+			//Peer tmpPeer = new Peer();
 			if (lookup(destinationCoordinate)) {
 				return this;
 			} else {
-				return shortestPath(destinationCoordinate);
+				//return shortestPath(destinationCoordinate);
 //				tmpPeer = shortestPath(destinationCoordinate);
 //				String baseUrl ="http://"+ tmpPeer.getIp_adresse()+":4434/p2p/v1/routing";
 //				Client c = ClientBuilder.newClient();
@@ -529,6 +600,17 @@ public class Peer {
 //			    tmpPeer = target.queryParam("destinationPoint",destinationCoordinate).request( MediaType.APPLICATION_JSON).get( Peer.class );
 //				c.close();
 //				return tmpPeer;
+				Peer tmpPeer = shortestPath(destinationCoordinate);
+				String baseUrl ="http://"+ tmpPeer.getIp_adresse()+":4434/p2p/v1/routing";
+				Client c = ClientBuilder.newClient();
+			    WebTarget  target = c.target( baseUrl );
+			    Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
+			    Response response = invocationBuilder.post(Entity.entity(destinationCoordinate, MediaType.APPLICATION_JSON));
+			    System.out.println("Response:" + response.getStatus());
+			    tmpPeer = response.readEntity(Peer.class);
+			    System.out.println("Destination Per is::" + tmpPeer);
+				c.close();
+				return tmpPeer;
 			}
 		}
 		
@@ -554,22 +636,75 @@ public class Peer {
 			System.out.println("Bootstrap vor createPeer(): " + this);
 			Peer newPeer = new Peer(newPeerAdress);
 			if(getRoutingTable().size() == 0) {
-				newPeer = splitZone(newPeer);
-				
+				//newPeer = splitZone(newPeer);
+				newPeer.setOwnZone(splitZone());
+				newPeer = updateRoutingTables(newPeer);
 			} else {
 				Point p = newPeer.generateRandomPoint();
 				if(lookup(p)) {
-					newPeer = splitZone(newPeer);
+					System.out.println("Fall unten");
+					//newPeer = splitZone(newPeer);
+					newPeer.setOwnZone(splitZone());
+					newPeer = updateRoutingTables(newPeer);
+					
 				} else {
+					System.out.println("Fall rechts");
 					newPeer.setOwnZone(getOwnZone());
+					Peer zielP = routing(p);
+					System.out.println("ZielPeer: " + zielP);
 					newPeer.mergeRoutingTableWithList(getRoutingTable());
 					newPeer.joinRequest(newPeer.generateRandomPoint());
 				}
 				
 			}		
 		    System.out.println("Bootstrap nach createPeer(): "+ this);
+		    System.out.println("New Peer nach createPeer(): "+ newPeer);
 			return newPeer;
 		}
+		
+
+		private void createPeerInPeer(String ip, String api, Peer newPeer) {
+
+
+
+	    	//every join request commes to the bootstrap first
+
+			final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
+
+			
+
+			//Build a Peer only with IP. The Bootstrap will give him a zone.
+
+			//Peer peer= newPeer;
+
+			
+
+			Client client = ClientBuilder.newClient();
+
+			WebTarget webTarget = client.target(bootstrapURL);
+
+			Invocation.Builder invocationBuilder 
+
+			  = webTarget.request(MediaType.APPLICATION_JSON);
+
+			Response response 
+
+			  = invocationBuilder
+
+			  .post(Entity.entity(newPeer, MediaType.APPLICATION_JSON));
+
+			System.out.println("Response Code : " + response.getStatus());
+
+			newPeer = response.readEntity(Peer.class);
+
+			
+
+			System.out.println("My Peer :" + newPeer );
+
+		}
+		
+		
+		
 		
 		public String toString() {
 			return "[ ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTableToString()+ "]";

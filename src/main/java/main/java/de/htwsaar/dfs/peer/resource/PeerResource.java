@@ -11,6 +11,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.http.client.ClientProtocolException;
@@ -87,10 +88,10 @@ public class PeerResource {
 	 */
 	
 	@DELETE
-	@Path("/peers/{peerId}")
+	@Path("/neighbors")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String deletePeer(@PathParam("peerId") int pid){
-		 return ps.deletePeer(pid);
+	public String deletePeer(@QueryParam("ip_adresse") String ip_adresse){
+		 return ps.deletePeer(ip_adresse);
 	}
 	
 	/**

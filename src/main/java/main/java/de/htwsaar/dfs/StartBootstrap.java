@@ -60,7 +60,7 @@ public class StartBootstrap {
 	      //images
 	      BufferedImage img = null, img2 = null;
 	    
-	    for(int i = 0; i <= 47; i++) {
+	    for(int i = 0; i <= 5; i++) {
 	      try {
 	        img2 = ImageIO.read(new File("./dummyBilder/"+i+".jpg"));
 	        LinkedList<String> tagList = new LinkedList<String>();  
@@ -89,7 +89,7 @@ public class StartBootstrap {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-    	putInDb();
+    	//putInDb();
         startServer();
         System.in.read();
        
