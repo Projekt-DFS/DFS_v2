@@ -167,42 +167,42 @@ public class Peer {
 	 * @param newPeer
 	 */
 	public Peer updateRoutingTables(Peer newPeer) {
-	
-		//Peer peer2= new Peer(newPeer);
-		//Peer peer3 =new Peer(this);
-		// oldPeer becomes neighbour of new Peer
-		newPeer.mergeRoutingTableWithList(routingTable);
-		newPeer.mergeRoutingTableSinglePeer(this);
-		//newPeer becomes neighbour of oldPeer
-	    this.mergeRoutingTableSinglePeer(newPeer);
-	    
-	    // newPeer gets the routingTable from oldPeer
-	    
-	    
-//	     newPeer becomes neighbour of oldPeer
-	
-	    /**
-	     * each Peer of oldPeer's routingTable gets newPeer as a temporary neighbour
-	     * Peers from oldPeer's old routingTable check if oldPeer and newPeer are neighbours
-	     * if not, they are removed from the routingTable
-	     */
-	    
-	    for (Peer p : routingTable) {
-	    	p.mergeRoutingTableSinglePeer(newPeer);
-	    	
-	    	if (p.isNeighbour(this) == false) {
-	    		p.getRoutingTable().remove(this);
-	    	}
-	    	
-	    	if (p.isNeighbour(newPeer) == false) {
-	    		p.getRoutingTable().remove(newPeer);
-	    	}
-	    }
-	    
-	    eliminateNeighbours(this);
-	    eliminateNeighbours(newPeer);
-	    return newPeer;
-	}
+			
+			//Peer peer2= new Peer(newPeer);
+			//Peer peer3 =new Peer(this);
+			// oldPeer becomes neighbour of new Peer
+			newPeer.mergeRoutingTableWithList(routingTable);
+			newPeer.mergeRoutingTableSinglePeer(this);
+			//newPeer becomes neighbour of oldPeer
+		    this.mergeRoutingTableSinglePeer(newPeer);
+		    
+		    // newPeer gets the routingTable from oldPeer
+		    
+		    
+//		     newPeer becomes neighbour of oldPeer
+		
+		    /**
+		     * each Peer of oldPeer's routingTable gets newPeer as a temporary neighbour
+		     * Peers from oldPeer's old routingTable check if oldPeer and newPeer are neighbours
+		     * if not, they are removed from the routingTable
+		     */
+		    
+		    for (Peer p : routingTable) {
+		    	p.mergeRoutingTableSinglePeer(newPeer);
+		    	
+		    	if (p.isNeighbour(this) == false) {
+		    		p.getRoutingTable().remove(this);
+		    	}
+		    	
+		    	if (p.isNeighbour(newPeer) == false) {
+		    		p.getRoutingTable().remove(newPeer);
+		    	}
+		    }
+		    
+		    eliminateNeighbours(this);
+		    eliminateNeighbours(newPeer);
+		    return newPeer;
+		}
 	
 	/**
 	 * a single Peer is put into the routingTable
