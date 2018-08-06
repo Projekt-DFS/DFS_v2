@@ -19,13 +19,6 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.imageio.ImageIO;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import java.net.InetAddress;
 
@@ -202,15 +195,7 @@ public class Peer {
 			if(!neighbour.isNeighbour(this)) {
 				
 				//TODO: Anfrage über REST zum Loeschen der RoutingTableEintraege
-		
-				final String neighBorIP ="http://"+ neighbour.getIp_adresse()+":4434/p2p/v1/neighbors?ip_adresse="+this.getIp_adresse();
-				Client c = ClientBuilder.newClient();
-			    WebTarget  target = c.target( neighBorIP );
-			    Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
-			    Response response = invocationBuilder.delete();
-			    System.out.println("Response:" + response.getStatus());
-				c.close();
-				this.routingTable.remove(neighbour);
+				new PeerClient().addNeighbor(neighbour.getIp_adresse(), "p2p", this.getIp_adresse());
 			}
 		}
 	}
@@ -223,6 +208,8 @@ public class Peer {
 				
 			} else {
 				//TODO: Anfrage über REST zum Eintragen
+				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), "p2p", this.getIp_adresse());
+			
 			}
 		}
 	}
@@ -280,9 +267,7 @@ public class Peer {
 	 * @param potentialNeighbour
 	 */
 	public void mergeRoutingTableSinglePeer(Peer potentialNeighbour) {
-		//System.out.println("testmerge");
 		routingTable.add(potentialNeighbour);
-		//System.out.println("testmerge2");
 	}
 	
 	/**
@@ -601,16 +586,7 @@ public class Peer {
 //				c.close();
 //				return tmpPeer;
 				Peer tmpPeer = shortestPath(destinationCoordinate);
-				String baseUrl ="http://"+ tmpPeer.getIp_adresse()+":4434/p2p/v1/routing";
-				Client c = ClientBuilder.newClient();
-			    WebTarget  target = c.target( baseUrl );
-			    Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
-			    Response response = invocationBuilder.post(Entity.entity(destinationCoordinate, MediaType.APPLICATION_JSON));
-			    System.out.println("Response:" + response.getStatus());
-			    tmpPeer = response.readEntity(Peer.class);
-			    System.out.println("Destination Per is::" + tmpPeer);
-				c.close();
-				return tmpPeer;
+				return new PeerClient().routing(tmpPeer, destinationCoordinate);
 			}
 		}
 		
@@ -642,17 +618,16 @@ public class Peer {
 			} else {
 				Point p = newPeer.generateRandomPoint();
 				if(lookup(p)) {
-<<<<<<< HEAD
+
 					System.out.println("Fall unten");
 					//newPeer = splitZone(newPeer);
 					newPeer.setOwnZone(splitZone());
 					newPeer = updateRoutingTables(newPeer);
 					
-=======
 					Peer zielP = routing(p);
-					createPeerInPeer(zielP.getIp_adresse(),"p2p", newPeer);
+					new PeerClient().createPeer(zielP.getIp_adresse(),"p2p", newPeer);
 					newPeer = splitZone(newPeer);
->>>>>>> branch 'master' of https://github.com/Projekt-DFS/DFS_v2.git
+
 				} else {
 					System.out.println("Fall rechts");
 					newPeer.setOwnZone(getOwnZone());
@@ -667,73 +642,6 @@ public class Peer {
 		    System.out.println("New Peer nach createPeer(): "+ newPeer);
 			return newPeer;
 		}
-		
-<<<<<<< HEAD
-
-		private void createPeerInPeer(String ip, String api, Peer newPeer) {
-
-
-
-	    	//every join request commes to the bootstrap first
-
-			final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
-
-			
-
-			//Build a Peer only with IP. The Bootstrap will give him a zone.
-
-			//Peer peer= newPeer;
-
-			
-
-			Client client = ClientBuilder.newClient();
-
-			WebTarget webTarget = client.target(bootstrapURL);
-
-			Invocation.Builder invocationBuilder 
-
-			  = webTarget.request(MediaType.APPLICATION_JSON);
-
-			Response response 
-
-			  = invocationBuilder
-
-			  .post(Entity.entity(newPeer, MediaType.APPLICATION_JSON));
-
-			System.out.println("Response Code : " + response.getStatus());
-
-			newPeer = response.readEntity(Peer.class);
-
-			
-
-			System.out.println("My Peer :" + newPeer );
-
-		}
-		
-		
-		
-=======
-		private void createPeerInPeer(String ip, String api, Peer newPeer) {
-
-	    	//every join request commes to the bootstrap first
-			final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
-			
-			//Build a Peer only with IP. The Bootstrap will give him a zone.
-			//Peer peer= newPeer;
-			
-			Client client = ClientBuilder.newClient();
-			WebTarget webTarget = client.target(bootstrapURL);
-			Invocation.Builder invocationBuilder 
-			  = webTarget.request(MediaType.APPLICATION_JSON);
-			Response response 
-			  = invocationBuilder
-			  .post(Entity.entity(newPeer, MediaType.APPLICATION_JSON));
-			System.out.println("Response Code : " + response.getStatus());
-			newPeer = response.readEntity(Peer.class);
-			
-			System.out.println("My Peer :" + newPeer );
-		}
->>>>>>> branch 'master' of https://github.com/Projekt-DFS/DFS_v2.git
 		
 		public String toString() {
 			return "[ ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTableToString()+ "]";
@@ -807,5 +715,6 @@ public class Peer {
 				this.deleteImageContainer(ic.getUsername(), ic.getImageName());
 			}
 		}
+
 	
 }

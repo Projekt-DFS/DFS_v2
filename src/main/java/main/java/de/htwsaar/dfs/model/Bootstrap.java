@@ -370,17 +370,8 @@ public class Bootstrap extends Peer {
 		
 		//if not , make a post request to the peer of destination and save the image there
 		else {
-			final String url ="http://" + destinationPeerIP + ":4434/p2p/v1/images/"+username;
-			
-			Client client = ClientBuilder.newClient();
-			WebTarget webTarget = client.target(url);
-			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-			Response response = invocationBuilder.post(Entity.entity(image, MediaType.APPLICATION_JSON));
-			if(response.getStatus()==200) {
-				image = response.readEntity(Image.class);
-//				System.out.println(SUCCEED);
-			}
-			client.close();
+			image = new PeerClient().forwardCreateImage(destinationPeerIP, username, image);
+//			System.out.println(SUCCEED);
 		}
 		return image;
 	}

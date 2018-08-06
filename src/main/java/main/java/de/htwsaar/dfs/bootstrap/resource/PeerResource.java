@@ -11,7 +11,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.http.client.ClientProtocolException;
@@ -72,23 +71,23 @@ public class PeerResource {
 	 * @return
 	 */
 	@GET
-	@Path("/neighbors/{neighborId}")
+	@Path("/neighbors/{neighborIp}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Peer getPeer(@PathParam("neighborId") int pid){
-		return ps.getPeer(pid);
+	public Peer getPeer(@PathParam("neighborIp") String ip){
+		return ps.getPeer(ip);
 	}
 	
 	/**
 	 * This method removes a Peer from the neighbor list
-	 * @param pid
+	 * @param ip
 	 * @return
 	 */
 
 	@DELETE
-	@Path("/neighbors")
+	@Path("/neighbors/{neighborIp}")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String deletePeer(@QueryParam("ip_adresse") String ip_adresse){
-		 return ps.deletePeer(ip_adresse);
+	public String deletePeer(@PathParam("neighborIp") String ip ){
+		 return ps.deletePeer(ip);
 	}
 	
 	/**

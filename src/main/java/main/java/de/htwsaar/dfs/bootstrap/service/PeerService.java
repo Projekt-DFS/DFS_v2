@@ -35,14 +35,18 @@ public class PeerService {
 		//return new ArrayList<>(neighbors.values());
 	}
 
-	public Peer getPeer(int pid) {
-		return bootstrap.getRoutingTable().get(pid);
-		//return neighbors.get(pid);
+	public Peer getPeer(String ip) {
+		Peer result = new Peer();
+		for ( Peer neighbor : bootstrap.getRoutingTable()) {
+			if( neighbor.getIp_adresse().equals(ip)) {
+			result = neighbor;
+			}
+		}
+		return result;
 	}
 
 	public Peer addPeer(Peer newPeer) {
 		bootstrap.mergeRoutingTableSinglePeer(newPeer);
-		//neighbors.put(neighbors.size() + 1, newPeer);
 		return bootstrap;
 	}
 
@@ -56,15 +60,12 @@ public class PeerService {
 
 	public String deletePeer(String ip) {
 		for ( Peer neighbor : bootstrap.getRoutingTable()) {
-			System.out.println(neighbor.getIp_adresse());
-			System.out.println(ip);
 			if( neighbor.getIp_adresse().equals(ip)) {
-				
-			bootstrap.eliminateNeighbours(neighbor);
-			return "Peer successfully removed!";
-	
-		}}
-			return "No";
+				bootstrap.getRoutingTable().remove(neighbor);
+				return "Peer successfully removed!";
+				}
+			}
+			return "Peer doesn't exist";
 		
 	}
 

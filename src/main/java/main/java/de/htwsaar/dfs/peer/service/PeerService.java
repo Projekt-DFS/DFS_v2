@@ -28,17 +28,20 @@ public class PeerService {
 	
 	public List<Peer> getAllNeighbors() {
 		return peer.getRoutingTable();
-		//return new ArrayList<>(neighbors.values());
 	}
 
-	public Peer getPeer(int pid) {
-		return peer.getRoutingTable().get(pid);
-		//return neighbors.get(pid);
+	public Peer getPeer(String ip) {
+		Peer result = new Peer();
+		for ( Peer neighbor :peer.getRoutingTable()) {
+			if( neighbor.getIp_adresse().equals(ip)) {
+			result = neighbor;
+			}
+		}
+		return result;
 	}
 
 	public Peer addPeer(Peer newPeer) {
 		peer.mergeRoutingTableSinglePeer(newPeer);
-		//neighbors.put(neighbors.size() + 1, newPeer);
 		return newPeer;
 	}
 
@@ -52,12 +55,15 @@ public class PeerService {
 
 	public String deletePeer(String ip) {
 		for ( Peer neighbor : peer.getRoutingTable()) {
-			if( neighbor.getIp_adresse().equals(ip));
-			peer.eliminateNeighbours(neighbor);
-		}
-		return "Peer successfully removed!";
+			if( neighbor.getIp_adresse().equals(ip)) {
+				peer.getRoutingTable().remove(neighbor);
+				return "Peer successfully removed!";
+				}
+			}
+			return "Peer doesn't exist";
+		
 	}
-
+	
 	public Zone getOwnZone() {
 		return peer.getOwnZone();
 	}
