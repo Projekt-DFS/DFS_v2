@@ -168,15 +168,16 @@ public class Peer {
 	 */
 	public Peer updateRoutingTables(Peer newPeer) {
 	
-		Peer peer2= new Peer(newPeer);
-		Peer peer3 =new Peer(this);
+		//Peer peer2= new Peer(newPeer);
+		//Peer peer3 =new Peer(this);
 		// oldPeer becomes neighbour of new Peer
-		newPeer.mergeRoutingTableSinglePeer(peer3);
+		newPeer.mergeRoutingTableWithList(routingTable);
+		newPeer.mergeRoutingTableSinglePeer(this);
 		//newPeer becomes neighbour of oldPeer
-	    this.mergeRoutingTableSinglePeer(peer2);
+	    this.mergeRoutingTableSinglePeer(newPeer);
 	    
 	    // newPeer gets the routingTable from oldPeer
-	    newPeer.mergeRoutingTableWithList(routingTable);
+	    
 	    
 //	     newPeer becomes neighbour of oldPeer
 	
@@ -489,7 +490,6 @@ public class Peer {
 					}
 					
 					return closestNeighbour.routing(destinationCoordinate);
-//					return closestNeighbour;
 				}
 	
 		/**
@@ -557,8 +557,15 @@ public class Peer {
 				newPeer = splitZone(newPeer);
 				
 			} else {
-				newPeer.mergeRoutingTableWithList(getRoutingTable());
-				newPeer.joinRequest(newPeer.generateRandomPoint());
+				Point p = newPeer.generateRandomPoint();
+				if(lookup(p)) {
+					newPeer = splitZone(newPeer);
+				} else {
+					newPeer.setOwnZone(getOwnZone());
+					newPeer.mergeRoutingTableWithList(getRoutingTable());
+					newPeer.joinRequest(newPeer.generateRandomPoint());
+				}
+				
 			}		
 		    System.out.println("Bootstrap nach createPeer(): "+ this);
 			return newPeer;
