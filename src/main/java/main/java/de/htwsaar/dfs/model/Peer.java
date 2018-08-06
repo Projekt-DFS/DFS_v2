@@ -642,11 +642,17 @@ public class Peer {
 			} else {
 				Point p = newPeer.generateRandomPoint();
 				if(lookup(p)) {
+<<<<<<< HEAD
 					System.out.println("Fall unten");
 					//newPeer = splitZone(newPeer);
 					newPeer.setOwnZone(splitZone());
 					newPeer = updateRoutingTables(newPeer);
 					
+=======
+					Peer zielP = routing(p);
+					createPeerInPeer(zielP.getIp_adresse(),"p2p", newPeer);
+					newPeer = splitZone(newPeer);
+>>>>>>> branch 'master' of https://github.com/Projekt-DFS/DFS_v2.git
 				} else {
 					System.out.println("Fall rechts");
 					newPeer.setOwnZone(getOwnZone());
@@ -662,6 +668,7 @@ public class Peer {
 			return newPeer;
 		}
 		
+<<<<<<< HEAD
 
 		private void createPeerInPeer(String ip, String api, Peer newPeer) {
 
@@ -705,6 +712,28 @@ public class Peer {
 		
 		
 		
+=======
+		private void createPeerInPeer(String ip, String api, Peer newPeer) {
+
+	    	//every join request commes to the bootstrap first
+			final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
+			
+			//Build a Peer only with IP. The Bootstrap will give him a zone.
+			//Peer peer= newPeer;
+			
+			Client client = ClientBuilder.newClient();
+			WebTarget webTarget = client.target(bootstrapURL);
+			Invocation.Builder invocationBuilder 
+			  = webTarget.request(MediaType.APPLICATION_JSON);
+			Response response 
+			  = invocationBuilder
+			  .post(Entity.entity(newPeer, MediaType.APPLICATION_JSON));
+			System.out.println("Response Code : " + response.getStatus());
+			newPeer = response.readEntity(Peer.class);
+			
+			System.out.println("My Peer :" + newPeer );
+		}
+>>>>>>> branch 'master' of https://github.com/Projekt-DFS/DFS_v2.git
 		
 		public String toString() {
 			return "[ ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTableToString()+ "]";
