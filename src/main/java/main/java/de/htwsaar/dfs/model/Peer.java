@@ -626,7 +626,7 @@ public class Peer {
 					
 					Peer zielP = routing(p);
 					new PeerClient().createPeer(zielP.getIp_adresse(),"p2p", newPeer);
-					newPeer = splitZone(newPeer);
+					//newPeer = splitZone(newPeer);
 
 				} else {
 					System.out.println("Fall rechts");
