@@ -176,7 +176,7 @@ public class Peer {
 	
 	
 	/**
-	 * Wird auf JEDEM Nachbars Peer aufgerufen
+	 * Wird auf altem Peer aufgerufen um RT von neuem Peer zu initialisieren
 	 * @return
 	 */
 	public void initializeRoutingTable(Peer newPeer) {
@@ -191,7 +191,7 @@ public class Peer {
 			if(!neighbour.isNeighbour(this)) {
 				
 				//TODO: Anfrage über REST zum Loeschen der RoutingTableEintraege
-				new PeerClient().addNeighbor(neighbour.getIp_adresse(), "p2p", this.getIp_adresse());
+				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), "p2p", this);
 			}
 		}
 	}
@@ -204,7 +204,7 @@ public class Peer {
 				
 			} else {
 				//TODO: Anfrage über REST zum Eintragen
-				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), "p2p", this.getIp_adresse());
+				new PeerClient().addNeighbor(neighbour.getIp_adresse(), "p2p", this);
 			
 			}
 		}
@@ -541,7 +541,7 @@ public class Peer {
 						}
 					}
 					
-					return closestNeighbour.routing(destinationCoordinate);
+					return closestNeighbour;//.routing(destinationCoordinate);
 				}
 	
 		/**
@@ -573,14 +573,7 @@ public class Peer {
 			if (lookup(destinationCoordinate)) {
 				return this;
 			} else {
-				//return shortestPath(destinationCoordinate);
-//				tmpPeer = shortestPath(destinationCoordinate);
-//				String baseUrl ="http://"+ tmpPeer.getIp_adresse()+":4434/p2p/v1/routing";
-//				Client c = ClientBuilder.newClient();
-//			    WebTarget  target = c.target( baseUrl );
-//			    tmpPeer = target.queryParam("destinationPoint",destinationCoordinate).request( MediaType.APPLICATION_JSON).get( Peer.class );
-//				c.close();
-//				return tmpPeer;
+
 				Peer tmpPeer = shortestPath(destinationCoordinate);
 				return new PeerClient().routing(tmpPeer, destinationCoordinate);
 			}
@@ -608,29 +601,30 @@ public class Peer {
 			System.out.println("Bootstrap vor createPeer(): " + this);
 			Peer newPeer = new Peer(newPeerAdress);
 			if(getRoutingTable().size() == 0) {
-				//newPeer = splitZone(newPeer);
 				newPeer.setOwnZone(splitZone());
 				newPeer = updateRoutingTables(newPeer);
 			} else {
-				Point p = newPeer.generateRandomPoint();
+				Point p = new Point(0.8, 0.3);//newPeer.generateRandomPoint();
 				if(lookup(p)) {
 
 					System.out.println("Fall unten");
-					//newPeer = splitZone(newPeer);
 					newPeer.setOwnZone(splitZone());
-					newPeer = updateRoutingTables(newPeer);
+					initializeRoutingTable(newPeer);
+					checkNeighboursOldPeer();
+					newPeer.checkNeighboursNewPeer();
+					mergeRoutingTableSinglePeer(newPeer);
 					
-					Peer zielP = routing(p);
-					new PeerClient().createPeer(zielP.getIp_adresse(),"p2p", newPeer);
-					//newPeer = splitZone(newPeer);
-
 				} else {
 					System.out.println("Fall rechts");
 					newPeer.setOwnZone(getOwnZone());
 					Peer zielP = routing(p);
 					System.out.println("ZielPeer: " + zielP);
-					newPeer.mergeRoutingTableWithList(getRoutingTable());
-					newPeer.joinRequest(newPeer.generateRandomPoint());
+					
+					new PeerClient().createPeer(zielP.getIp_adresse(), "p2p", newPeer);
+					
+					
+					/*newPeer.mergeRoutingTableWithList(getRoutingTable());
+					newPeer.joinRequest(newPeer.generateRandomPoint());*/
 				}
 				
 			}		

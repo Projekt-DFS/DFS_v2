@@ -29,11 +29,11 @@ public class PeerClient {
 	 * @param peerToDeleteIP : the peer that should be delete
 	 * @return true if done
 	 */
-	public boolean deleteNeighbor(String destinationIp , String api, String peerToDeleteIP) {
+	public boolean deleteNeighbor(String destinationIp , String api, Peer peerToDelete) {
 		System.out.println("---------------------Start delete------------------- ");
-	    System.out.println(peerToDeleteIP + " from the routing table of " + destinationIp);
+	    System.out.println(peerToDelete.getIp_adresse() + " from the routing table of " + destinationIp);
 		boolean isRemoved = false;
-		final String neighBorIP ="http://"+ destinationIp + ":4434/" + api + "/v1/neighbors/" + peerToDeleteIP;
+		final String neighBorIP ="http://"+ destinationIp + ":4434/" + api + "/v1/neighbors/" + peerToDelete.getIp_adresse();
 		Client c = ClientBuilder.newClient();
 	    WebTarget  target = c.target( neighBorIP );
 	    Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
@@ -55,15 +55,15 @@ public class PeerClient {
 	 * @param peerToDeleteIP : the peer that should be add
 	 * @return true if done
 	 */
-	public boolean addNeighbor(String destinationIp , String api, String peerToDeleteIP) {
+	public boolean addNeighbor(String destinationIp , String api, Peer peerToDelete) {
 		System.out.println("---------------------Start add -------------------");
-		System.out.println(peerToDeleteIP + " in the routing table of " + destinationIp);
+		System.out.println(peerToDelete.getIp_adresse() + " in the routing table of " + destinationIp);
 		boolean isAdded = false;
 		final String neighBorIP ="http://"+ destinationIp + ":4434/" + api + "/v1/neighbors/";
 		Client c = ClientBuilder.newClient();
 	    WebTarget  target = c.target( neighBorIP );
 	    Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
-	    Response response = invocationBuilder.post(Entity.entity(peerToDeleteIP, MediaType.APPLICATION_JSON));
+	    Response response = invocationBuilder.post(Entity.entity(peerToDelete, MediaType.APPLICATION_JSON));
 	    System.out.println("Response:" + response.getStatus());
 	    if( response.getStatus() == 200) {
 	    	isAdded = true;
