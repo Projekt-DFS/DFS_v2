@@ -89,7 +89,7 @@ public class StartBootstrap {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-    	putInDb();
+    	//putInDb();
         startServer();
         System.in.read();
        

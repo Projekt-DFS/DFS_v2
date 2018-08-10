@@ -540,7 +540,7 @@ public class Peer {
 							smallestSquare = this.getRoutingTable().get(i).getZone().calculateCentrePoint().distanceSq(destinationCoordinate);
 						}
 					}
-					
+					System.out.println("Naechster Nachbar: " + closestNeighbour.getIp_adresse());
 					return closestNeighbour;//.routing(destinationCoordinate);
 				}
 	
@@ -570,6 +570,7 @@ public class Peer {
 		public Peer routing(Point destinationCoordinate) {
 			// Temporärer Peer zur Zwischenspeicherung
 			//Peer tmpPeer = new Peer();
+			System.out.println("Routing auf Peer: " + getIp_adresse());
 			if (lookup(destinationCoordinate)) {
 				return this;
 			} else {
