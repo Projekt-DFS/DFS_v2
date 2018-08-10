@@ -29,10 +29,6 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.http.client.ClientProtocolException;
 
-import main.java.de.htwsaar.dfs.utils.RestUtils;
-import main.java.de.htwsaar.dfs.utils.StaticFunctions;
-
-
 /**
  * @author Thomas Spanier
  * @author Raphaela Wagner

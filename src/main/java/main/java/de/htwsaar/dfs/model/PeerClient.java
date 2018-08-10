@@ -30,7 +30,8 @@ public class PeerClient {
 	 * @return true if done
 	 */
 	public boolean deleteNeighbor(String destinationIp , String api, String peerToDeleteIP) {
-		System.out.println("Start delete "+ peerToDeleteIP + " from the routing table of " + destinationIp);
+		System.out.println("---------------------Start delete------------------- ");
+	    System.out.println(peerToDeleteIP + " from the routing table of " + destinationIp);
 		boolean isRemoved = false;
 		final String neighBorIP ="http://"+ destinationIp + ":4434/" + api + "/v1/neighbors/" + peerToDeleteIP;
 		Client c = ClientBuilder.newClient();
@@ -40,7 +41,7 @@ public class PeerClient {
 	    System.out.println("Response:" + response.getStatus());
 	    if( response.getStatus() == 200) {
 	    	isRemoved = true;
-	    	System.out.println("Terminate delete "+ peerToDeleteIP + " from the routing table of " + destinationIp);
+	    	System.out.println("----------------------Terminate delete ------------------------");
 	    }
 		c.close();
 		
@@ -55,7 +56,8 @@ public class PeerClient {
 	 * @return true if done
 	 */
 	public boolean addNeighbor(String destinationIp , String api, String peerToDeleteIP) {
-		System.out.println("Start add "+ peerToDeleteIP + " in the routing table of " + destinationIp);
+		System.out.println("---------------------Start add -------------------");
+		System.out.println(peerToDeleteIP + " in the routing table of " + destinationIp);
 		boolean isAdded = false;
 		final String neighBorIP ="http://"+ destinationIp + ":4434/" + api + "/v1/neighbors/";
 		Client c = ClientBuilder.newClient();
@@ -65,7 +67,7 @@ public class PeerClient {
 	    System.out.println("Response:" + response.getStatus());
 	    if( response.getStatus() == 200) {
 	    	isAdded = true;
-	    	System.out.println("Terminate add "+ peerToDeleteIP + " in the routing table of " + destinationIp);
+	    	System.out.println("--------------------Terminate add ----------------- ");
 			
 	    }
 		c.close();
@@ -80,14 +82,15 @@ public class PeerClient {
 	 * @return the peer that have the point in his zone.
 	 */
 	public Peer routing(Peer destinationPeer , Point destinationCoordinate) {
-		System.out.println("Start routing " + destinationCoordinate + " to "+ destinationPeer );
+		System.out.println("---------------Start routing---------------- " );
+		System.out.println(destinationCoordinate + "to "+ destinationPeer );
 		String baseUrl ="http://"+ destinationPeer.getIp_adresse()+":4434/p2p/v1/routing";
 		Client c = ClientBuilder.newClient();
 	    WebTarget  target = c.target( baseUrl );
 	    Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
 	    Response response = invocationBuilder.post(Entity.entity(destinationCoordinate, MediaType.APPLICATION_JSON));
 	    System.out.println("Response:" + response.getStatus());
-	    System.out.println("Stop routing " + destinationCoordinate + " to "+ destinationPeer );
+	    System.out.println("---------------Stop routing-------------------- "  );
 	    destinationPeer = response.readEntity(Peer.class);
 	    System.out.println("Destination Peer is: " + destinationPeer);
 		c.close();
@@ -104,7 +107,8 @@ public class PeerClient {
 	public void createPeer(String destinationIp, String api, Peer newPeer) {
 
 		final String URL ="http://" + destinationIp + ":4434/"+api+"/v1/createPeer";
-		
+		System.out.println("---------------Start createPeer---------------- " );
+		System.out.println("Destination: " + URL );
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target(URL);
 		Invocation.Builder invocationBuilder 
@@ -116,6 +120,7 @@ public class PeerClient {
 		newPeer = response.readEntity(Peer.class);
 		
 		System.out.println("My Peer :" + newPeer );
+		System.out.println("---------------Terminate CreatePeer---------------- " );
 	}
 	
 	/**
