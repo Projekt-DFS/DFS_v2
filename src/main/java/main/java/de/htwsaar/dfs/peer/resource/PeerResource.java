@@ -154,7 +154,7 @@ public class PeerResource {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	@POST
+	/*@POST
 	@Path("/createPeer")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -162,7 +162,17 @@ public class PeerResource {
 		Peer nP= ps.createPeer(peer.getIp_adresse());
 		System.out.println("new Peer successfully created :" + nP);
 		return nP;
+	}*/
+	@POST
+	@Path("/createPeer")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Peer createPeer(String ip) throws ClientProtocolException, IOException{
+		Peer nP= ps.createPeer(ip);
+		System.out.println("new Peer successfully created :" + nP);
+		return nP;
 	}
+	
 	
 	/**
 	 * This method returns a Peer Object witch is near to the coordinates

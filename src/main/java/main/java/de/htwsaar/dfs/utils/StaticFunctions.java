@@ -77,9 +77,11 @@ public class StaticFunctions {
 	/**
 	 * returns a non-loopback IP-Address
 	 * @return a non-loopback IP-Address
-	 * @author Thomas Spanier
 	 */
-	public static InetAddress getRightIP() {
+	public static String getRightIP() {
+		String[] tmpArray;
+		String ip;
+		
 		Enumeration<NetworkInterface> e;
 		try {
 			e = NetworkInterface.getNetworkInterfaces();
@@ -92,7 +94,9 @@ public class StaticFunctions {
 			        try {
 			        	Inet4Address i = (Inet4Address) ee.nextElement();
 			        	if(!i.isLoopbackAddress()) {
-				        	return i;
+			        		tmpArray =  i.toString().split("[/]");
+			        		ip = tmpArray[1];
+				        	return ip;
 				        }
 			        } catch (ClassCastException e1) {
 			        	//Do nothing, if it's no ipv4 Address

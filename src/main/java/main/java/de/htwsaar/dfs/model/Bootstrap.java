@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -52,10 +53,14 @@ public class Bootstrap extends Peer {
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		this.ip_adresse = StaticFunctions.getRightIP().getHostAddress();
+		this.ip_adresse = StaticFunctions.getRightIP();
 		
 		//Create a new Zone
 		createZone(new Point(0.0, 0.0), new Point(1.0, 1.0));
+		
+		//this.setId(0);
+		rt = new ArrayList<String>();
+		routingTable = new CopyOnWriteArrayList<Peer>();
 	}
 	
 
