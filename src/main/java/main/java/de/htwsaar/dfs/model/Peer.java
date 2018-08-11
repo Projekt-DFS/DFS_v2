@@ -171,15 +171,15 @@ public class Peer {
 	public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
 		System.out.println("Bootstrap vor createPeer(): " + this);
 		Peer newPeer = new Peer(newPeerAdress);
-		//newPeer.setId(++idCount);
 		newPeer.initializeRt();
 		System.out.println("ID: " + newPeer.getIp_adresse());
+		//If Bootstrap is the only peer in the network
 		//if(getRoutingTable().size() == 0) {
 		if(rt.size() ==0 ) {
 			newPeer.setOwnZone(splitZone());
 
 			rt.add(newPeerAdress);
-			newPeer.addPeerToRt(newPeerAdress);
+			newPeer.addPeerToRt(getIp_adresse());
 			/*Peer peer2= new Peer(newPeer);
 			Peer peer3 =new Peer(this);
 			newPeer.mergeRoutingTableSinglePeer(peer3);
@@ -195,18 +195,26 @@ public class Peer {
 				newPeer.checkNeighboursNewPeer();
 				mergeRoutingTableSinglePeer(newPeer);*/
 				//TEMPORARY
+				//Copy oldPeer's rt to newPeer's rt and add oldPeer to newPeer's rt
 				newPeer.addListToRt(rt);
 				newPeer.addPeerToRt(getIp_adresse());
-				newPeer.checkRtNewPeer();
-				checkRtOldPeer();
+				
+				//Die muessen wieder rein
+				//newPeer.checkRtNewPeer();
+				//checkRtOldPeer();
+				
 				rt.add(newPeerAdress);
 			} else {
 				System.out.println("Fall nicht bt");
 				newPeer.setOwnZone(getOwnZone());
 				
-				Peer zielP = routing(p);
+				/*Peer zielP = routing(p);
 				System.out.println("ZielPeer: " + zielP);
-				new PeerClient().createPeer(zielP.getIp_adresse(), "p2p", newPeer);
+				new PeerClient().createPeer(zielP.getIp_adresse(), "p2p", newPeer);*/
+				
+				//Re-Open createPeer on destinationPeer (then, case bt will occur)
+				Peer destPeer = peerRouting(p);
+				destPeer.createPeer(newPeerAdress);
 				}
 			}		
 	    System.out.println("Bootstrap nach createPeer(): "+ this);
@@ -232,7 +240,7 @@ public class Peer {
 	 * @return new Zone for the new Peer
 	 */
 	public Zone splitZone() {
-		Zone newZone = new Zone();;
+		Zone newZone = new Zone();
 		if (ownZone.isSquare()) {
 	        
 	    	newZone.setZone(new Point(ownZone.calculateCentrePoint().getX(), ownZone.getBottomRight().getY()), ownZone.getUpperRight());
@@ -287,7 +295,11 @@ public class Peer {
 	}
 	
 	
-	public void iniRt(Peer newPeer) {
+	/**
+	 * copies the oldPeer's rt to the newPeer and adds itself
+	 * @param newPeer
+	 */
+	public void copyRt(Peer newPeer) {
 		newPeer.addListToRt(getRt());
 		newPeer.addPeerToRt(getIp_adresse());
 	}
@@ -451,7 +463,7 @@ public class Peer {
 	 * @author Thomas Spanier 11.08.2018
 	 */
 	public void addPeerToRt(String ip) {
-		if(!rt.contains(ip)) {
+		if(!rt.contains(ip) && !ip_adresse.equals(ip)) {
 			rt.add(ip);
 		}
 	}
@@ -465,7 +477,7 @@ public class Peer {
 	public void addListToRt(ArrayList<String> neighboursRt) {
 		//rt.addAll(neighboursRt);
 		for(String ip: neighboursRt) {
-			if(!rt.contains(ip)) {
+			if(!rt.contains(ip) && !ip_adresse.equals(ip)) {
 				rt.add(ip);
 			}
 		}

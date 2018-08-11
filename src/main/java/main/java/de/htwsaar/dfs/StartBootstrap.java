@@ -64,7 +64,7 @@ public class StartBootstrap {
 	      try {
 	        img2 = ImageIO.read(new File("./dummyBilder/"+i+".jpg"));
 	        LinkedList<String> tagList = new LinkedList<String>();  
-	        bootstrap.createImage(img2, "user2", "name"+ i + ".jpg", "Milan",new Date(), tagList);
+	        //bootstrap.createImage(img2, "user2", "name"+ i + ".jpg", "Milan",new Date(), tagList);
 	      } catch (IOException e) {
 	        e.printStackTrace();
 	      }
