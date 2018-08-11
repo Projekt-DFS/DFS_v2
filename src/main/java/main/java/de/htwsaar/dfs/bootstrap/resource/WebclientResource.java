@@ -91,7 +91,6 @@ public class WebclientResource {
 			System.err.println(e);
 			e.printStackTrace();
 		}
-        System.out.println(fileAsString);
         return fileAsString;
 	}
 	
