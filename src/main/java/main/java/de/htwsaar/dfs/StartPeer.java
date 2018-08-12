@@ -133,7 +133,7 @@ public class StartPeer {
      * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void start() throws IOException {
         startServer();
         joinPeer(bootstrapIP, "bootstrap");
         System.in.read();

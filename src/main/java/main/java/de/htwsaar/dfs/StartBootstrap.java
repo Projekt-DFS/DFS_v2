@@ -41,7 +41,7 @@ public class StartBootstrap {
         final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.bootstrap.resource");
         rc.register(MultiPartFeature.class);
         rc.register(LoggingFilter.class);
-        //rc.register(SecurityFilter.class); //TODO temporary deactivated
+        rc.register(SecurityFilter.class); //TODO temporary deactivated
 
                
         // create and start a new instance of grizzly http server
@@ -88,7 +88,7 @@ public class StartBootstrap {
      * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void start() throws IOException {
     	putInDb();
         startServer();
         System.in.read();
