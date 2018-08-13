@@ -131,11 +131,9 @@ public class Peer {
 	 * @param ip
 	 * @return
 	 */
-	public Peer getPeer(String ip) {
-		Peer peer = new Peer();
-		//TODO: Baue Verbindung mit Peer mit der ip auf und gebe ihn zurueck
-		
-		return peer;
+	public Peer getPeer(String ip, String api) {
+		//Baue Verbindung mit Peer mit der ip auf und gebe ihn zurueck
+		return new PeerClient().getPeer(ip, api);
 	}
 	
 

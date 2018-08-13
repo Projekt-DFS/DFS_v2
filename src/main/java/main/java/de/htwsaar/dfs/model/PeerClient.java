@@ -131,7 +131,6 @@ public class PeerClient {
 	 * @return image that has been created
 	 * @throws ClientProtocolException
 	 * @throws IOException
-	 * @author Aude Nana 28.07.2017
 	 */
 	public Image forwardCreateImage(String destinationPeerIP, String username, Image image) throws ClientProtocolException, IOException {
 		
@@ -148,4 +147,29 @@ public class PeerClient {
 		return image;
 	}
 	
+	
+	/**
+	 * This method returns the information of the peer host on an IP
+	 * @param ip 
+	 * @param api
+	 * @return
+	 */
+	public Peer getPeer(String ip ,String api) {
+		
+		final String URL ="http://" + ip + ":4434/"+api+"/v1";
+		
+		System.out.println("---------------Start getPeer---------------- " );
+		System.out.println("Destination: " + URL );
+		Client client = ClientBuilder.newClient();
+		WebTarget webTarget = client.target(URL);
+		Invocation.Builder invocationBuilder 
+		  = webTarget.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.get();
+		System.out.println("Response Code : " + response.getStatus());
+		Peer peer = response.readEntity(Peer.class);
+		
+		System.out.println(" Peer under the ip " + ip + " is : " + peer );
+		System.out.println("---------------Terminate getPeer---------------- " );
+		return peer;
+	}
 }
