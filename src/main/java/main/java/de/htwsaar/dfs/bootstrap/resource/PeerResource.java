@@ -150,17 +150,7 @@ public class PeerResource {
 	 * @return a Peer with his new Zone 
 	 * @throws ClientProtocolException
 	 * @throws IOException
-	 */
-	/*@POST
-	@Path("/createPeer")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Peer createPeer(Peer peer) throws ClientProtocolException, IOException{
-		Peer nP= ps.createPeer(peer.getIp_adresse());
-		System.out.println("new Peer successfully created :" + nP);
-		return nP;
-	}*/
-	
+	 */	
 	@POST
 	@Path("/createPeer")
 	@Produces(MediaType.APPLICATION_JSON)

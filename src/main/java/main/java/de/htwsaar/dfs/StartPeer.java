@@ -52,7 +52,6 @@ public class StartPeer {
                
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
-        //return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP() +":" + Peer.port+ "/p2p/v1/"), rc);
         return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+StaticFunctions.getRightIP() +":" + Peer.port+ "/p2p/v1/"), rc);
     }
     
@@ -70,11 +69,10 @@ public class StartPeer {
 		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
 		
 		//Build a Peer only with IP. The Bootstrap will give him a zone.
-		//peer= new Peer(getIP());
+
 		String ip_adresse;
 		ip_adresse = StaticFunctions.getRightIP();
-		
-		
+
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target(bootstrapURL);
 		Invocation.Builder invocationBuilder 
@@ -83,7 +81,7 @@ public class StartPeer {
 		  = invocationBuilder
 		  .post(Entity.entity(ip_adresse, MediaType.APPLICATION_JSON));
 		System.out.println("Response Code : " + response.getStatus());
-		Peer peer = response.readEntity(Peer.class);
+		peer = response.readEntity(Peer.class);
 		
 		System.out.println("My Peer :" + peer );
 		

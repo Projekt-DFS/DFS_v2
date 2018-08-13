@@ -25,14 +25,11 @@ public class PeerService {
 
 
 	public Peer getPeer() {
-		Peer p = new Peer(bootstrap);
-		return p;//bootstrap;
+		return bootstrap;
 	} 
 	
 	public List<Peer> getAllNeighbors() {
-		CopyOnWriteArrayList< Peer> list = new CopyOnWriteArrayList<>(bootstrap.getRoutingTable());
-		return list;//bootstrap.getRoutingTable();
-		//return new ArrayList<>(neighbors.values());
+		return bootstrap.getRoutingTable();
 	}
 
 	public Peer getPeer(String ip) {
