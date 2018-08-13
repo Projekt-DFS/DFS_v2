@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.http.client.ClientProtocolException;
 
+import main.java.de.htwsaar.dfs.StartPeer;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
@@ -184,6 +185,7 @@ public class Peer {
 		    this.mergeRoutingTableSinglePeer(peer2);
 			*/
 		} else {
+			//TODO: use generateRandomPoint
 			Point p = new Point(0.1, 0.9);//newPeer.generateRandomPoint();
 			if(lookup(p)) {
 				System.out.println("Fall bt");
@@ -192,6 +194,7 @@ public class Peer {
 				checkNeighboursOldPeer();
 				newPeer.checkNeighboursNewPeer();
 				mergeRoutingTableSinglePeer(newPeer);*/
+				
 				//TEMPORARY
 				//Copy oldPeer's rt to newPeer's rt and add oldPeer to newPeer's rt
 				newPeer.addListToRt(rt);
@@ -324,11 +327,19 @@ public class Peer {
 	 */
 	public void checkRtOldPeer() {
 		//TODO: Test
+		String api = "";
 		for(String ip : rt) {
-			Peer neighbour = getPeer(ip);
+			if(ip.equals(StartPeer.bootstrapIP)) {
+				api = "bootstrap";
+			} else {
+				api = "p2p";
+			}
+			Peer neighbour = getPeer(ip, api);
 			if(!neighbour.isNeighbour(this)) {
+				neighbour.deletePeerFromRt(ip);
 				//new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), "p2p", this);
 				//TODO: Anfrage ueber REST zum Entfernen aus rt
+				
 			}
 		}
 	}
@@ -368,21 +379,31 @@ public class Peer {
 	public void checkRtNewPeer() {
 		//TODO: Test
 		for(String ip : rt) {
-			Peer neighbour = getPeer(ip);
+			String api = "";
+			
+			if(ip.equals(StartPeer.bootstrapIP)) {
+				api = "bootstrap";
+			} else {
+				api = "p2p";
+			}
+			
+			Peer neighbour = getPeer(ip, api);
 			System.out.println("Nachbar wird gecheckt:" + neighbour.getIp_adresse());
 			if(!neighbour.isNeighbour(this)) {
-				this.routingTable.remove(neighbour);
+				//this.routingTable.remove(neighbour);
+				deletePeerFromRt(neighbour.getIp_adresse());
 				System.out.println("Keine Nachbarn");
 			} else {
-				//TODO: IP-Adresse des Bootstraps erfassen
-				if(neighbour.getIp_adresse().equals("192.168.178.27")) {
+				if(neighbour.getIp_adresse().equals(StartPeer.bootstrapIP)) {
 					System.out.println("Bootstrap wird benachrichtigt");
 					//new PeerClient().addNeighbor(neighbour.getIp_adresse(), "bootstrap", this);
 					//TODO: Anfrage ueber REST zum Eintragen in rt
+					getPeer(ip, "bootstrap").addPeerToRt(ip);
 				} else {
 					System.out.println("Peer traegt newPeer ein");
 					//new PeerClient().addNeighbor(neighbour.getIp_adresse(), "p2p", this);
 					//TODO: Anfrage ueber REST zum Eintragen in rt
+					getPeer(ip, "p2p").addPeerToRt(ip);
 				}
 				
 			
@@ -463,6 +484,17 @@ public class Peer {
 	public void addPeerToRt(String ip) {
 		if(!rt.contains(ip) && !ip_adresse.equals(ip)) {
 			rt.add(ip);
+		}
+	}
+	
+	
+	/**
+	 * Deletes an IP-Address from peer's rt
+	 * @param ip
+	 */
+	public void deletePeerFromRt(String ip) {
+		if(rt.contains(ip)) {
+			rt.remove(ip);
 		}
 	}
 	
@@ -600,16 +632,27 @@ public class Peer {
 	 * @author Thomas Spanier 11.08.2018
 	 */
 	public Peer peerRouting(Point destinationCoordinate) {
+		String api ="";
 		System.out.println("Routing auf Peer: " + getIp_adresse());
 		if (lookup(destinationCoordinate)) {
 			return this;
 		} else {
-			Peer closestNeighbour = getPeer(rt.get(0));
+			if(rt.get(0).equals(StartPeer.bootstrapIP)) {
+				api = "bootstrap";
+			} else {
+				api = "p2p";
+			}
+			Peer closestNeighbour = getPeer(rt.get(0), api);
 			double smallestSquare = closestNeighbour.getOwnZone().calculateCentrePoint().distanceSq(destinationCoordinate);
 			
 			for(int i = 1; i < rt.size(); i++) {
-				if (getPeer(rt.get(i)).getOwnZone().calculateCentrePoint().distanceSq(destinationCoordinate) < smallestSquare) {
-					closestNeighbour = getPeer(rt.get(i));
+				if(rt.get(i).equals(StartPeer.bootstrapIP)) {
+					api = "bootstrap";
+				} else {
+					api = "p2p";
+				}
+				if (getPeer(rt.get(i), api).getOwnZone().calculateCentrePoint().distanceSq(destinationCoordinate) < smallestSquare) {
+					closestNeighbour = getPeer(rt.get(i), api);
 					smallestSquare = closestNeighbour.getOwnZone().calculateCentrePoint().distanceSq(destinationCoordinate);
 				}
 			}
