@@ -22,7 +22,6 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import main.java.de.htwsaar.dfs.model.Peer;
-import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
  * Main Class
@@ -33,7 +32,7 @@ import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 public class StartPeer {
 	
 	public static Peer peer = new Peer();
-	public static String bootstrapIP = "192.168.178.27";
+	private static String bootstrapIP = "10.9.45.17";
 
 	public StartPeer(String bootstrapIP) {
 		StartPeer.bootstrapIP = bootstrapIP;	
@@ -52,7 +51,7 @@ public class StartPeer {
                
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+StaticFunctions.getRightIP() +":" + Peer.port+ "/p2p/v1/"), rc);
+        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP() +":" + Peer.port+ "/p2p/v1/"), rc);
     }
     
     /**
@@ -62,24 +61,22 @@ public class StartPeer {
      * @param api : the api that is install on the destinationpeer
      * @throws ClientProtocolException
      * @throws IOException
-     */   
+     */
     private static void joinPeer(String ip, String api) throws ClientProtocolException, IOException {
     	
     	//every join request commes to the bootstrap first
 		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
 		
 		//Build a Peer only with IP. The Bootstrap will give him a zone.
-
-		String ip_adresse;
-		ip_adresse = StaticFunctions.getRightIP();
-
+		peer= new Peer(getIP());
+		
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target(bootstrapURL);
 		Invocation.Builder invocationBuilder 
 		  = webTarget.request(MediaType.APPLICATION_JSON);
 		Response response 
 		  = invocationBuilder
-		  .post(Entity.entity(ip_adresse, MediaType.APPLICATION_JSON));
+		  .post(Entity.entity(peer, MediaType.APPLICATION_JSON));
 		System.out.println("Response Code : " + response.getStatus());
 		peer = response.readEntity(Peer.class);
 		
@@ -87,7 +84,7 @@ public class StartPeer {
 		
 	}
     
-    
+
     /**
      * read the IP address automatically
      * @return
@@ -102,7 +99,7 @@ public class StartPeer {
      * @param args
      * @throws IOException
      */
-    public static void start() throws IOException {
+    public static void main(String[] args) throws IOException {
         startServer();
         joinPeer(bootstrapIP, "bootstrap");
         System.in.read();
