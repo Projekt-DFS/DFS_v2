@@ -18,6 +18,7 @@ public class Dialogue {
      // Main menue
     private static final int I_AM_A_BOOTSTRAP     = 1;
     private static final int I_AM_A_PEER	      = 2;
+    private static final int PRINT_CAN			  = 3;
     private static final int END                  = 0;
     
      // Submenue 1 (i_am_a_bootstrap)
@@ -58,12 +59,13 @@ public class Dialogue {
     private int readFunctionMainMenue() {
         int readInput;
          System.out.print(I_AM_A_BOOTSTRAP   	 + ": I'm the bootstrap\n" +
-            I_AM_A_PEER		                 	 + ": I'm a peer\n" +            
+            I_AM_A_PEER		                 	 + ": I'm a peer\n" +  
+            PRINT_CAN							 + ": Print existing CAN\n" +
             END                           		 + ": END.\n" 
             + "\nYour input: ");
          readInput = input.nextInt();
         
-        if (readInput < 0 || readInput > 2)
+        if (readInput < 0 || readInput > 3)
         	System.out.println("Bad input, try again");
         return readInput;
     }
@@ -131,6 +133,16 @@ public class Dialogue {
             	}
             	submenue = readFunctionPeerMenue();
             	executeFunctionPeerMenue(submenue);
+            	break;
+            	
+            case PRINT_CAN:
+            	if (bootstrapExists) {
+            		System.out.println("Bootstrap: " + StartBootstrap.bootstrap + "\n");
+            	} else if (peerExists) {
+            		System.out.println("Peer: " + StartPeer.peer + "\n");
+            	} else {
+            		System.out.println("\nNo CAN found. You are neither a bootstrap nor a peer.\n");
+            	}            		
             	break;
             
             case END:
