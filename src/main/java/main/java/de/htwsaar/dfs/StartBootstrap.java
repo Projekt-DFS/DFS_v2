@@ -88,7 +88,7 @@ public class StartBootstrap {
      * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void start() throws IOException {
     	//putInDb();
         startServer();
         System.in.read();

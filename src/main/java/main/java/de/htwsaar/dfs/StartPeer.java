@@ -32,7 +32,7 @@ import main.java.de.htwsaar.dfs.model.Peer;
 public class StartPeer {
 	
 	public static Peer peer = new Peer();
-	private static String bootstrapIP = "10.9.45.17";
+	public static String bootstrapIP = "10.9.45.17";
 
 	public StartPeer(String bootstrapIP) {
 		StartPeer.bootstrapIP = bootstrapIP;	
@@ -99,7 +99,7 @@ public class StartPeer {
      * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void start() throws IOException {
         startServer();
         joinPeer(bootstrapIP, "bootstrap");
         System.in.read();
