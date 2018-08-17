@@ -29,6 +29,8 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.http.client.ClientProtocolException;
 
+import main.java.de.htwsaar.dfs.StartPeer;
+
 /**
  * @author Thomas Spanier
  * @author Raphaela Wagner
@@ -189,7 +191,7 @@ public class Peer {
 	public void checkNeighboursOldPeer() {
 		for(Peer neighbour : routingTable) {
 			if(!neighbour.isNeighbour(this)) {
-				
+				//neighbour muss aus rt entfernt werden
 				//TODO: Anfrage über REST zum Loeschen der RoutingTableEintraege
 				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), "p2p", this);
 			}
@@ -203,8 +205,12 @@ public class Peer {
 				this.routingTable.remove(neighbour);
 				
 			} else {
-				//TODO: Anfrage über REST zum Eintragen
-				new PeerClient().addNeighbor(neighbour.getIp_adresse(), "p2p", this);
+				if(!neighbour.getIp_adresse().equals(StartPeer.bootstrapIP)) {
+					new PeerClient().addNeighbor(neighbour.getIp_adresse(), "p2p", this);
+				} else {
+					new PeerClient().addNeighbor(neighbour.getIp_adresse(), "bootstrap", this);
+				}
+				
 			
 			}
 		}
@@ -263,6 +269,11 @@ public class Peer {
 	 * @param potentialNeighbour
 	 */
 	public void mergeRoutingTableSinglePeer(Peer potentialNeighbour) {
+		for(Peer neighbour: routingTable) {
+			if(neighbour.getIp_adresse().equals(potentialNeighbour.getIp_adresse())) {
+				return ;
+			}
+		}
 		routingTable.add(potentialNeighbour);
 	}
 	
@@ -605,14 +616,14 @@ public class Peer {
 				newPeer.setOwnZone(splitZone());
 				newPeer = updateRoutingTables(newPeer);
 			} else {
-				Point p = new Point(0.8, 0.3);//newPeer.generateRandomPoint();
+				Point p = new Point(0.1, 0.9);//newPeer.generateRandomPoint();
 				if(lookup(p)) {
 
 					System.out.println("Fall unten");
 					newPeer.setOwnZone(splitZone());
-					initializeRoutingTable(newPeer);
-					checkNeighboursOldPeer();
-					newPeer.checkNeighboursNewPeer();
+					//initializeRoutingTable(newPeer);
+					//checkNeighboursOldPeer();
+					//newPeer.checkNeighboursNewPeer();
 					mergeRoutingTableSinglePeer(newPeer);
 					
 				} else {

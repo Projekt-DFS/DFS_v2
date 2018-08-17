@@ -158,6 +158,8 @@ public class PeerResource {
 	public Peer createPeer(Peer peer) throws ClientProtocolException, IOException{
 		Peer nP= ps.createPeer(peer.getIp_adresse());
 		System.out.println("new Peer successfully created :" + nP);
+		if(nP.getIp_adresse().equals("10.9.40.33"))
+			nP= new Peer(nP);
 		return nP;
 	}
 	
