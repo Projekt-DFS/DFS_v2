@@ -22,6 +22,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import main.java.de.htwsaar.dfs.model.Peer;
+import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
  * Main Class
@@ -32,7 +33,7 @@ import main.java.de.htwsaar.dfs.model.Peer;
 public class StartPeer {
 	
 	public static Peer peer = new Peer();
-	public static String bootstrapIP = "10.9.45.17";
+	public static String bootstrapIP = "192.168.178.27";//"10.9.45.17";
 
 	public StartPeer(String bootstrapIP) {
 		StartPeer.bootstrapIP = bootstrapIP;	
@@ -51,7 +52,7 @@ public class StartPeer {
                
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP() +":" + Peer.port+ "/p2p/v1/"), rc);
+        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+ StaticFunctions.getRightIP() +":" + Peer.port+ "/p2p/v1/"), rc);
     }
     
     /**
@@ -68,7 +69,7 @@ public class StartPeer {
 		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
 		
 		//Build a Peer only with IP. The Bootstrap will give him a zone.
-		peer= new Peer(getIP());
+		peer= new Peer(StaticFunctions.getRightIP());
 		
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target(bootstrapURL);

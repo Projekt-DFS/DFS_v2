@@ -15,7 +15,6 @@ import java.util.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
@@ -52,7 +51,7 @@ public class Bootstrap extends Peer {
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		this.ip_adresse = StaticFunctions.getRightIP().getHostAddress();
+		this.ip_adresse = StaticFunctions.getRightIP();
 		
 		//Create a new Zone
 		createZone(new Point(0.0, 0.0), new Point(1.0, 1.0));
@@ -120,6 +119,7 @@ public class Bootstrap extends Peer {
 	 */
 	public void setUserList(ArrayList<User> userList) {
 		this.userList = userList;
+		//Bootstrap.userList = userList;
 	}
 
 	
@@ -351,7 +351,7 @@ public class Bootstrap extends Peer {
 	 */
 	private Image forwardCreateImage(String destinationPeerIP, String username, ImageContainer imageContainer) throws ClientProtocolException, IOException {
 		
-		final String SUCCEED = "New image successfully added!";
+		//final String SUCCEED = "New image successfully added!";
 		
 		//build an Image from imageContainer
 		Image image =  new Image(imageContainer.getImageName(), 

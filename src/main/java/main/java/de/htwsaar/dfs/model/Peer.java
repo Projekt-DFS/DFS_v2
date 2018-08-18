@@ -12,8 +12,6 @@ import java.io.ObjectOutputStream;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -138,7 +136,7 @@ public class Peer {
 	 * @return new Zone for the new Peer
 	 */
 	public Zone splitZone() {
-		Zone newZone = new Zone();;
+		Zone newZone = new Zone();
 		if (ownZone.isSquare()) {
 	        
 	    	newZone.setZone(new Point(ownZone.calculateCentrePoint().getX(), ownZone.getBottomRight().getY()), ownZone.getUpperRight());
@@ -190,10 +188,20 @@ public class Peer {
 	
 	public void checkNeighboursOldPeer() {
 		for(Peer neighbour : routingTable) {
-			if(!neighbour.isNeighbour(this)) {
-				//neighbour muss aus rt entfernt werden
-				//TODO: Anfrage über REST zum Loeschen der RoutingTableEintraege
-				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), "p2p", this);
+			String api;
+			if(neighbour.getIp_adresse().equals(StartPeer.bootstrapIP)) {
+				api = "bootstrap";
+			} else {
+				api = "p2p";
+			}
+			
+			if(!isNeighbour(neighbour)) {
+				routingTable.remove(neighbour);
+				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), api, this);
+			} else {
+				//TODO: Uebermittle neue Zone, indem erst geloescht wird, dann wieder rein gesetzt
+				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), api, this);
+				new PeerClient().addNeighbor(neighbour.getIp_adresse(), api, this);
 			}
 		}
 	}
@@ -225,6 +233,7 @@ public class Peer {
 	/**
 	 * updates routingTables of all Peers affected
 	 * @param newPeer
+	 * @deprecated
 	 */
 	public Peer updateRoutingTables(Peer newPeer) {
 			
@@ -274,7 +283,10 @@ public class Peer {
 				return ;
 			}
 		}
-		routingTable.add(potentialNeighbour);
+		
+		Peer tmpPeer = new Peer(potentialNeighbour);
+		tmpPeer.dumpRoutingTable();
+		routingTable.add(tmpPeer);
 	}
 	
 	/**
@@ -284,6 +296,11 @@ public class Peer {
 	public void mergeRoutingTableWithList(CopyOnWriteArrayList<Peer> neighboursRoutingTable) {
 		routingTable.addAll(neighboursRoutingTable);
 	}
+	
+	private void dumpRoutingTable() {
+		routingTable.clear();
+	}
+	
 	
 	/**
 	 * eliminates neighbours from routingTable if isNeighbour() returns false
@@ -614,20 +631,28 @@ public class Peer {
 			Peer newPeer = new Peer(newPeerAdress);
 			if(getRoutingTable().size() == 0) {
 				newPeer.setOwnZone(splitZone());
-				newPeer = updateRoutingTables(newPeer);
+				//newPeer = updateRoutingTables(newPeer);
+				
+				// oldPeer becomes neighbour of new Peer
+				newPeer.mergeRoutingTableWithList(routingTable);
+				newPeer.mergeRoutingTableSinglePeer(this);
+				//newPeer becomes neighbour of oldPeer
+			    this.mergeRoutingTableSinglePeer(newPeer);
+				
+				
 			} else {
 				Point p = new Point(0.1, 0.9);//newPeer.generateRandomPoint();
 				if(lookup(p)) {
 
-					System.out.println("Fall unten");
+					System.out.println("Fall Bootstrap splittet sich");
 					newPeer.setOwnZone(splitZone());
-					//initializeRoutingTable(newPeer);
-					//checkNeighboursOldPeer();
-					//newPeer.checkNeighboursNewPeer();
+					initializeRoutingTable(newPeer);
+					checkNeighboursOldPeer();
+					newPeer.checkNeighboursNewPeer();
 					mergeRoutingTableSinglePeer(newPeer);
 					
 				} else {
-					System.out.println("Fall rechts");
+					System.out.println("Fall Peer splittet sich");
 					newPeer.setOwnZone(getOwnZone());
 					Peer zielP = routing(p);
 					System.out.println("ZielPeer: " + zielP);
@@ -718,5 +743,17 @@ public class Peer {
 			}
 		}
 
+		
+		@Override
+		public boolean equals(Object o) {
+			//TODO vervollstaendigen
+			Peer p = (Peer) o;
+			if(p.getIp_adresse().equals(this.getIp_adresse())) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
 	
 }

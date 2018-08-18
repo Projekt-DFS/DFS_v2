@@ -58,13 +58,13 @@ public class StartBootstrap {
 	      bootstrap.createUser("user2", "password");
 	    
 	      //images
-	      BufferedImage img = null, img2 = null;
+	      BufferedImage img = null;
 	    
 	    for(int i = 0; i <= 5; i++) {
 	      try {
-	        img2 = ImageIO.read(new File("./dummyBilder/"+i+".jpg"));
+	        img = ImageIO.read(new File("./dummyBilder/"+i+".jpg"));
 	        LinkedList<String> tagList = new LinkedList<String>();  
-	        bootstrap.createImage(img2, "user2", "name"+ i + ".jpg", "Milan",new Date(), tagList);
+	        bootstrap.createImage(img, "user2", "name"+ i + ".jpg", "Milan",new Date(), tagList);
 	      } catch (IOException e) {
 	        e.printStackTrace();
 	      }
