@@ -194,14 +194,15 @@ public class Peer {
 			} else {
 				api = "p2p";
 			}
-			
+			Peer tmpPeer = new Peer(this);
+			tmpPeer.dumpRoutingTable();
 			if(!isNeighbour(neighbour)) {
 				routingTable.remove(neighbour);
-				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), api, this);
+				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), api, tmpPeer);
 			} else {
 				//TODO: Uebermittle neue Zone, indem erst geloescht wird, dann wieder rein gesetzt
-				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), api, this);
-				new PeerClient().addNeighbor(neighbour.getIp_adresse(), api, this);
+				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), api, tmpPeer);
+				new PeerClient().addNeighbor(neighbour.getIp_adresse(), api, tmpPeer);
 			}
 		}
 	}
@@ -604,7 +605,8 @@ public class Peer {
 			} else {
 
 				Peer tmpPeer = shortestPath(destinationCoordinate);
-				return new PeerClient().routing(tmpPeer, destinationCoordinate);
+				Peer routingPeer = new PeerClient().routing(tmpPeer, destinationCoordinate);
+				return routingPeer.routing(destinationCoordinate);
 			}
 		}
 		
@@ -628,22 +630,27 @@ public class Peer {
 		 */
 		public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
 			System.out.println("Bootstrap vor createPeer(): " + this);
-			Peer newPeer = new Peer(newPeerAdress);
+			Peer newPeer;
 			if(getRoutingTable().size() == 0) {
+				newPeer = new Peer(newPeerAdress);
 				newPeer.setOwnZone(splitZone());
-				//newPeer = updateRoutingTables(newPeer);
 				
 				// oldPeer becomes neighbour of new Peer
 				newPeer.mergeRoutingTableWithList(routingTable);
 				newPeer.mergeRoutingTableSinglePeer(this);
+				
 				//newPeer becomes neighbour of oldPeer
 			    this.mergeRoutingTableSinglePeer(newPeer);
-				
-				
-			} else {
-				Point p = new Point(0.1, 0.9);//newPeer.generateRandomPoint();
-				if(lookup(p)) {
 
+			    System.out.println("Bootstrap nach createPeer(): "+ this);
+			    System.out.println("New Peer nach createPeer(): "+ newPeer);
+				return newPeer;
+			    
+			    
+			} else {
+				Point p = new Point(0.9, 0.9);//newPeer.generateRandomPoint();	//TODO: Andere Loesung suchen (Uebergabe-Parameter?)
+				if(lookup(p)) {
+					newPeer = new Peer(newPeerAdress);
 					System.out.println("Fall Bootstrap splittet sich");
 					newPeer.setOwnZone(splitZone());
 					initializeRoutingTable(newPeer);
@@ -651,23 +658,27 @@ public class Peer {
 					newPeer.checkNeighboursNewPeer();
 					mergeRoutingTableSinglePeer(newPeer);
 					
+					System.out.println("Bootstrap nach createPeer(): "+ this);
+					System.out.println("New Peer nach createPeer(): "+ newPeer);
+					return newPeer;
+					
 				} else {
-					System.out.println("Fall Peer splittet sich");
-					newPeer.setOwnZone(getOwnZone());
+					System.out.println("Fall anderer Peer splittet sich");
 					Peer zielP = routing(p);
 					System.out.println("ZielPeer: " + zielP);
+					//TODO: REST-Aufruf CreatePeer von zielP aus
 					
-					new PeerClient().createPeer(zielP.getIp_adresse(), "p2p", newPeer);
+					newPeer = new PeerClient().createPeer(newPeerAdress, "p2p", zielP); 
+					//newPeer = zielP.createPeer(newPeerAdress); //ueber REST
 					
 					
-					/*newPeer.mergeRoutingTableWithList(getRoutingTable());
-					newPeer.joinRequest(newPeer.generateRandomPoint());*/
+					System.out.println("Bootstrap nach createPeer(): "+ this);
+					System.out.println("New Peer nach createPeer(): "+ newPeer);
+					return newPeer;
 				}
 				
 			}		
-		    System.out.println("Bootstrap nach createPeer(): "+ this);
-		    System.out.println("New Peer nach createPeer(): "+ newPeer);
-			return newPeer;
+		  
 		}
 		
 		public String toString() {
