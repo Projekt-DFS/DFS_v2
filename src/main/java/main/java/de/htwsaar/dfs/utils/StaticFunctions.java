@@ -5,6 +5,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.awt.*;
 import main.java.de.htwsaar.dfs.model.Point;
@@ -82,18 +83,38 @@ public class StaticFunctions {
 	public static String getRightIP() {
 		String[] tmpArray;
 		String ip;
-		
-		Enumeration<NetworkInterface> e;
 		try {
+			Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
+			Enumeration<InetAddress> all_IPs;
+			
+			//Search for "eth0" and return
+			for(NetworkInterface ni : Collections.list(e)) {
+				if(ni.getDisplayName().contains("eth0")) {
+					all_IPs = ni.getInetAddresses();
+					for(InetAddress tmpip : Collections.list(all_IPs)) {
+						try {
+				        	Inet4Address i = (Inet4Address) tmpip;
+				        	if(!i.isLoopbackAddress()) {
+				        		tmpArray =  i.toString().split("[/]");
+				        		ip = tmpArray[1];
+					        	return ip;
+					        }
+				        } catch (ClassCastException e1) {
+				        	//Do nothing, if it's no ipv4 Address
+				        }
+					}
+				} else {
+					//Not eth0
+				}
+				
+			}
+			//If no "eth0" was found --> get first non-loopback ip-address
 			e = NetworkInterface.getNetworkInterfaces();
-			while(e.hasMoreElements())
-			{
-			    NetworkInterface n = (NetworkInterface) e.nextElement();
-			    Enumeration<InetAddress> ee = n.getInetAddresses();
-			    while (ee.hasMoreElements())
-			    {
-			        try {
-			        	Inet4Address i = (Inet4Address) ee.nextElement();
+			for(NetworkInterface ni : Collections.list(e)) {
+				all_IPs = ni.getInetAddresses();
+				for(InetAddress tmpip : Collections.list(all_IPs)) {
+					try {
+			        	Inet4Address i = (Inet4Address) tmpip;
 			        	if(!i.isLoopbackAddress()) {
 			        		tmpArray =  i.toString().split("[/]");
 			        		ip = tmpArray[1];
@@ -102,14 +123,14 @@ public class StaticFunctions {
 			        } catch (ClassCastException e1) {
 			        	//Do nothing, if it's no ipv4 Address
 			        }
-			    }
+				}
 			}
+			
 		} catch (SocketException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		return null;
-	}
+		return "no IP-Address found";
+	} 
 	
 	
 	/**

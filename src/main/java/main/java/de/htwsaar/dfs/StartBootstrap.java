@@ -7,6 +7,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import main.java.de.htwsaar.dfs.model.*;
+import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -60,16 +61,16 @@ public class StartBootstrap {
 	      //images
 	      BufferedImage img = null;
 	    
-	    for(int i = 0; i <= 5; i++) {
-	      try {
-	        img = ImageIO.read(new File("./dummyBilder/"+i+".jpg"));
-	        LinkedList<String> tagList = new LinkedList<String>();  
-	        bootstrap.createImage(img, "user2", "name"+ i + ".jpg", "Milan",new Date(), tagList);
-	      } catch (IOException e) {
-	        e.printStackTrace();
-	      }
-	      
-	    } 
+//	    for(int i = 0; i <= 5; i++) {
+//	      try {
+//	        img = ImageIO.read(new File("./dummyBilder/"+i+".jpg"));
+//	        LinkedList<String> tagList = new LinkedList<String>();  
+//	        bootstrap.createImage(img, "user2", "name"+ i + ".jpg", "Milan",new Date(), tagList);
+//	      } catch (IOException e) {
+//	        e.printStackTrace();
+//	      }
+//	      
+//	    } 
 	   
 	}
 
@@ -80,7 +81,7 @@ public class StartBootstrap {
      * @throws UnknownHostException
      */
     static public String getIP() throws UnknownHostException {
-    	return InetAddress.getLocalHost().getHostAddress();
+    	return StaticFunctions.getRightIP();
     }
     
     /**
