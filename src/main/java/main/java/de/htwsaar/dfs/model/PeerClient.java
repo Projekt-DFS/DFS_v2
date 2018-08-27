@@ -34,9 +34,10 @@ public class PeerClient {
 	    System.out.println(peerToDelete.getIp_adresse() + " from the routing table of " + destinationIp);
 		boolean isRemoved = false;
 		final String neighBorIP ="http://"+ destinationIp + ":4434/" + api + "/v1/neighbors/" + peerToDelete.getIp_adresse();
+		System.out.println("URL: " + neighBorIP);
 		Client c = ClientBuilder.newClient();
 	    WebTarget  target = c.target( neighBorIP );
-	    Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
+	    Invocation.Builder invocationBuilder = target.request(MediaType.TEXT_PLAIN);
 	    Response response = invocationBuilder.delete();
 	    System.out.println("Response:" + response.getStatus());
 	    if( response.getStatus() == 200) {
@@ -52,18 +53,18 @@ public class PeerClient {
 	 *  This method adds a neighbor in the routing table of a peer
 	 * @param destinationIp : the peer where the operation will be done
 	 * @param api : the web context Path 
-	 * @param peerToDeleteIP : the peer that should be add
+	 * @param peerToAdd : the peer that should be added
 	 * @return true if done
 	 */
-	public boolean addNeighbor(String destinationIp , String api, Peer peerToDelete) {
+	public boolean addNeighbor(String destinationIp , String api, Peer peerToAdd) {
 		System.out.println("---------------------Start add -------------------");
-		System.out.println(peerToDelete.getIp_adresse() + " in the routing table of " + destinationIp);
+		System.out.println(peerToAdd.getIp_adresse() + " in the routing table of " + destinationIp);
 		boolean isAdded = false;
 		final String neighBorIP ="http://"+ destinationIp + ":4434/" + api + "/v1/neighbors/";
 		Client c = ClientBuilder.newClient();
 	    WebTarget  target = c.target( neighBorIP );
 	    Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
-	    Response response = invocationBuilder.post(Entity.entity(peerToDelete, MediaType.APPLICATION_JSON));
+	    Response response = invocationBuilder.post(Entity.entity(peerToAdd, MediaType.APPLICATION_JSON));
 	    System.out.println("Response:" + response.getStatus());
 	    if( response.getStatus() == 200) {
 	    	isAdded = true;
@@ -104,7 +105,7 @@ public class PeerClient {
      * @param api : the api that is install on the destinationpeer
 	 * @param newPeer
 	 */
-	public void createPeer(String destinationIp, String api, Peer newPeer) {
+	public Peer createPeer(String destinationIp, String api, Peer newPeer) {
 
 		final String URL ="http://" + destinationIp + ":4434/"+api+"/v1/createPeer";
 		System.out.println("---------------Start createPeer---------------- " );
@@ -121,6 +122,7 @@ public class PeerClient {
 		
 		System.out.println("My Peer :" + newPeer );
 		System.out.println("---------------Terminate CreatePeer---------------- " );
+		return newPeer;
 	}
 	
 	/**
