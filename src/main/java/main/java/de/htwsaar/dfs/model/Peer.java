@@ -354,7 +354,7 @@ public class Peer {
      * Generates a random Point in the Coordinate system
      * @return randomPoint in the coordinate space
      */
-    public Point generateRandomPoint() {
+    public static Point generateRandomPoint() {
     	Point randomPoint = new Point(Math.random(), Math.random());
     	return randomPoint;
     }
@@ -628,7 +628,7 @@ public class Peer {
 		 * @throws IOException 
 		 * @throws ClientProtocolException 
 		 */
-		public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
+		public Peer createPeer(String newPeerAdress, Point p) throws ClientProtocolException, IOException {
 			System.out.println("Bootstrap vor createPeer(): " + this);
 			Peer newPeer;
 			if(getRoutingTable().size() == 0) {
@@ -648,7 +648,6 @@ public class Peer {
 			    
 			    
 			} else {
-				Point p = new Point(0.9, 0.9);//newPeer.generateRandomPoint();	//TODO: Andere Loesung suchen (Uebergabe-Parameter?)
 				if(lookup(p)) {
 					newPeer = new Peer(newPeerAdress);
 					System.out.println("Fall Bootstrap splittet sich");
@@ -668,7 +667,7 @@ public class Peer {
 					System.out.println("ZielPeer: " + zielP);
 					//TODO: REST-Aufruf CreatePeer von zielP aus
 					
-					newPeer = new PeerClient().createPeer(newPeerAdress, "p2p", zielP); 
+					newPeer = new PeerClient().createPeer(zielP.getIp_adresse(), p, "p2p", new Peer(newPeerAdress)); 
 					//newPeer = zielP.createPeer(newPeerAdress); //ueber REST
 					
 					

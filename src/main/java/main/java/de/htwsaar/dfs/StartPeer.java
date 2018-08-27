@@ -22,6 +22,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import main.java.de.htwsaar.dfs.model.Peer;
+import main.java.de.htwsaar.dfs.model.Point;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
@@ -64,9 +65,9 @@ public class StartPeer {
      * @throws IOException
      */
     private static void joinPeer(String ip, String api) throws ClientProtocolException, IOException {
-    	
+    	Point p = Peer.generateRandomPoint();
     	//every join request commes to the bootstrap first
-		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer";
+		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer/" +p.getX() + "-" + p.getY();
 		
 		//Build a Peer only with IP. The Bootstrap will give him a zone.
 		peer= new Peer(StaticFunctions.getRightIP());

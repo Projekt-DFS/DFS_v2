@@ -105,9 +105,9 @@ public class PeerClient {
      * @param api : the api that is install on the destinationpeer
 	 * @param newPeer
 	 */
-	public Peer createPeer(String destinationIp, String api, Peer newPeer) {
+	public Peer createPeer(String destinationIp, Point p, String api, Peer newPeer) {
 
-		final String URL ="http://" + destinationIp + ":4434/"+api+"/v1/createPeer";
+		final String URL ="http://" + destinationIp + ":4434/"+api+"/v1/createPeer/"+p.getX() + "-"+ p.getY();
 		System.out.println("---------------Start createPeer---------------- " );
 		System.out.println("Destination: " + URL );
 		Client client = ClientBuilder.newClient();

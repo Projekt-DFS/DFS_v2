@@ -79,8 +79,8 @@ public class PeerService {
 		return zone;
 	}
 
-	public Peer createPeer(String newPeerAdress) throws ClientProtocolException, IOException {
-		return bootstrap.createPeer(newPeerAdress);
+	public Peer createPeer(String newPeerAdress, Point p) throws ClientProtocolException, IOException {
+		return bootstrap.createPeer(newPeerAdress, p);
 	}
 	
 	public Peer routing(Point destinationPoint) {

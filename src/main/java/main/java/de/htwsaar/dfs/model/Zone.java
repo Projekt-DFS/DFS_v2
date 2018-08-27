@@ -55,8 +55,7 @@ public class Zone {
     }
     
     public String toString() {
-		return "bottomLeft: " + bottomLeft + " bottomRight: " + bottomRight + 
-				           " upperLeft: " + upperLeft + " upperRight: " + upperRight;
+		return "bottomLeft: " + bottomLeft + " upperRight: " + upperRight;
 	}
     
     public void calculateAxis(Point bottomLeft, Point upperRight) {

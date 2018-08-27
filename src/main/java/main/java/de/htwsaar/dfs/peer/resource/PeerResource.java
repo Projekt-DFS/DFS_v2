@@ -155,12 +155,16 @@ public class PeerResource {
 	 * @throws IOException
 	 */
 	@POST
-	@Path("/createPeer")
+	@Path("/createPeer/{point}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Peer createPeer(Peer peer) throws ClientProtocolException, IOException{
-		Peer nP= ps.createPeer(peer.getIp_adresse());
+	public Peer createPeer(@PathParam("point") String point ,Peer peer ) throws ClientProtocolException, IOException{
+		String[] coordinate = point.split("-");
+		Point p = new Point(Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]));
+		Peer nP= ps.createPeer(peer.getIp_adresse(), p);
 		System.out.println("new Peer successfully created :" + nP);
+		if(nP.getIp_adresse().equals("10.9.40.33"))
+			nP= new Peer(nP);
 		return nP;
 	}
 	
