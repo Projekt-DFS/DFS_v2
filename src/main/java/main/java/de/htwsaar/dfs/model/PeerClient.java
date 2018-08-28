@@ -1,12 +1,15 @@
 package main.java.de.htwsaar.dfs.model;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -84,7 +87,7 @@ public class PeerClient {
 	 */
 	public Peer routing(Peer destinationPeer , Point destinationCoordinate) {
 		System.out.println("---------------Start routing---------------- " );
-		System.out.println(destinationCoordinate + "to "+ destinationPeer );
+		System.out.println(destinationCoordinate + "to "+ destinationPeer.getIp_adresse() );
 		String baseUrl ="http://"+ destinationPeer.getIp_adresse()+":4434/p2p/v1/routing";
 		Client c = ClientBuilder.newClient();
 	    WebTarget  target = c.target( baseUrl );
@@ -93,7 +96,7 @@ public class PeerClient {
 	    System.out.println("Response:" + response.getStatus());
 	    System.out.println("---------------Stop routing-------------------- "  );
 	    destinationPeer = response.readEntity(Peer.class);
-	    System.out.println("Destination Peer is: " + destinationPeer);
+	    System.out.println("Destination Peer is: " + destinationPeer.getIp_adresse());
 		c.close();
 		return destinationPeer;
 	}
@@ -135,19 +138,51 @@ public class PeerClient {
 	 * @throws IOException
 	 * @author Aude Nana 28.07.2017
 	 */
-	public Image forwardCreateImage(String destinationPeerIP, String username, Image image) throws ClientProtocolException, IOException {
+	public Image createImage(String destinationPeerIP, String username, Image image) throws ClientProtocolException, IOException {
 		
-		final String url ="http://" + destinationPeerIP + ":4434/p2p/v1/images/"+username;
-		
+		final String URL ="http://" + destinationPeerIP + ":4434/p2p/v1/images/"+username;
+		System.out.println("---------------Start createImage---------------- " );
+		System.out.println("Destination: " + URL );
 		Client client = ClientBuilder.newClient();
-		WebTarget webTarget = client.target(url);
+		WebTarget webTarget = client.target(URL);
 		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(image, MediaType.APPLICATION_JSON));
 		if(response.getStatus()==200) {
 			image = response.readEntity(Image.class);
 		}
 		client.close();
+		System.out.println("---------------Terminate createImage---------------- " );
 		return image;
+	}
+	
+	/**
+	 * This method forwarded the get Image request to all neighbors peers
+	 * @author Aude Nana 02.08.2018
+	 * @param neighborIP
+	 * @param username
+	 * @return
+	 */
+	public List<Image> getImages(String neighborIP,String username ){
+	
+		List<Image> results = new ArrayList<>();
+		//make a get request to the neighbor and get the images that are saved there
+		final String URL ="http://" + neighborIP + ":4434/p2p/v1/images/"+username;
+		System.out.println("---------------Start getImages---------------- " );		
+		System.out.println("Destination: " + URL );
+		Client client = ClientBuilder.newClient();
+		WebTarget webTarget = client.target(URL);
+		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.get();
+		System.out.println(response.getStatus());
+		System.out.println(response.toString());
+		if(response.getStatus()==200) {
+			results = (ArrayList<Image>) response.readEntity(new GenericType<List<Image>>() {
+	        });
+			
+		}
+		client.close();
+		System.out.println("---------------Terminate createImage--------------- " );
+		return results;
 	}
 	
 }

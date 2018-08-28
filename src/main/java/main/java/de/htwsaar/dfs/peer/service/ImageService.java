@@ -37,10 +37,15 @@ public class ImageService {
 	
 	public List<Image> getAllImages( String username) throws ClassNotFoundException, IOException{
 		List<Image> result = new ArrayList<>();
-		ArrayList <ImageContainer> list = bootstrap.getAllImageContainers(username);
-		for( ImageContainer ic : list) {
-			result.add(RestUtils.convertIcToImg(baseUri, ic, username));
-		}
+		//check if folder exist
+		File userFolder = new File("images/" + username);
+		if(userFolder.exists()) {
+			ArrayList <ImageContainer> list = bootstrap.getAllImageContainers(username);
+			for( ImageContainer ic : list) {
+				result.add(RestUtils.convertIcToImg(baseUri, ic, username));
+				}
+			}		
+		
 		return result; 
 	}
 
@@ -59,11 +64,7 @@ public class ImageService {
 		if(image.getMetaData() == null) {
 			image.setMetaData(new Metadata(username));	
 		}
-//		bootstrap.createImage(RestUtils.decodeToImage(image.getImageSource()),
-//				username, image.getImageName(), image.getMetaData().getLocation(),new Date(),
-//				image.getMetaData().getTagList());
-		
-		peer.saveImageContainer(new ImageContainer(RestUtils.decodeToImage(image.getImageSource()),
+		Peer.saveImageContainer(new ImageContainer(RestUtils.decodeToImage(image.getImageSource()),
 				username, image.getImageName(), image.getMetaData().getLocation(), new Date(),
 				image.getMetaData().getTagList()
 				));

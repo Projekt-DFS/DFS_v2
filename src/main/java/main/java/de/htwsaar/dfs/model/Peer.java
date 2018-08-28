@@ -146,7 +146,6 @@ public class Peer {
 	    	newZone.setZone(ownZone.getBottomLeft(), (new Point(ownZone.getBottomRight().getX(), ownZone.calculateCentrePoint().getY())));
 	        ownZone.setZone(new Point(ownZone.getUpperLeft().getX(), ownZone.calculateCentrePoint().getY()), ownZone.getUpperRight());    
 	    }
-		System.out.println("Neue Zone: " + newZone);
 	    return newZone;
 	}
 		
@@ -629,7 +628,7 @@ public class Peer {
 		 * @throws ClientProtocolException 
 		 */
 		public Peer createPeer(String newPeerAdress, Point p) throws ClientProtocolException, IOException {
-			System.out.println("Bootstrap vor createPeer(): " + this);
+			System.out.println("This peer vor createPeer(): " + this);
 			Peer newPeer;
 			if(getRoutingTable().size() == 0) {
 				newPeer = new Peer(newPeerAdress);
@@ -642,8 +641,7 @@ public class Peer {
 				//newPeer becomes neighbour of oldPeer
 			    this.mergeRoutingTableSinglePeer(newPeer);
 
-			    System.out.println("Bootstrap nach createPeer(): "+ this);
-			    System.out.println("New Peer nach createPeer(): "+ newPeer);
+			    System.out.println("This peer nach createPeer(): "+ this);
 				return newPeer;
 			    
 			    

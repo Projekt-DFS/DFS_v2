@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
@@ -16,6 +17,8 @@ import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.ImageContainer;
 import main.java.de.htwsaar.dfs.model.Image;
 import main.java.de.htwsaar.dfs.model.Metadata;
+import main.java.de.htwsaar.dfs.model.Peer;
+import main.java.de.htwsaar.dfs.model.PeerClient;
 import main.java.de.htwsaar.dfs.utils.RestUtils;
 
 /**
@@ -43,8 +46,11 @@ public class ImageService {
 			}
 		}
 		
-//		result.addAll(bootstrap.getAllImages(username));
-		return result; 
+		//result.addAll(collectImages(username));
+		//display images sorted 
+		return result.stream()
+				.sorted((x,y)-> y.getMetaData().getCreated().compareTo(x.getMetaData().getCreated()) )
+				.collect(Collectors.toList()); 
 	}
 
 	public Image getImage(String username , String imageName)  {
@@ -61,12 +67,9 @@ public class ImageService {
 		if(image.getMetaData() == null) {
 			image.setMetaData(new Metadata(username));	
 		}
-//		bootstrap.createImage(RestUtils.decodeToImage(image.getImageSource()),
-//				username, image.getImageName(), image.getMetaData().getLocation(),new Date(),
-//				image.getMetaData().getTagList());
 		return bootstrap.createImage(RestUtils.decodeToImage(image.getImageSource()),
 				username, image.getImageName(), image.getMetaData().getLocation(),new Date(),
-				image.getMetaData().getTagList());//image;
+				image.getMetaData().getTagList());
 	}
 	
 	public Image updateImage(String username, String imageName, Image image) {
@@ -122,6 +125,24 @@ public class ImageService {
 		}
 
 		return img;
+	}
+	
+	/**
+	 * This method collected all images from a user in different peers
+	 * @param username
+	 * @return
+	 */
+	
+	private List<Image> collectImages(String username) {
+		List<Image> images = new ArrayList<>();
+		System.out.println(bootstrap.routingTableToString());
+		for ( Peer p : bootstrap.getRoutingTable()) {
+			List<Image> list = new ArrayList<>();
+			list = new PeerClient().getImages(p.getIp_adresse(), username);
+			System.out.println("Get Images from : " + p.getIp_adresse());
+			images.addAll( list	);
+		}
+		return images;
 	}
 	
 }

@@ -331,48 +331,10 @@ public class Bootstrap extends Peer {
 		try {
 			String destinationPeerIP = routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse ;
 			image = forwardCreateImage(destinationPeerIP, username,ic);
-//			System.out.println("Destination peer is : " + destinationPeerIP);
 			exportUserList();							//Updates the UserList, incl Link to new Image
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
-		return image;
-	}
-
-	/**
-	 * This method forward the createImage Request to another peer 
-	 * @param destinationPeerIP
-	 * @param username
-	 * @param imageContainer
-	 * @return image that has been created
-	 * @throws ClientProtocolException
-	 * @throws IOException
-	 * @author Aude Nana 28.07.2017
-	 */
-	private Image forwardCreateImage(String destinationPeerIP, String username, ImageContainer imageContainer) throws ClientProtocolException, IOException {
-		
-		//final String SUCCEED = "New image successfully added!";
-		
-		//build an Image from imageContainer
-		Image image =  new Image(imageContainer.getImageName(), 
-				new Metadata(imageContainer.getUsername(),
-						imageContainer.getDate(), 
-						imageContainer.getLocation(),
-						imageContainer.getTagList()),
-				RestUtils.encodeToString(imageContainer.getImage(), "jpg"),
-				null);
-		  
-		//if the Peer of destination is the actually peer, save the image here  
-		if ( this.getIP().equals(destinationPeerIP)) {
-			saveImageContainer(imageContainer);
-//			System.out.println(SUCCEED);
-		}
-		
-		//if not , make a post request to the peer of destination and save the image there
-		else {
-			image = new PeerClient().forwardCreateImage(destinationPeerIP, username, image);
-//			System.out.println(SUCCEED);
-		}
 		return image;
 	}
 	
@@ -452,55 +414,43 @@ public class Bootstrap extends Peer {
 		return ics;
 	}
 	
-	/**
-	 * This method collected all images from a user in different peers
-	 * @author Aude Nana 30.07.2018
-	 * @param username
-	 * @return
-	 */
-	public List<Image> getAllImages(String username) {
-		List<Image> images = new ArrayList<>();
-		System.out.println(routingTableToString());
-		for ( Peer p : getRoutingTable()) {
-			List<Image> list = new ArrayList<>();
-			list = forwardGetImages(p.getIp_adresse(), username);
-			System.out.println("Get Images from : " + p.getIp_adresse());
-			images.addAll( list	);
-		}
-		return images;
-	}
-	
-	/**
-	 * This method forwarded the get Image request to all neighbors peers
-	 * @author Aude Nana 02.08.2018
-	 * @param neighborIP
-	 * @param username
-	 * @return
-	 */
-	private List<Image> forwardGetImages(String neighborIP,String username ){
-	
-		List<Image> results = new ArrayList<>();
-		//make a get request to the neighbor and get the images that are saved there
-		final String url ="http://" + neighborIP + ":4434/p2p/v1/images/"+username;
-					
-		Client client = ClientBuilder.newClient();
-		WebTarget webTarget = client.target(url);
-		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-		Response response = invocationBuilder.get();
-		System.out.println(response.getStatus());
-		System.out.println(response.toString());
-		if(response.getStatus()==200) {
-			results = (ArrayList<Image>) response.readEntity(new GenericType<List<Image>>() {
-	        });
-			
-		}
-		client.close();
-		return results;
-	}
-	
 
-	
-	
+	/**
+	 * This method forward the createImage Request to another peer 
+	 * @param destinationPeerIP
+	 * @param username
+	 * @param imageContainer
+	 * @return image that has been created
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @author Aude Nana 28.07.2017
+	 */
+	private Image forwardCreateImage(String destinationPeerIP, String username, ImageContainer imageContainer) throws ClientProtocolException, IOException {
+		
+		final String SUCCEED = "New image successfully added!";
+		
+		//build an Image from imageContainer
+		Image image =  new Image(imageContainer.getImageName(), 
+				new Metadata(imageContainer.getUsername(),
+						imageContainer.getDate(), 
+						imageContainer.getLocation(),
+						imageContainer.getTagList()),
+				RestUtils.encodeToString(imageContainer.getImage(), "jpg"),
+				null);
+		  
+		//if the Peer of destination is the actually peer, save the image here  
+		if ( this.getIP().equals(destinationPeerIP)) {
+			saveImageContainer(imageContainer);
+			System.out.println(SUCCEED);
+		}
+		
+		//if not , make a post request to the peer of destination and save the image there
+		else {
+			image = new PeerClient().createImage(destinationPeerIP, username, image);
+			System.out.println(SUCCEED);
+		}
+		return image;
+	}
 
 }
 
