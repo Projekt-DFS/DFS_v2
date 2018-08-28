@@ -40,11 +40,10 @@ public class ImageService {
 		//check if folder exist
 		File userFolder = new File("images/" + username);
 		if(userFolder.exists()) {
-			ArrayList <ImageContainer> list = bootstrap.getAllImageContainers(username);
-			for( ImageContainer ic : list) {
-				result.add(RestUtils.convertIcToImg(baseUri, ic, username));
-				}
-			}		
+			bootstrap.getAllImageContainers(username)
+					.forEach( (ImageContainer ic)-> result.add(RestUtils.convertIcToImg(baseUri, ic, username)));
+			
+		}		
 		
 		return result; 
 	}
@@ -68,6 +67,7 @@ public class ImageService {
 				username, image.getImageName(), image.getMetaData().getLocation(), new Date(),
 				image.getMetaData().getTagList()
 				));
+		System.out.println("New image successfully added!");
 		return getImage(username, image.getImageName());
 	}
 	
@@ -93,11 +93,14 @@ public class ImageService {
 			throws FileNotFoundException, ClassNotFoundException, IOException {
 		String m = "" ;
 		LinkedList<String> t = new LinkedList<>();
+		
 		if(metadata.getLocation() != null)
 			m = metadata.getLocation();
 		if(metadata.getTagList() != null)
 			t= metadata.getTagList();
+		
 		peer.editMeta(username, imageName, m, t);
+		
 		return metadata;
 	}
 

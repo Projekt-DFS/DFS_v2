@@ -3,7 +3,7 @@ package main.java.de.htwsaar.dfs.model;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * This class is used to Parse ImageContainer zu Json with string
+ * This class is used to Parse ImageContainer to Json with string
  * @author Aude Nana
  *
  */

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * 
+ * This class represent the coordinate of a point
  * @author Aude Nana
  *
  */
@@ -51,7 +51,5 @@ public class Point implements Serializable {
 	public double distanceSq(Point point) {
 		return Math.pow(this.x - point.getX(), 2) + Math.pow(this.y - point.getY(), 2);
 	}
-	
-	//public double distanceSq(x1, x2, y1, y2)
 	
 }

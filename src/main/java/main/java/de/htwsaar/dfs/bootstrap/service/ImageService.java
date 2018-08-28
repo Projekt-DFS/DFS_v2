@@ -29,7 +29,7 @@ import main.java.de.htwsaar.dfs.utils.RestUtils;
 public class ImageService {
 	
 	Bootstrap bootstrap = StartBootstrap.bootstrap;
-	//URI for Image
+	//URI for Image's link
 	private String baseUri = "http://" + bootstrap.getIP() + ":" + Bootstrap.port +"/bootstrap/v1/";
 	
 	public ImageService(){	}
@@ -40,14 +40,14 @@ public class ImageService {
 		//check if folder exist
 		File userFolder = new File("images/" + username);
 		if(userFolder.exists()) {
-			ArrayList <ImageContainer> list = bootstrap.getAllImageContainers(username);
-			for( ImageContainer ic : list) {
-				result.add(RestUtils.convertIcToImg(baseUri, ic, username));
-			}
+			bootstrap.getAllImageContainers(username)
+					.forEach( (ImageContainer ic)-> result.add(RestUtils.convertIcToImg(baseUri, ic, username)));
+			
 		}
+		//make a get request to the neighbor and get the images that are saved there
+		result.addAll(collectImages(username));
 		
-		//result.addAll(collectImages(username));
-		//display images sorted 
+		//return all images sorted 
 		return result.stream()
 				.sorted((x,y)-> y.getMetaData().getCreated().compareTo(x.getMetaData().getCreated()) )
 				.collect(Collectors.toList()); 
@@ -95,11 +95,15 @@ public class ImageService {
 			throws FileNotFoundException, ClassNotFoundException, IOException {
 		String m = "" ;
 		LinkedList<String> t = new LinkedList<>();
+		
+		//update the data only when the fields are full
 		if(metadata.getLocation() != null)
 			m = metadata.getLocation();
 		if(metadata.getTagList() != null)
 			t= metadata.getTagList();
+		
 		bootstrap.editMeta(username, imageName, m, t);
+		
 		return metadata;
 	}
 
@@ -135,14 +139,9 @@ public class ImageService {
 	
 	private List<Image> collectImages(String username) {
 		List<Image> images = new ArrayList<>();
-		System.out.println(bootstrap.routingTableToString());
-		for ( Peer p : bootstrap.getRoutingTable()) {
-			List<Image> list = new ArrayList<>();
-			list = new PeerClient().getImages(p.getIp_adresse(), username);
-			System.out.println("Get Images from : " + p.getIp_adresse());
-			images.addAll( list	);
-		}
-		return images;
+		bootstrap.getRoutingTable().stream()
+			.forEach((Peer p)-> images.addAll(new PeerClient().getImages(p.getIp_adresse(), username)));
+		return images ;
 	}
 	
 }

@@ -54,13 +54,9 @@ public class PeerService {
 	}
 
 	public String deletePeer(String ip) {
-		for ( Peer neighbor : peer.getRoutingTable()) {
-			if( neighbor.getIp_adresse().equals(ip)) {
-				peer.getRoutingTable().remove(neighbor);
-				return "Peer successfully removed!";
-				}
-			}
-			return "Peer doesn't exist";
+		if(peer.getRoutingTable().removeIf(peer -> peer.getIp_adresse().equals(ip)))
+			return "Peer successfully removed!";
+		return "Peer doesn't exist";
 		
 	}
 	

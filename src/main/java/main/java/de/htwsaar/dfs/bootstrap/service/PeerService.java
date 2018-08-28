@@ -26,13 +26,12 @@ public class PeerService {
 
 	public Peer getPeer() {
 		Peer p = new Peer(bootstrap);
-		return p;//bootstrap;
+		return p;
 	} 
 	
 	public List<Peer> getAllNeighbors() {
 		CopyOnWriteArrayList< Peer> list = new CopyOnWriteArrayList<>(bootstrap.getRoutingTable());
-		return list;//bootstrap.getRoutingTable();
-		//return new ArrayList<>(neighbors.values());
+		return list;
 	}
 
 	public Peer getPeer(String ip) {
@@ -59,13 +58,9 @@ public class PeerService {
 	}
 
 	public String deletePeer(String ip) {
-		for ( Peer neighbor : bootstrap.getRoutingTable()) {
-			if( neighbor.getIp_adresse().equals(ip)) {
-				bootstrap.getRoutingTable().remove(neighbor);
-				return "Peer successfully removed!";
-				}
-			}
-			return "Peer doesn't exist";
+		if(bootstrap.getRoutingTable().removeIf(peer -> peer.getIp_adresse().equals(ip)))
+			return "Peer successfully removed!";
+		return "Peer doesn't exist";
 		
 	}
 

@@ -163,8 +163,6 @@ public class PeerResource {
 		Point p = new Point(Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]));
 		Peer nP= ps.createPeer(peer.getIp_adresse(), p);
 		System.out.println("new Peer successfully created :" + nP);
-		if(nP.getIp_adresse().equals("10.9.40.33"))
-			nP= new Peer(nP);
 		return nP;
 	}
 	

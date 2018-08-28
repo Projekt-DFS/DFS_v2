@@ -22,7 +22,11 @@ import org.apache.http.client.ClientProtocolException;
  */
 public class PeerClient {
 	
+	private Client client;
+	private Response response;
+	
 	public PeerClient() {
+		client = ClientBuilder.newClient();
 	}
 	
 	/**
@@ -33,23 +37,22 @@ public class PeerClient {
 	 * @return true if done
 	 */
 	public boolean deleteNeighbor(String destinationIp , String api, Peer peerToDelete) {
+		
 		System.out.println("---------------------Start delete------------------- ");
 	    System.out.println(peerToDelete.getIp_adresse() + " from the routing table of " + destinationIp);
-		boolean isRemoved = false;
-		final String neighBorIP ="http://"+ destinationIp + ":4434/" + api + "/v1/neighbors/" + peerToDelete.getIp_adresse();
-		System.out.println("URL: " + neighBorIP);
-		Client c = ClientBuilder.newClient();
-	    WebTarget  target = c.target( neighBorIP );
-	    Invocation.Builder invocationBuilder = target.request(MediaType.TEXT_PLAIN);
-	    Response response = invocationBuilder.delete();
+		
+		final String URL ="http://"+ destinationIp + ":4434/" + api + "/v1/neighbors/" + peerToDelete.getIp_adresse();
+		System.out.println("URL: " + URL);
+		
+	    response = client.target( URL ).request(MediaType.TEXT_PLAIN).delete();
 	    System.out.println("Response:" + response.getStatus());
 	    if( response.getStatus() == 200) {
-	    	isRemoved = true;
 	    	System.out.println("----------------------Terminate delete ------------------------");
+	    	return true;
 	    }
-		c.close();
+		client.close();
 		
-		return isRemoved;
+		return false;
 	}
 	
 	/**
@@ -60,23 +63,24 @@ public class PeerClient {
 	 * @return true if done
 	 */
 	public boolean addNeighbor(String destinationIp , String api, Peer peerToAdd) {
+		
 		System.out.println("---------------------Start add -------------------");
 		System.out.println(peerToAdd.getIp_adresse() + " in the routing table of " + destinationIp);
-		boolean isAdded = false;
-		final String neighBorIP ="http://"+ destinationIp + ":4434/" + api + "/v1/neighbors/";
-		Client c = ClientBuilder.newClient();
-	    WebTarget  target = c.target( neighBorIP );
-	    Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
-	    Response response = invocationBuilder.post(Entity.entity(peerToAdd, MediaType.APPLICATION_JSON));
+	
+		final String URL ="http://"+ destinationIp + ":4434/" + api + "/v1/neighbors/";
+		System.out.println("URL: " + URL);
+		
+	    response = client.target( URL ).request(MediaType.APPLICATION_JSON).post(Entity.entity(peerToAdd, MediaType.APPLICATION_JSON));
 	    System.out.println("Response:" + response.getStatus());
+	    
 	    if( response.getStatus() == 200) {
-	    	isAdded = true;
 	    	System.out.println("--------------------Terminate add ----------------- ");
+	    	return true;
 			
 	    }
-		c.close();
+		client.close();
 		
-		return isAdded;
+		return false;
 	}
 	
 	/**
@@ -86,19 +90,25 @@ public class PeerClient {
 	 * @return the peer that have the point in his zone.
 	 */
 	public Peer routing(Peer destinationPeer , Point destinationCoordinate) {
+		
 		System.out.println("---------------Start routing---------------- " );
 		System.out.println(destinationCoordinate + "to "+ destinationPeer.getIp_adresse() );
-		String baseUrl ="http://"+ destinationPeer.getIp_adresse()+":4434/p2p/v1/routing";
-		Client c = ClientBuilder.newClient();
-	    WebTarget  target = c.target( baseUrl );
-	    Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
-	    Response response = invocationBuilder.post(Entity.entity(destinationCoordinate, MediaType.APPLICATION_JSON));
+		
+		String URL ="http://"+ destinationPeer.getIp_adresse()+":4434/p2p/v1/routing";
+		
+	    response = client.target( URL ).request(MediaType.APPLICATION_JSON).post(Entity.entity(destinationCoordinate, MediaType.APPLICATION_JSON));
 	    System.out.println("Response:" + response.getStatus());
-	    System.out.println("---------------Stop routing-------------------- "  );
-	    destinationPeer = response.readEntity(Peer.class);
-	    System.out.println("Destination Peer is: " + destinationPeer.getIp_adresse());
-		c.close();
-		return destinationPeer;
+	    
+	    if( response.getStatus() == 200) {
+	    	System.out.println("---------------Stop routing-------------------- "  );
+	    	destinationPeer = response.readEntity(Peer.class);
+		    System.out.println("Destination Peer is: " + destinationPeer.getIp_adresse());
+	    
+	    }
+		
+	    client.close();
+		
+	    return destinationPeer;
 	}
 	
 
@@ -110,21 +120,19 @@ public class PeerClient {
 	 */
 	public Peer createPeer(String destinationIp, Point p, String api, Peer newPeer) {
 
-		final String URL ="http://" + destinationIp + ":4434/"+api+"/v1/createPeer/"+p.getX() + "-"+ p.getY();
 		System.out.println("---------------Start createPeer---------------- " );
+		
+		final String URL ="http://" + destinationIp + ":4434/"+api+"/v1/createPeer/"+p.getX() + "-"+ p.getY();
 		System.out.println("Destination: " + URL );
-		Client client = ClientBuilder.newClient();
-		WebTarget webTarget = client.target(URL);
-		Invocation.Builder invocationBuilder 
-		  = webTarget.request(MediaType.APPLICATION_JSON);
-		Response response 
-		  = invocationBuilder
-		  .post(Entity.entity(newPeer, MediaType.APPLICATION_JSON));
+		
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).
+				post(Entity.entity(newPeer, MediaType.APPLICATION_JSON));
 		System.out.println("Response Code : " + response.getStatus());
 		newPeer = response.readEntity(Peer.class);
-		
-		System.out.println("My Peer :" + newPeer );
 		System.out.println("---------------Terminate CreatePeer---------------- " );
+		System.out.println("This Peer :" + newPeer );
+		
 		return newPeer;
 	}
 	
@@ -140,24 +148,28 @@ public class PeerClient {
 	 */
 	public Image createImage(String destinationPeerIP, String username, Image image) throws ClientProtocolException, IOException {
 		
-		final String URL ="http://" + destinationPeerIP + ":4434/p2p/v1/images/"+username;
 		System.out.println("---------------Start createImage---------------- " );
+		
+		final String URL ="http://" + destinationPeerIP + ":4434/p2p/v1/images/"+username;
 		System.out.println("Destination: " + URL );
-		Client client = ClientBuilder.newClient();
-		WebTarget webTarget = client.target(URL);
-		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-		Response response = invocationBuilder.post(Entity.entity(image, MediaType.APPLICATION_JSON));
+		
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).
+				post(Entity.entity(image, MediaType.APPLICATION_JSON));
+		System.out.println("Response Code : " + response.getStatus());
+		
 		if(response.getStatus()==200) {
 			image = response.readEntity(Image.class);
 		}
-		client.close();
 		System.out.println("---------------Terminate createImage---------------- " );
+		
+		client.close();
+		
 		return image;
 	}
 	
 	/**
 	 * This method forwarded the get Image request to all neighbors peers
-	 * @author Aude Nana 02.08.2018
 	 * @param neighborIP
 	 * @param username
 	 * @return
@@ -165,23 +177,25 @@ public class PeerClient {
 	public List<Image> getImages(String neighborIP,String username ){
 	
 		List<Image> results = new ArrayList<>();
-		//make a get request to the neighbor and get the images that are saved there
-		final String URL ="http://" + neighborIP + ":4434/p2p/v1/images/"+username;
-		System.out.println("---------------Start getImages---------------- " );		
+		
+		System.out.println("---------------Start getImages---------------- " );	
+		
+		final String URL ="http://" + neighborIP + ":4434/p2p/v1/images/"+username;	
 		System.out.println("Destination: " + URL );
-		Client client = ClientBuilder.newClient();
-		WebTarget webTarget = client.target(URL);
-		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-		Response response = invocationBuilder.get();
-		System.out.println(response.getStatus());
-		System.out.println(response.toString());
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).get();
+		System.out.println("Response Code : " + response.getStatus());
+		
 		if(response.getStatus()==200) {
 			results = (ArrayList<Image>) response.readEntity(new GenericType<List<Image>>() {
 	        });
 			
 		}
+		
+		System.out.println("---------------Terminate getImage--------------- " );
+		
 		client.close();
-		System.out.println("---------------Terminate createImage--------------- " );
+		
 		return results;
 	}
 	

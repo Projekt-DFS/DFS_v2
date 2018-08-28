@@ -82,7 +82,7 @@ public class StartPeer {
 		System.out.println("Response Code : " + response.getStatus());
 		peer = response.readEntity(Peer.class);
 		
-		System.out.println("My Peer :" + peer );
+		System.out.println("This Peer :" + peer );
 		
 	}
     
