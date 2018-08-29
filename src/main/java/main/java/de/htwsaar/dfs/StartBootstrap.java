@@ -61,11 +61,15 @@ public class StartBootstrap {
 	      //images
 	      BufferedImage img = null;
 	    
-	    for(int i = 0; i <= 5; i++) {
+	    for(int i = 0; i <= 2; i++) {
 	      try {
 	        img = ImageIO.read(new File("./dummyBilder/"+i+".jpg"));
 	        LinkedList<String> tagList = new LinkedList<String>();  
+	        bootstrap.createImage(img, "user2", "test"+ i + ".jpg", "Milan",new Date(), tagList);
+	        
+	        img = ImageIO.read(new File("./dummyBilder/"+i+".jpg"));
 	        bootstrap.createImage(img, "user2", "name"+ i + ".jpg", "Milan",new Date(), tagList);
+	        
 	      } catch (IOException e) {
 	        e.printStackTrace();
 	      }
