@@ -324,13 +324,14 @@ public class Bootstrap extends Peer {
 		User user = getUser(username);
 		
 		ImageContainer ic = new ImageContainer(img, username, imageName, location, date, tagList);
-		user.insertIntoImageList(imageName);
+		
 		
 		Image image = null;
 		
 		try {
-			String destinationPeerIP = routing(StaticFunctions.hashToPoint(username, imageName)).ip_adresse ;
+			String destinationPeerIP = routing(StaticFunctions.hashToPoint(username, imageName)).getIp_adresse();
 			image = forwardCreateImage(destinationPeerIP, username,ic);
+			user.insertIntoImageList(imageName);
 			exportUserList();							//Updates the UserList, incl Link to new Image
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -370,28 +371,6 @@ public class Bootstrap extends Peer {
 		*/
 		return getUser(username).getImageList();
 	}
-
-	
-	/**
-	 * returns a List with all paths to the images
-	 * @param username 
-	 * @return an ArrayList with all paths to the images
-	 * @throws UnknownHostException
-	 * @author Thomas Spanier 
-	 */
-	public ArrayList<String> getPaths(String username) throws UnknownHostException {
-		String path;
-		String ip;
-		HashSet<String> imageList = getListOfImages(username);
-		ArrayList<String> paths = new ArrayList<String>();
-		//TODO forwarding to the peers
-		for(String imageName : imageList) {
-			ip = routing(StaticFunctions.hashToPoint(username, imageName)).getIP();
-			path = "http://" + ip + "/images/" + username + "/" + imageName;
-			paths.add(path);
-		}
-		return paths;
-	}
 	
 
 	/**
@@ -407,7 +386,13 @@ public class Bootstrap extends Peer {
 		HashSet<String> imageNames = getListOfImages(username);
 		
 		for(String imageName : imageNames) {
-			ics.add(loadImageContainer(username, imageName));
+			try {
+				//TODO: Anders
+				
+				ics.add(loadImageContainer(username, imageName));
+			} catch (IOException e) {
+				System.out.println(imageName + " nicht gefunden");
+			}
 			
 		}
 		

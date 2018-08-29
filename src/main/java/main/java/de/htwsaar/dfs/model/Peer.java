@@ -634,6 +634,8 @@ public class Peer {
 				newPeer = new Peer(newPeerAdress);
 				newPeer.setOwnZone(splitZone());
 				
+				transferImagesAfterSplit(newPeerAdress);
+				
 				// oldPeer becomes neighbour of new Peer
 				newPeer.mergeRoutingTableWithList(routingTable);
 				newPeer.mergeRoutingTableSinglePeer(this);
@@ -650,6 +652,9 @@ public class Peer {
 					newPeer = new Peer(newPeerAdress);
 					System.out.println("Fall Bootstrap splittet sich");
 					newPeer.setOwnZone(splitZone());
+					
+					transferImagesAfterSplit(newPeerAdress);
+					
 					initializeRoutingTable(newPeer);
 					checkNeighboursOldPeer();
 					newPeer.checkNeighboursNewPeer();
@@ -681,6 +686,46 @@ public class Peer {
 		public String toString() {
 			return "[ ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTableToString()+ "]";
 		}
+		
+		
+		public boolean transferImagesAfterSplit(String destinationIP) {
+			
+			try {
+				ArrayList<ImageContainer> transferList = findImagesToTransfer();
+				transferPairs(destinationIP, transferList);
+				deletePairs(transferList);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			
+			
+			
+			
+			return true;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		/**
 		 * @author Raphaela Wagner
@@ -729,15 +774,10 @@ public class Peer {
 		 * @param newPeer
 		 * @throws IOException 
 		 */
-		public void transferPairs(ArrayList<ImageContainer> transferList) {
-			for(ImageContainer ic : transferList) {
-				try {
-					Peer.saveImageContainer(ic);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+		public void transferPairs(String destinationIP, ArrayList<ImageContainer> transferList) {
+			PeerClient pc = new PeerClient();
+			pc.transferImage(transferList, destinationIP);
+			
 
 		}
 		

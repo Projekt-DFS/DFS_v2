@@ -15,6 +15,8 @@ import javax.ws.rs.core.Response;
 
 import org.apache.http.client.ClientProtocolException;
 
+import main.java.de.htwsaar.dfs.utils.RestUtils;
+
 /**
  * This Class represent a Peer as Client
  * @author Aude Nana
@@ -198,5 +200,40 @@ public class PeerClient {
 		
 		return results;
 	}
+	
+	
+	/**
+	  * This method is called when a peer entry to the  network
+	  * @param images
+	  * @param destinationIp
+	  * @return
+	  */
+	 public void  transferImage(List<ImageContainer> images , String destinationIp ) {
+
+	  System.out.println("---------------Start transferImages---------------- " ); 
+	  System.out.println("Destination: " + destinationIp );
+	  
+	  images.forEach( ic -> {
+	   final String URL ="http://" + destinationIp + ":4434/p2p/v1/images/"+ic.getUsername();
+	   //build an Image from imageContainer
+	   Image image =  new Image(ic.getImageName(), 
+	     new Metadata(ic.getUsername(),
+	       ic.getDate(), 
+	       ic.getLocation(),
+	       ic.getTagList()),
+	     RestUtils.encodeToString(ic.getImage(), "jpg"),
+	     null);
+	   response = client.target( URL ).
+	     request(MediaType.APPLICATION_JSON).
+	     post(Entity.entity(image, MediaType.APPLICATION_JSON));
+	   System.out.println("Tranfering "+ ic.getImageName() +" Response Code : " + response.getStatus());
+	   
+	  });
+	  
+	  System.out.println("---------------Terminate transferImage---------------- " );
+	    client.close();
+
+	 }
+	
 	
 }
