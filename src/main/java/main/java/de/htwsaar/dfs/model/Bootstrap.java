@@ -303,7 +303,47 @@ public class Bootstrap extends Peer {
 	
 	
 	
-	
+	/** 
+
+
+	 
+	 * returns a List with all paths to the images 
+
+
+ 
+	 * @param username  
+
+
+ 
+	 * @return an ArrayList with all paths to the images 
+
+
+ 
+	 * @throws UnknownHostException 
+
+
+ 
+	 * @author Thomas Spanier  
+
+
+ 
+	 */ 
+
+
+ 
+	public ArrayList<String> getPaths(String username) throws UnknownHostException { 
+		String path; 
+		String ip; 
+		HashSet<String> imageList = getListOfImages(username); 
+		ArrayList<String> paths = new ArrayList<String>(); 
+		//TODO forwarding to the peers 
+		for(String imageName : imageList) { 
+			ip = routing(StaticFunctions.hashToPoint(username, imageName)).getIP(); 
+			path = "http://" + ip + "/images/" + username + "/" + imageName; 
+			paths.add(path); 
+		} 
+		return paths; 
+	} 
 	
 	
 	
