@@ -33,7 +33,7 @@ public class Bootstrap extends Peer {
 
 	//Variables
 	private static ArrayList<User> userList;
-	private long userCount;
+	
 	
 	/**
 	 * Constructor
@@ -44,7 +44,6 @@ public class Bootstrap extends Peer {
 		//Create or load UserList
 		userList = new ArrayList<User>();
 		try {
-			userCount = loadUserCount();
 			userList = importUserList();
 		} catch (FileNotFoundException e){
 			
@@ -60,26 +59,10 @@ public class Bootstrap extends Peer {
 
 	
 	//get methods
-	/**
-	 * returns how many Users are registered
-	 * @return how many Users are registered
-	 */
-	public int getUserCount() {
-		int count = 0;
-		for(@SuppressWarnings("unused") User user : userList) {
-			count++;
-		}
-		return count;
-	}
-		
 	public ArrayList<User> getUserList() {
 		return userList;
 	}
 
-	public User getUser(long id) {
-		//TODO 
-		return userList.get((int) id);
-	}
 	
 	/**
 	 * 
@@ -118,20 +101,11 @@ public class Bootstrap extends Peer {
 	 * @author Thomas Spanier
 	 */
 	public void setUserList(ArrayList<User> userList) {
-		this.userList = userList;
+		Bootstrap.userList = userList;
 		//Bootstrap.userList = userList;
 	}
 
 	
-	/**
-	 * 
-	 * @param userCount
-	 * @author Thomas Spanier
-	 */
-	public void setUserCount(long userCount) {
-		this.userCount = userCount;
-	}
-
 	
 	
 	//User management
@@ -145,19 +119,17 @@ public class Bootstrap extends Peer {
 	 */
 	public String createUser(String name, String password) {
 		User newUser;
-		newUser = new User(userCount, name, password);
+		newUser = new User(name, password);
 		for(User user : userList) {
 			if(user.getName().equals(name)) {
 				return ("User already exists");
 			}
 		}
-		userCount++;
 		userList.add(newUser);
 		try {
 			exportUserList();
-			saveUserCount();
+			//saveUserCount();
 		} catch (Exception e ) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return ("User has been added");
@@ -168,24 +140,14 @@ public class Bootstrap extends Peer {
 	 * @param name of the deleting User
 	 * @author Thomas Spanier
 	 */
-	@SuppressWarnings("unused")
 	public String deleteUser(String username) {
 		User user = getUser(username);
-		File fileName;
-		//TODO: routing
-		try {
-			for(String imageName : getPaths(username)) {
-				fileName = new File("images//" + username);
-				for(File file: fileName.listFiles()) {
-					file.delete();
-				}
-				fileName.delete();
-			}
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-		} catch (NullPointerException e) {
-			//e.printStackTrace();
+		LinkedList<String> imageNames = getListOfImages(username);
+		
+		for(String imageName : imageNames) {
+			deleteImage(username, imageName);
 		}
+		
 		userList.remove(user);
 		try {
 			exportUserList();
@@ -221,11 +183,10 @@ public class Bootstrap extends Peer {
 	 */
 	public void dumpUsers() {
 		userList.removeAll(userList);
-		userCount = 0;
 		try {
 			exportUserList();
-			saveUserCount();
-		} catch (IOException | ClassNotFoundException e) {
+			//saveUserCount();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
@@ -265,85 +226,39 @@ public class Bootstrap extends Peer {
 		return tmpUserList;
 	}
 	
-	/**
-	 * Deserializes the UserCount
-	 * @return
-	 * @throws FileNotFoundException
-	 * @throws ClassNotFoundException
-	 * @throws IOException
-	 * @author Thomas Spanier
-	 */
-	private long loadUserCount() throws FileNotFoundException, ClassNotFoundException, IOException {
-		ObjectInputStream in;
-		in= new ObjectInputStream(
-				new BufferedInputStream(
-						new FileInputStream("userCount.dat")));
-		long userCount= (long)in.readObject();
-		
-		in.close();
-		return userCount;
-	}
-	
-	/**
-	 * Serializes the UserCount
-	 * @throws FileNotFoundException
-	 * @throws ClassNotFoundException
-	 * @throws IOException
-	 * @author Thomas Spanier
-	 */
-	private void saveUserCount() throws FileNotFoundException, ClassNotFoundException, IOException {
-		ObjectOutputStream out = new ObjectOutputStream(
-				new BufferedOutputStream(
-						new FileOutputStream("userCount.dat")));
-		out.writeObject(userCount);
-		out.close();
-	}
-	
-	
-	
-	
-	
-	/** 
-
-
-	 
-	 * returns a List with all paths to the images 
-
-
- 
-	 * @param username  
-
-
- 
-	 * @return an ArrayList with all paths to the images 
-
-
- 
-	 * @throws UnknownHostException 
-
-
- 
-	 * @author Thomas Spanier  
-
-
- 
-	 */ 
-
-
- 
-	public ArrayList<String> getPaths(String username) throws UnknownHostException { 
-		String path; 
-		String ip; 
-		HashSet<String> imageList = getListOfImages(username); 
-		ArrayList<String> paths = new ArrayList<String>(); 
-		//TODO forwarding to the peers 
-		for(String imageName : imageList) { 
-			ip = routing(StaticFunctions.hashToPoint(username, imageName)).getIP(); 
-			path = "http://" + ip + "/images/" + username + "/" + imageName; 
-			paths.add(path); 
-		} 
-		return paths; 
-	} 
+//	/**
+//	 * Deserializes the UserCount
+//	 * @return
+//	 * @throws FileNotFoundException
+//	 * @throws ClassNotFoundException
+//	 * @throws IOException
+//	 * @author Thomas Spanier
+//	 */
+//	private long loadUserCount() throws FileNotFoundException, ClassNotFoundException, IOException {
+//		ObjectInputStream in;
+//		in= new ObjectInputStream(
+//				new BufferedInputStream(
+//						new FileInputStream("userCount.dat")));
+//		long userCount= (long)in.readObject();
+//		
+//		in.close();
+//		return userCount;
+//	}
+//	
+//	/**
+//	 * Serializes the UserCount
+//	 * @throws FileNotFoundException
+//	 * @throws ClassNotFoundException
+//	 * @throws IOException
+//	 * @author Thomas Spanier
+//	 */
+//	private void saveUserCount() throws FileNotFoundException, ClassNotFoundException, IOException {
+//		ObjectOutputStream out = new ObjectOutputStream(
+//				new BufferedOutputStream(
+//						new FileOutputStream("userCount.dat")));
+//		out.writeObject(userCount);
+//		out.close();
+//	}
 	
 	
 	
@@ -361,15 +276,43 @@ public class Bootstrap extends Peer {
 	public Image createImage(BufferedImage img, String username, String imageName, 
 			String location, Date date, LinkedList<String> tagList) {
 		
+		int i = 0, j = 0;
 		User user = getUser(username);
+		String[] tmpArray;
+		
+		String ending;
+		
+		//Check for double names
+		LinkedList<String> imageNames = getListOfImages(username);
+		
+		for(@SuppressWarnings("unused") String name : imageNames) {
+			while(imageNames.contains(imageName)) {
+				String imageNameWithoutEnding = "";
+				tmpArray = imageName.split("[.]");
+				for(int k = 0; k < tmpArray.length - 1; k++) {
+					imageNameWithoutEnding = imageNameWithoutEnding + tmpArray[k];
+				}
+				ending = "." + tmpArray[tmpArray.length - 1]; 
+				
+				
+				if(i>0) {
+					j= (int)Math.log10(i);
+					imageName = imageNameWithoutEnding.substring(0, imageNameWithoutEnding.length() - j - 1) + i++ + ending;
+				} else {
+					imageName = imageNameWithoutEnding + i++ + ending;
+				}
+			}
+		}
+		
+		
 		
 		ImageContainer ic = new ImageContainer(img, username, imageName, location, date, tagList);
-		
-		
 		Image image = null;
 		
 		try {
-			String destinationPeerIP = routing(StaticFunctions.hashToPoint(username, imageName)).getIp_adresse();
+			Point p = StaticFunctions.hashToPoint(username, imageName);
+			System.out.println("Destination Coordinate: " + StaticFunctions.hashTester(username, imageName));
+			String destinationPeerIP = routing(p).getIp_adresse();
 			image = forwardCreateImage(destinationPeerIP, username,ic);
 			user.insertIntoImageList(imageName);
 			exportUserList();							//Updates the UserList, incl Link to new Image
@@ -388,11 +331,24 @@ public class Bootstrap extends Peer {
 	 */
 	public String deleteImage(String username, String imageName) {
 		User user = getUser(username);
+		Point p;
+		String destinationPeerIP;
+		
+		p = StaticFunctions.hashToPoint(username, imageName);
+		System.out.println(StaticFunctions.hashTester(username, imageName));
 		try {
+			if(lookup(p)) {
+				//deletes the files
+				deleteImageContainer(username, imageName);
+			} else {
+				//delete the files on remote Peer
+				destinationPeerIP = routing(p).getIp_adresse();
+				//TODO: REST Aufruf deleteImageContainer
+			}
 			user.deleteFromImageList(imageName);
-			exportUserList();							//Updates the UserList, incl Link to new Image
-			routing(StaticFunctions.hashToPoint(username, imageName)).deleteImageContainer(username, imageName);					//TODO: temporary (routing)
-		} catch (IOException e) {
+			exportUserList();
+			
+		} catch (Exception e) {
 			return "Some errors have occured.";
 		}
 		return "image has been deleted.";
@@ -405,7 +361,7 @@ public class Bootstrap extends Peer {
 	 * @return a List with paths of all images of an user
 	 * @author Thomas Spanier
 	 */
-	private static HashSet<String> getListOfImages(String username){
+	private static LinkedList<String> getListOfImages(String username){
 		/*List<String> paths = imageList.stream().
 				filter(s -> s.startsWith(username+ "|")).collect(Collectors.toList());
 		*/
@@ -423,13 +379,19 @@ public class Bootstrap extends Peer {
 	 */
 	public ArrayList<ImageContainer> getAllImageContainers(String username) throws ClassNotFoundException, IOException {
 		ArrayList<ImageContainer> ics = new ArrayList<ImageContainer>();
-		HashSet<String> imageNames = getListOfImages(username);
-		
+		LinkedList<String> imageNames = getListOfImages(username);
+		Point p;
+		String destinationPeerIp;
 		for(String imageName : imageNames) {
 			try {
-				//TODO: Anders
+				p = StaticFunctions.hashToPoint(username, imageName);
+				if(lookup(p)) {
+					ics.add(loadImageContainer(username, imageName));
+				} else {
+					destinationPeerIp = routing(p).getIp_adresse();
+					//TODO: REST-Aufruf zum Laden des ImageContainers von peer
+				}
 				
-				ics.add(loadImageContainer(username, imageName));
 			} catch (IOException e) {
 				System.out.println(imageName + " nicht gefunden");
 			}
@@ -464,7 +426,7 @@ public class Bootstrap extends Peer {
 				null);
 		  
 		//if the Peer of destination is the actually peer, save the image here  
-		if ( this.getIP().equals(destinationPeerIP)) {
+		if ( this.getIp_adresse().equals(destinationPeerIP)) {
 			saveImageContainer(imageContainer);
 			System.out.println(SUCCEED);
 		}
@@ -477,5 +439,40 @@ public class Bootstrap extends Peer {
 		return image;
 	}
 
+	
+	
+	/**
+	 * Returns a String that contains all imagenames of an user
+	 * @param username
+	 * @return 
+	 */
+	public String listImageNames(String username) {
+		StringBuffer sb = new StringBuffer();
+		int i = 0;
+		User user = getUser(username);
+		
+		sb.append("Username: " + username + "\n");
+		
+		for(String imageName : user.getImageList()) {
+			sb.append(i++ + " : " + imageName + ", " + StaticFunctions.hashTester(username, imageName)  + " | ");
+		}
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * Returns all Images of all users
+	 * @return
+	 */
+	public String listImageNames() {
+		StringBuffer sb = new StringBuffer();
+		for(User user : userList) {
+			sb.append(listImageNames(user.getName()) + "\n");
+		}
+		
+		
+		return sb.toString();
+	}
+	
 }
 

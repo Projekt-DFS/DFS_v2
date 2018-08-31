@@ -1,6 +1,7 @@
 package main.java.de.htwsaar.dfs.model;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -20,10 +21,9 @@ public class User implements Serializable {
 	
 	private static final long serialVersionUID = -3153801662101748013L;
 	//Variables
-	private long id;
 	private String name;
 	private String password;
-	private HashSet<String> imageList;
+	private LinkedList<String> imageList;
 	//imageList?
 	
 	
@@ -33,9 +33,8 @@ public class User implements Serializable {
 	 * @param name
 	 * @param password
 	 */
-	public User(long id, String name, String password) {
-		imageList = new HashSet<String>();
-		this.id=id;
+	public User(String name, String password) {
+		imageList = new LinkedList<String>();
 		setName(name);
 		setPassword(password);
 	}
@@ -44,10 +43,6 @@ public class User implements Serializable {
 		
 	}
 	//get-methods
-	public long getId() {
-		return id;
-	}
-	
 	public String getName() {
 		return name;
 	}
@@ -56,17 +51,12 @@ public class User implements Serializable {
 		return password;
 	}
 	
-	public HashSet<String> getImageList() {
+	public LinkedList<String> getImageList() {
 		return imageList;
 	}
 	
 	
 	//set-methods
-	
-	public void setId(long id) {
-		this.id = id;
-	}
-	
 	public void setName(String name) {
 		if (name.trim().isEmpty()) {
 			throw new EmptyStringException();

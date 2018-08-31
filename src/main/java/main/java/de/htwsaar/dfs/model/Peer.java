@@ -384,72 +384,40 @@ public class Peer {
 	
 	
 	//Image functions P2P
-		/**
-		 * Saves an ImageContainer including the image and the thumbnail on the hdd
-		 * @param ic the imageContainer to be saved
-		 * @author Thomas Spanier
-		 */
-		public static void saveImageContainer(ImageContainer ic) throws IOException {
-			int i = 0, j = 0;
-			//Create folders if they do not already exist
-			File folder = new File("images");
-			if(!folder.exists()) {
-				folder.mkdir();
-			}
-			File userFolder = new File("images/" + ic.getUsername());
-			if(!userFolder.exists()) {
-				userFolder.mkdir();
-			}
-			
-			File file = new File(ic.getPath() + ".data");
-			//If File already exists, a generated number will be added
-			while (file.exists()) {
-				String newPath;
-				if( i > 0 ) {
-					j= (int)Math.log10(i);
-					newPath = ic.getPath().substring(0, ic.getPath().length() - j - 1) + i++;
-					
-					
-				} else {
-					newPath = ic.getPath() + i++;
-				}
-				
-				
-				file = new File(newPath + ".data");
-				
-				String[] tmp = newPath.split("[/]");
-				String newImageName = tmp[tmp.length -1];
-				ic.setFileName(newImageName + ic.getEnding());
-				ic.setPath(newPath);
-				ic.setCoordinate();
-
-				
-				
-			}
-			/*
-			System.out.println("imageName	: " + ic.getImageName());
-			System.out.println("Path		: " + ic.getPath());
-			System.out.println("Coordinate	: " + ic.getCoordinate());
-			System.out.println();
-			*/
-			
-			//Save imageContainer
-			ObjectOutputStream out;
-			out = new ObjectOutputStream(
-					new BufferedOutputStream(
-							new FileOutputStream(file)));
-			out.writeObject(ic);
-			out.close();
-			
-			
-			//Save image
-			File outputFile = new File(ic.getPath() + ic.getEnding());
-			ImageIO.write(ic.getImage(), "jpg", outputFile);
-			
-			//Save thumbnail
-			outputFile = new File(ic.getPath() + "_thumbnail" + ic.getEnding());
-			ImageIO.write(ic.getThumbnail(), "jpg", outputFile);	
+	/**
+	 * Saves an ImageContainer including the image and the thumbnail on the hdd
+	 * @param ic the imageContainer to be saved
+	 * @author Thomas Spanier
+	 */
+	public static void saveImageContainer(ImageContainer ic) throws IOException {
+		
+		//Create folders if they do not already exist
+		File folder = new File("images");
+		if(!folder.exists()) {
+			folder.mkdir();
 		}
+		File userFolder = new File("images/" + ic.getUsername());
+		if(!userFolder.exists()) {
+			userFolder.mkdir();
+		}
+		
+		//Save imageContainer
+		ObjectOutputStream out;
+		out = new ObjectOutputStream(
+				new BufferedOutputStream(
+						new FileOutputStream(new File(ic.getPath() + ".data"))));
+		out.writeObject(ic);
+		out.close();
+		
+		
+		//Save image
+		File outputFile = new File(ic.getPath() + ic.getEnding());
+		ImageIO.write(ic.getImage(), "jpg", outputFile);
+		
+		//Save thumbnail
+		outputFile = new File(ic.getPath() + "_thumbnail" + ic.getEnding());
+		ImageIO.write(ic.getThumbnail(), "jpg", outputFile);	
+	}
 		
 		
 		/**
@@ -529,8 +497,19 @@ public class Peer {
 		}
 		
 		
-
+	/**
+	 * Deletes all Files in user's imageFolder
+	 * @param username
+	 */
+	public void deleteAllImages(String username) throws IOException {
+		File folder = new File("images//" + username);
+		for(File file: folder.listFiles()) {
+			file.delete();
+		}
+		folder.delete();
+	}
 		
+	
 		
 		
 		

@@ -5,6 +5,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.awt.*;
@@ -47,6 +48,24 @@ public class StaticFunctions {
 		//System.out.println("Das Bild "+ imageName + " Hat die Koordinaten: "+ coordinatePoint);
 		return coordinatePoint;
 	}
+	
+	
+	/**
+	 * Returns the hashed Coordinates that were genereated in hashToPoint
+	 * @param userName
+	 * @param imageName
+	 * @return
+	 */
+	public static String hashTester(String userName, String imageName) {
+		Point p = hashToPoint(userName, imageName);
+		
+		return p.toString();
+	}
+	
+	
+	
+	
+	
 	
 	
 	/**
@@ -131,6 +150,37 @@ public class StaticFunctions {
 		}
 		return "no IP-Address found";
 	} 
+	
+	public static ArrayList<String> getAllIPs () {
+		ArrayList<String> ips = new ArrayList<String>();
+		String[] tmpArray;
+		String ip;
+		Enumeration<NetworkInterface> e;
+		Enumeration<InetAddress> all_IPs;
+		try {
+			e = NetworkInterface.getNetworkInterfaces();
+			for(NetworkInterface ni : Collections.list(e)) {
+				all_IPs = ni.getInetAddresses();
+				for(InetAddress tmpip : Collections.list(all_IPs)) {
+					try {
+			        	Inet4Address i = (Inet4Address) tmpip;
+			        	if(!i.isLoopbackAddress()) {
+			        		tmpArray =  i.toString().split("[/]");
+			        		ip = tmpArray[1];
+				        	ips.add(ip);
+				        }
+			        } catch (ClassCastException e1) {
+			        	//Do nothing, if it's no ipv4 Address
+			        }
+				}
+			}
+		} catch (SocketException e1) {
+			e1.printStackTrace();
+		}
+		return ips;
+	}
+	
+	
 	
 	
 	/**

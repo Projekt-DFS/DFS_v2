@@ -17,6 +17,7 @@ import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.ImageContainer;
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.User;
+import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
  * @author Thomas Spanier
@@ -40,12 +41,20 @@ public class PlayGround {
 		//new PlayGround().startUserTest();
 		//new PlayGround().startImageTest();
 		try {
+			new PlayGround().start();
 			new PlayGround().startBootstrapTest();
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	private void start() {
+		System.out.println(StaticFunctions.getAllIPs());
+	}
+	
+	
 	
 	private void startBootstrapTest() throws IOException, ClassNotFoundException {
 		startBootstrapTestCreate();
@@ -63,39 +72,34 @@ public class PlayGround {
 		Date date = new Date();
 		LinkedList<String> tagList = new LinkedList<String>();
 		
-		img = ImageIO.read(new File("twins.jpg"));
+		img = ImageIO.read(new File("Classdiagram.jpg"));
 		photographer = "Thomas";
 		tagList.add("babys");
-		bt.createImage(img, Bootstrap.getUser("test1").getName(), "twins.jpg", photographer, date, tagList);
-		bt.createImage(img, Bootstrap.getUser("test1").getName(), "twins.jpg", photographer, date, tagList);
-		bt.createImage(img, Bootstrap.getUser("test1").getName(), "twins.jpg", photographer, date, tagList);
-		bt.createImage(img, Bootstrap.getUser("test1").getName(), "twins.jpg", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("test1").getName(), "Classdiagram.jpg", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("test1").getName(), "Classdiagram.jpg", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("test1").getName(), "Classdiagram.jpg", photographer, date, tagList);
+		bt.createImage(img, Bootstrap.getUser("test1").getName(), "Classdiagram.jpg", photographer, date, tagList);
 		
-		img = ImageIO.read(new File("coins.jpg"));
+		img = ImageIO.read(new File("Classdiagram.jpg"));
 		photographer = "amazon";
 		tagList.removeFirst();
 		tagList.add("Kaufbelege");
 		tagList.add("money");
-		bt.createImage(img, Bootstrap.getUser("test2").getName(), "img_002.jpg", photographer, date, tagList);
-		System.out.println(bt.getPaths("test2"));
-		try {
-			System.out.println("tagList:" + bt.loadImageContainer("test2", "img_002").getTagList());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		bt.createImage(img, Bootstrap.getUser("test2").getName(), "Classdiagram.jpg", photographer, date, tagList);
+		
+		System.out.println(bt.listImageNames());
 	}
 	
 	
 	private void startBootstrapTestLoad() throws ClassNotFoundException, IOException {
 		bt = new Bootstrap();
-		System.out.println("Pfade: " + bt.getPaths("test2"));
-		System.out.println("All Containers: " + bt.getAllImageContainers("test2"));
+		
+		System.out.println("All Containers: " + bt.listImageNames("test1"));
 		ArrayList<ImageContainer> ics;
 		ics = bt.getAllImageContainers("test2");
 		System.out.println("TagList: " + ics.get(0).getTags());
 		
-		ImageContainer coins = bt.loadImageContainer("test2", "img_002.jpg");
+		ImageContainer coins = bt.loadImageContainer("test2", "Classdiagram.jpg");
 		System.out.println(coins.getTags());
 		
 		
