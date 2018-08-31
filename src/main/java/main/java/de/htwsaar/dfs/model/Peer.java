@@ -716,29 +716,34 @@ public class Peer {
 		public ArrayList<ImageContainer> findImagesToTransfer() throws FileNotFoundException, ClassNotFoundException, IOException {
 			File directory = new File("images/");
 			File[] userList = directory.listFiles();
-			String userName, imageName, tmp;
+			String userName, imageName;
 			String[] tmpArray;
 			ArrayList<ImageContainer> transferList = new ArrayList<>();
-			
+			if(!directory.exists()) {
+				return new ArrayList<ImageContainer>();
+			}
+			//for each user-folder
 			for (File userFile : userList) {
-				System.out.println("userFile: " + userFile.toString());
+				
+				//for each image File in user folder
 				for(File imageFile : userFile.listFiles()) {
-					System.out.println("imageFile: " + imageFile.toString());
+					//Search for Meta-Data file
 					if(imageFile.toString().endsWith(".data")) {
 						userName = userFile.getName();
-						
-						
+
+						ObjectInputStream in= new ObjectInputStream(
+								new BufferedInputStream(
+										new FileInputStream(imageFile)));
+						ImageContainer tmpIc= (ImageContainer)in.readObject();
+						in.close(); 
 						
 						tmpArray = imageFile.getName().split(".data");
-						imageName = tmpArray[0] + ".jpg";
-						
-						System.out.println("User: " + userName + ", Image: " + imageName);
-						
-						
+						imageName = tmpArray[0] + tmpIc.getEnding();
 						
 						ImageContainer ic = this.loadImageContainer(userName, imageName);
 						
 						if(!containsPoint(ic.getCoordinate())) {
+							System.out.println("To TransferList: " + userName + ", " + imageName);
 							transferList.add(ic);
 						}
 					}
