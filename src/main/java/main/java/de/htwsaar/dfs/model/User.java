@@ -1,7 +1,6 @@
 package main.java.de.htwsaar.dfs.model;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -23,7 +22,7 @@ public class User implements Serializable {
 	//Variables
 	private String name;
 	private String password;
-	private LinkedList<String> imageList;
+	private CopyOnWriteArrayList<String> imageList;
 	//imageList?
 	
 	
@@ -34,7 +33,7 @@ public class User implements Serializable {
 	 * @param password
 	 */
 	public User(String name, String password) {
-		imageList = new LinkedList<String>();
+		imageList = new CopyOnWriteArrayList<String>();
 		setName(name);
 		setPassword(password);
 	}
@@ -51,7 +50,7 @@ public class User implements Serializable {
 		return password;
 	}
 	
-	public LinkedList<String> getImageList() {
+	public CopyOnWriteArrayList<String> getImageList() {
 		return imageList;
 	}
 	

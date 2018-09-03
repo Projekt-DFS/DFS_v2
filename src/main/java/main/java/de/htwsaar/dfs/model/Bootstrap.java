@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -32,7 +33,7 @@ import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 public class Bootstrap extends Peer {
 
 	//Variables
-	private static ArrayList<User> userList;
+	private static CopyOnWriteArrayList<User> userList;
 	
 	
 	/**
@@ -42,7 +43,7 @@ public class Bootstrap extends Peer {
 	 */
 	public Bootstrap() {
 		//Create or load UserList
-		userList = new ArrayList<User>();
+		userList = new CopyOnWriteArrayList<User>();
 		try {
 			userList = importUserList();
 		} catch (FileNotFoundException e){
@@ -59,7 +60,7 @@ public class Bootstrap extends Peer {
 
 	
 	//get methods
-	public ArrayList<User> getUserList() {
+	public CopyOnWriteArrayList<User> getUserList() {
 		return userList;
 	}
 
@@ -100,7 +101,7 @@ public class Bootstrap extends Peer {
 	 * @param userList
 	 * @author Thomas Spanier
 	 */
-	public void setUserList(ArrayList<User> userList) {
+	public void setUserList(CopyOnWriteArrayList<User> userList) {
 		Bootstrap.userList = userList;
 		//Bootstrap.userList = userList;
 	}
@@ -142,11 +143,14 @@ public class Bootstrap extends Peer {
 	 */
 	public String deleteUser(String username) {
 		User user = getUser(username);
-		LinkedList<String> imageNames = getListOfImages(username);
+		CopyOnWriteArrayList<String> imageNames = getListOfImages(username);
 		
 		for(String imageName : imageNames) {
 			deleteImage(username, imageName);
 		}
+		
+		
+		
 		
 		userList.remove(user);
 		try {
@@ -215,13 +219,13 @@ public class Bootstrap extends Peer {
 	 * @author Thomas Spanier
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<User> importUserList() throws IOException, ClassNotFoundException, FileNotFoundException {
+	public CopyOnWriteArrayList<User> importUserList() throws IOException, ClassNotFoundException, FileNotFoundException {
 		ObjectInputStream in;
-		ArrayList<User> tmpUserList = new ArrayList<User>();
+		CopyOnWriteArrayList<User> tmpUserList = new CopyOnWriteArrayList<User>();
 		in= new ObjectInputStream(
 				new BufferedInputStream(
 						new FileInputStream("userList.dat")));
-		tmpUserList= (ArrayList<User>)in.readObject();
+		tmpUserList= (CopyOnWriteArrayList<User>)in.readObject();
 		in.close();
 		return tmpUserList;
 	}
@@ -283,7 +287,7 @@ public class Bootstrap extends Peer {
 		String ending;
 		
 		//Check for double names
-		LinkedList<String> imageNames = getListOfImages(username);
+		CopyOnWriteArrayList<String> imageNames = getListOfImages(username);
 		
 		for(@SuppressWarnings("unused") String name : imageNames) {
 			while(imageNames.contains(imageName)) {
@@ -361,7 +365,7 @@ public class Bootstrap extends Peer {
 	 * @return a List with paths of all images of an user
 	 * @author Thomas Spanier
 	 */
-	private static LinkedList<String> getListOfImages(String username){
+	private static CopyOnWriteArrayList<String> getListOfImages(String username){
 		/*List<String> paths = imageList.stream().
 				filter(s -> s.startsWith(username+ "|")).collect(Collectors.toList());
 		*/
@@ -379,7 +383,7 @@ public class Bootstrap extends Peer {
 	 */
 	public ArrayList<ImageContainer> getAllImageContainers(String username) throws ClassNotFoundException, IOException {
 		ArrayList<ImageContainer> ics = new ArrayList<ImageContainer>();
-		LinkedList<String> imageNames = getListOfImages(username);
+		CopyOnWriteArrayList<String> imageNames = getListOfImages(username);
 		Point p;
 		String destinationPeerIp;
 		for(String imageName : imageNames) {
