@@ -13,7 +13,6 @@ import java.io.ObjectOutputStream;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.imageio.ImageIO;
@@ -52,137 +51,180 @@ public class Peer {
 	private CopyOnWriteArrayList<Peer> routingTable = new CopyOnWriteArrayList<>();
 	
 	
-	
-		//Constructor
-		public Peer (Peer copie) {
-			Zone zone = copie.getOwnZone();
-			this.ownZone = new Zone(zone.getBottomLeft(), zone.getBottomRight(), zone.getUpperLeft(), zone.getUpperRight());
-			this.ip_adresse = copie.getIp_adresse();
-			this.routingTable = new CopyOnWriteArrayList<>(copie.routingTable);
-		}
+	//Constructors
+	public Peer (Peer copie) {
+		Zone zone = copie.getOwnZone();
+		this.ownZone = new Zone(zone.getBottomLeft(), zone.getBottomRight(), zone.getUpperLeft(), zone.getUpperRight());
+		this.ip_adresse = copie.getIp_adresse();
+		this.routingTable = new CopyOnWriteArrayList<>(copie.routingTable);
+	}
 		
-		public Peer () {		
-		}
+	public Peer () {	
 		
-		/**
-		 * Creates new Peer with ip address only
-		 */
-		public Peer (String ip_adress) {
-			this.ip_adresse = ip_adress;
-		}
+	}
 	
 		
-		public Peer(Zone ownZone, String ip_adresse, CopyOnWriteArrayList<Peer> routingTable) {
+	/**
+	 * Creates new Peer with ip address only
+	 */
+	public Peer (String ip_adress) {
+		this.ip_adresse = ip_adress;
+	}
+	
+		
+	public Peer(Zone ownZone, String ip_adresse, CopyOnWriteArrayList<Peer> routingTable) {
+		
+		this.ownZone = ownZone;
+		this.ip_adresse = ip_adresse;
+		this.routingTable = routingTable;
+		System.out.println(this.ownZone);
+	}
+
+	
+	//Getters
+	public Zone getOwnZone() {
+		return ownZone;
+	}
+	
+	public String getIp_adresse() {
+		return ip_adresse;
+	}
+
+	public static int getPort() {
+		return port;
+	}
+
+	public Zone getZone() {
+		return ownZone;
+	}
+	
+	/**
+	 * 
+	 * @return the local ip-address of the peer
+	 * @throws UnknownHostException 
+	 */
+	public String getIP() {
+		
+		try {
+			ip_adresse = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ip_adresse;
+	}
+	
+	public CopyOnWriteArrayList<Peer> getRoutingTable() {
+    	return routingTable;
+    }
+	
+	
+	//Setters
+	public void setOwnZone(Zone ownZone) {
+		this.ownZone = ownZone;
+	}
+
+	public void setIp_adresse(String ip_adresse) {
+		this.ip_adresse = ip_adresse;
+	}
+	
+	public void setRoutingTable(CopyOnWriteArrayList<Peer> routingTable) {
+		this.routingTable = routingTable;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	//Routing
+	/**
+	 * @author Raphaela Wagner 27.06.2018
+	 * Recursive method that returns the destinationPeer which holds the destinationCoordinate
+	 * @param destinationCoordinate
+	 * @return 
+	 */
+	public Peer shortestPath(Point destinationCoordinate) {
+		
+		double smallestSquare = this.getRoutingTable().get(0).getZone().calculateCentrePoint().distanceSq(destinationCoordinate);
+		Peer closestNeighbour = this.getRoutingTable().get(0);
 			
-			this.ownZone = ownZone;
-			this.ip_adresse = ip_adresse;
-			this.routingTable = routingTable;
-			System.out.println(this.ownZone);
-		}
-
-		public Zone getOwnZone() {
-			return ownZone;
-		}
-
-		public void setOwnZone(Zone ownZone) {
-			this.ownZone = ownZone;
-		}
-
-		public String getIp_adresse() {
-			return ip_adresse;
-		}
-
-		public static int getPort() {
-			return port;
-		}
-
-		
-		
-		public void setIp_adresse(String ip_adresse) {
-			this.ip_adresse = ip_adresse;
-		}
-		public void setRoutingTable(CopyOnWriteArrayList<Peer> routingTable) {
-			this.routingTable = routingTable;
-		}
-		public Zone getZone() {
-			return ownZone;
-		}
-		
-		
-		/**
-		 * 
-		 * @return the local ip-address of the peer
-		 * @throws UnknownHostException 
-		 */
-		public String getIP() {
-			
-			try {
-				ip_adresse = InetAddress.getLocalHost().getHostAddress();
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		for(int i = 1; i < getRoutingTable().size(); i++) {
+			if (this.getRoutingTable().get(i).getZone().calculateCentrePoint().distanceSq(destinationCoordinate) < smallestSquare) {
+				closestNeighbour = this.getRoutingTable().get(i);
+				smallestSquare = this.getRoutingTable().get(i).getZone().calculateCentrePoint().distanceSq(destinationCoordinate);
 			}
-			return ip_adresse;
 		}
-		
-		public CopyOnWriteArrayList<Peer> getRoutingTable() {
-	    	return routingTable;
-	    }
-		
+		System.out.println("Naechster Nachbar: " + closestNeighbour.getIp_adresse());
+		return closestNeighbour;//.routing(destinationCoordinate);
+	}
+	
 	
 	/**
-	 * Splits the Peer's Zone and transfers one half to the new Peer
-	 * @author Thomas Spanier & Raphaela Wagner
-	 * @return new Zone for the new Peer
+	 * @author Raphaela Wagner 27.06.2018
+	 * looks up whether destinationCoordinate lies in this Peer's zone
+	 * @param destinationCoordinate
+	 * @return
 	 */
-	public Zone splitZone() {
-		Zone newZone = new Zone();
-		if (ownZone.isSquare()) {
-	        
-	    	newZone.setZone(new Point(ownZone.calculateCentrePoint().getX(), ownZone.getBottomRight().getY()), ownZone.getUpperRight());
-	    	ownZone.setZone(ownZone.getBottomLeft(), new Point(ownZone.calculateCentrePoint().getX(), ownZone.getUpperLeft().getY()));    
-	    } else {
-	        
-	    	newZone.setZone(ownZone.getBottomLeft(), (new Point(ownZone.getBottomRight().getX(), ownZone.calculateCentrePoint().getY())));
-	        ownZone.setZone(new Point(ownZone.getUpperLeft().getX(), ownZone.calculateCentrePoint().getY()), ownZone.getUpperRight());    
-	    }
-	    return newZone;
+	public boolean lookup(Point destinationCoordinate) {
+		if (this.getOwnZone().getBottomLeft().getX() <= destinationCoordinate.getX() 
+				&& this.getOwnZone().getUpperRight().getX() >= destinationCoordinate.getX()
+				&& this.getOwnZone().getBottomLeft().getY() <= destinationCoordinate.getY()
+				&& this.getOwnZone().getUpperRight().getY() >= destinationCoordinate.getY()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-		
-		
-		
+	
+	
 	/**
-	 * @deprecated
-	 * Splits the Peer's Zone and transfers one half to the new Peer
-	 * @param newPeer
+	 * @author Raphaela Wagner 03.08.2018
+	 * @param p
+	 * @return
 	 */
-	public Peer splitZone(Peer newPeer) {
-	    if (ownZone.isSquare()) {
-	        
-	    	newPeer.createZone(new Point(ownZone.calculateCentrePoint().getX(), ownZone.getBottomRight().getY()), ownZone.getUpperRight());
-	    	ownZone.setZone(ownZone.getBottomLeft(), new Point(ownZone.calculateCentrePoint().getX(), ownZone.getUpperLeft().getY()));    
-	    } else {
-	        
-	    	newPeer.createZone(ownZone.getBottomLeft(), (new Point(ownZone.getBottomRight().getX(), ownZone.calculateCentrePoint().getY())));
-	        ownZone.setZone(new Point(ownZone.getUpperLeft().getX(), ownZone.calculateCentrePoint().getY()), ownZone.getUpperRight());    
-	    }
-	    newPeer = updateRoutingTables(newPeer);
-	    
-	    return newPeer;
+	public boolean containsPoint(Point p) {
+		return ownZone.getBottomRight().getX() > p.getX() && p.getX() > ownZone.getUpperLeft().getX() 
+				&& ownZone.getUpperLeft().getY() > p.getY() && p.getY() > ownZone.getBottomRight().getY();
 	}
+	
+
+	/**
+	 * @ author Raphaela Wagner 27.06.2018
+	 * routing method 
+	 * @param destinationCoordinate
+	 * @return
+	 */
+	public Peer routing(Point destinationCoordinate) {
+		// Temporärer Peer zur Zwischenspeicherung
+		//Peer tmpPeer = new Peer();
+		System.out.println("Routing auf Peer: " + getIp_adresse());
+		if (lookup(destinationCoordinate)) {
+			return this;
+		} else {
+
+			Peer tmpPeer = shortestPath(destinationCoordinate);
+			Peer routingPeer = new PeerClient().routing(tmpPeer, destinationCoordinate);
+			return routingPeer.routing(destinationCoordinate);
+		}
+	}	
+	
+	
+	
+	
+	
+	
 	
 	// Methods for routingTable updating
-	
-	
 	/**
 	 * Wird auf altem Peer aufgerufen um RT von neuem Peer zu initialisieren
 	 * @return
 	 */
 	public void initializeRoutingTable(Peer newPeer) {
 		newPeer.mergeRoutingTableWithList(routingTable);
-		newPeer.mergeRoutingTableSinglePeer(this);
-		
-		
+		newPeer.mergeRoutingTableSinglePeer(this);	
 	}
 	
 	public void checkNeighboursOldPeer() {
@@ -199,7 +241,7 @@ public class Peer {
 				routingTable.remove(neighbour);
 				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), api, tmpPeer);
 			} else {
-				//TODO: Uebermittle neue Zone, indem erst geloescht wird, dann wieder rein gesetzt
+				//Update new Zone
 				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), api, tmpPeer);
 				new PeerClient().addNeighbor(neighbour.getIp_adresse(), api, tmpPeer);
 			}
@@ -218,60 +260,11 @@ public class Peer {
 				} else {
 					new PeerClient().addNeighbor(neighbour.getIp_adresse(), "bootstrap", this);
 				}
-				
-			
+
 			}
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	/**
-	 * updates routingTables of all Peers affected
-	 * @param newPeer
-	 * @deprecated
-	 */
-	public Peer updateRoutingTables(Peer newPeer) {
-			
-			Peer peer2= new Peer(newPeer);
-			Peer peer3 =new Peer(this);
-			// oldPeer becomes neighbour of new Peer
-			newPeer.mergeRoutingTableWithList(routingTable);
-			newPeer.mergeRoutingTableSinglePeer(peer3);
-			//newPeer becomes neighbour of oldPeer
-		    this.mergeRoutingTableSinglePeer(peer2);
-		    
-		    // newPeer gets the routingTable from oldPeer
-		    
-		    
-//		     newPeer becomes neighbour of oldPeer
-		
-		    /**
-		     * each Peer of oldPeer's routingTable gets newPeer as a temporary neighbour
-		     * Peers from oldPeer's old routingTable check if oldPeer and newPeer are neighbours
-		     * if not, they are removed from the routingTable
-		     */
-		    
-		    for (Peer p : routingTable) {
-		    	p.mergeRoutingTableSinglePeer(newPeer);
-		    	
-		    	if (p.isNeighbour(this) == false) {
-		    		p.getRoutingTable().remove(this);
-		    	}
-		    	
-		    	if (p.isNeighbour(newPeer) == false) {
-		    		p.getRoutingTable().remove(newPeer);
-		    	}
-		    }
-		    
-		    eliminateNeighbours(this);
-		    eliminateNeighbours(newPeer);
-		    return newPeer;
-		}
 	
 	/**
 	 * a single Peer is put into the routingTable
@@ -314,27 +307,169 @@ public class Peer {
 		});
 	}
 	
-	public String routingTableToString() {
-		StringBuilder sb = new StringBuilder();
+	 public boolean isNeighbour(Peer potentialNeighbour) {
+	    	
+	    	if (ownZone.getLeftY().intersects(potentialNeighbour.ownZone.getRightY()) 
+	    	    || ownZone.getRightY().intersects(potentialNeighbour.ownZone.getLeftY())
+	    	    || ownZone.getUpperX().intersects(potentialNeighbour.ownZone.getBottomX())
+	    	    || ownZone.getBottomX().intersects(potentialNeighbour.ownZone.getUpperX())) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}	
+	    }
+	
+	
+	 /**
+	 * updates routingTables of all Peers affected
+	 * @param newPeer
+	 * @deprecated
+	 */
+	public Peer updateRoutingTables(Peer newPeer) {
+		Peer peer2= new Peer(newPeer);
+		Peer peer3 =new Peer(this);
+		newPeer.mergeRoutingTableWithList(routingTable);
+		newPeer.mergeRoutingTableSinglePeer(peer3);
+	
+		this.mergeRoutingTableSinglePeer(peer2);
 		
-		for (Peer p : routingTable) {
-			sb.append(p.getIp_adresse()).append(" ").append(p.getZone()).append(System.lineSeparator());
-		}
-		
-		return sb.toString();	
+		// newPeer gets the routingTable from oldPeer
+		//			     newPeer becomes neighbour of oldPeer
+		/*
+		 * each Peer of oldPeer's routingTable gets newPeer as a temporary neighbour
+		 * Peers from oldPeer's old routingTable check if oldPeer and newPeer are neighbours	
+		 * if not, they are removed from the routingTable
+		 */
+	    for (Peer p : routingTable) {
+	    	p.mergeRoutingTableSinglePeer(newPeer);
+	    	if (p.isNeighbour(this) == false) {
+	    		p.getRoutingTable().remove(this);
+	    	}
+	    	if (p.isNeighbour(newPeer) == false) {
+	    		p.getRoutingTable().remove(newPeer);
+	    	}
+	    }
+	    eliminateNeighbours(this);
+	    eliminateNeighbours(newPeer);
+	    return newPeer;
 	}
 	
 	
 	
 	
-		
+	
+	//Create Peer
+	/**
+	 * Splits the Peer's Zone and transfers one half to the new Peer
+	 * @author Thomas Spanier & Raphaela Wagner
+	 * @return new Zone for the new Peer
+	 */
+	public Zone splitZone() {
+		Zone newZone = new Zone();
+		if (ownZone.isSquare()) {
+	        
+	    	newZone.setZone(new Point(ownZone.calculateCentrePoint().getX(), ownZone.getBottomRight().getY()), ownZone.getUpperRight());
+	    	ownZone.setZone(ownZone.getBottomLeft(), new Point(ownZone.calculateCentrePoint().getX(), ownZone.getUpperLeft().getY()));    
+	    } else {
+	        
+	    	newZone.setZone(ownZone.getBottomLeft(), (new Point(ownZone.getBottomRight().getX(), ownZone.calculateCentrePoint().getY())));
+	        ownZone.setZone(new Point(ownZone.getUpperLeft().getX(), ownZone.calculateCentrePoint().getY()), ownZone.getUpperRight());    
+	    }
+	    return newZone;
+	}
 	
 	
+	/**
+	 * @deprecated
+	 * Splits the Peer's Zone and transfers one half to the new Peer
+	 * @param newPeer
+	 */
+	public Peer splitZone(Peer newPeer) {
+	    if (ownZone.isSquare()) {
+	    	newPeer.createZone(new Point(ownZone.calculateCentrePoint().getX(), ownZone.getBottomRight().getY()), ownZone.getUpperRight());
+	    	ownZone.setZone(ownZone.getBottomLeft(), new Point(ownZone.calculateCentrePoint().getX(), ownZone.getUpperLeft().getY()));    
+	    } else {
+	    	newPeer.createZone(ownZone.getBottomLeft(), (new Point(ownZone.getBottomRight().getX(), ownZone.calculateCentrePoint().getY())));
+	        ownZone.setZone(new Point(ownZone.getUpperLeft().getX(), ownZone.calculateCentrePoint().getY()), ownZone.getUpperRight());    
+	    }
+	    newPeer = updateRoutingTables(newPeer);
+	    return newPeer;
+	}
+	
 		
+		
+	/**
+	 * @author Raphaela Wagner 27.06.2018
+	 * creates a new Peer and invokes joinRequest for joining the coordinate space
+	 * @return
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 */
+	public Peer createPeer(String newPeerAdress, Point p) throws ClientProtocolException, IOException {
+		System.out.println("This peer vor createPeer(): " + this);
+		Peer newPeer;
+		if(getRoutingTable().size() == 0) {
+			newPeer = new Peer(newPeerAdress);
+			newPeer.setOwnZone(splitZone());
+			
+			transferImagesAfterSplit(newPeerAdress);
+			
+			// oldPeer becomes neighbour of new Peer
+			newPeer.mergeRoutingTableWithList(routingTable);
+			newPeer.mergeRoutingTableSinglePeer(this);
+			
+			//newPeer becomes neighbour of oldPeer
+		    this.mergeRoutingTableSinglePeer(newPeer);
 
-   
-   //Zone functions
-   
+		    System.out.println("This peer nach createPeer(): "+ this);
+			return newPeer;
+		    
+		    
+		} else {
+			if(lookup(p)) {
+				newPeer = new Peer(newPeerAdress);
+				System.out.println("Fall Bootstrap splittet sich");
+				newPeer.setOwnZone(splitZone());
+				
+				transferImagesAfterSplit(newPeerAdress);
+				
+				initializeRoutingTable(newPeer);
+				checkNeighboursOldPeer();
+				newPeer.checkNeighboursNewPeer();
+				mergeRoutingTableSinglePeer(newPeer);
+				
+				System.out.println("Bootstrap nach createPeer(): "+ this);
+				System.out.println("New Peer nach createPeer(): "+ newPeer);
+				return newPeer;
+				
+			} else {
+				System.out.println("Fall anderer Peer splittet sich");
+				Peer zielP = routing(p);
+				System.out.println("ZielPeer: " + zielP);
+				//TODO: REST-Aufruf CreatePeer von zielP aus
+				
+				newPeer = new PeerClient().createPeer(zielP.getIp_adresse(), p, "p2p", new Peer(newPeerAdress)); 
+				//newPeer = zielP.createPeer(newPeerAdress); //ueber REST
+				
+				
+				System.out.println("Bootstrap nach createPeer(): "+ this);
+				System.out.println("New Peer nach createPeer(): "+ newPeer);
+				return newPeer;
+			}
+			
+		}		
+	  
+	}	
+	
+	
+	public void transferImagesAfterSplit(String destinationIP) {
+		ArrayList<ImageContainer> transferList = findImagesToTransfer();
+		transferPairs(destinationIP, transferList);
+		deletePairs(transferList);
+	}
+	
+	
+	
    /**
     * Creates a new Zone
     * @param bottomLeft Point in the Coordinate system
@@ -345,11 +480,8 @@ public class Peer {
         ownZone.setZone(bottomLeft, upperRight);
     }
     
- 
-     
-    
-    
-     /**
+   
+    /**
      * Generates a random Point in the Coordinate system
      * @return randomPoint in the coordinate space
      */
@@ -360,21 +492,11 @@ public class Peer {
    
     
     
-    public boolean isNeighbour(Peer potentialNeighbour) {
-    	
-    	if (ownZone.getLeftY().intersects(potentialNeighbour.ownZone.getRightY()) 
-    	    || ownZone.getRightY().intersects(potentialNeighbour.ownZone.getLeftY())
-    	    || ownZone.getUpperX().intersects(potentialNeighbour.ownZone.getBottomX())
-    	    || ownZone.getBottomX().intersects(potentialNeighbour.ownZone.getUpperX())) {
-    		return true;
-    	} else {
-    		return false;
-    	}	
-    }
-	public Map<Integer, Peer> getNeighbours() {
-		// TODO Auto-generated method stub
-		return null;
-	}    
+   
+    
+    
+    
+   
 	
 	
 	
@@ -420,83 +542,86 @@ public class Peer {
 	}
 		
 		
-		/**
-		 * Deserialize imageContainer  
-		 * @param canCoordinate
-		 * @throws IOException 
-		 * @throws FileNotFoundException 
-		 * @throws ClassNotFoundException 
-		 * @author Thomas Spanier
-		 */
-		public ImageContainer loadImageContainer(String username, String imageName) throws FileNotFoundException, IOException, ClassNotFoundException {
-			//Get location
-			StringBuffer imageNameWithoutEnding = new StringBuffer();
-			String[] nameArray =  imageName.split("[.]");
-			
-			imageNameWithoutEnding.append(nameArray[0]);
-			for(int i=1; i < nameArray.length - 2; i++) {
-				imageNameWithoutEnding.append("." + nameArray[i]);
-			}
-			
-			
-			
-			StringBuffer fileName = new StringBuffer();
-			fileName.append("images/").append(username).append("/")
-					.append(imageNameWithoutEnding.toString());
-			
-			//Load image
-			File inputFile = new File(fileName.toString() + "." + nameArray[nameArray.length-1]);
-			BufferedImage img = ImageIO.read(inputFile);
-			
-			//Load imageContainer and set image and thumbnail 
-			ImageContainer ic;
-			ObjectInputStream in= new ObjectInputStream(
-					new BufferedInputStream(
-							new FileInputStream(fileName.toString() + ".data")));
-			ic= (ImageContainer)in.readObject();
-			ic.setImage(img);
-			in.close();
-			return ic;
-			
-		}
+	/**
+	 * Deserialize imageContainer  
+	 * @param canCoordinate
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 * @throws ClassNotFoundException 
+	 * @author Thomas Spanier
+	 */
+	public ImageContainer loadImageContainer(String username, String imageName) throws FileNotFoundException, IOException, ClassNotFoundException {
+		//Get location
+		StringBuffer imageNameWithoutEnding = new StringBuffer();
+		String[] nameArray =  imageName.split("[.]");
 		
-		/**
-		 * Deletes the imageContainer
-		 * @param username
-		 * @param imageName
-		 * @author Thomas Spanier
-		 */
-		public void deleteImageContainer(String username, String imageName) {
-			//TODO routing
-			//Point2D.Double coordinate = StaticFunctions.hashToPoint(username, imageName);
-			
-			StringBuffer imageNameWithoutEnding = new StringBuffer();
-			String[] nameArray =  imageName.split("[.]");
-			
-			imageNameWithoutEnding.append(nameArray[0]);
-			for(int i=1; i < nameArray.length - 2; i++) {
-				imageNameWithoutEnding.append("." + nameArray[i]);
-			}
-			
-			
-			//Get location
-			StringBuffer fileName = new StringBuffer();
-			fileName.append("images/").append(username).append("/")
-					.append(imageNameWithoutEnding);
-			//Load image
-			File inputFile = new File(fileName.toString() + "." + nameArray[nameArray.length-1]);
-			inputFile.delete();
-			
-			inputFile = new File(fileName.toString() + "_thumbnail." + nameArray[nameArray.length-1]);
-			inputFile.delete();
-			
-			
-			inputFile = new File(fileName.toString() + ".data");
-			inputFile.delete();
-			
+		imageNameWithoutEnding.append(nameArray[0]);
+		for(int i=1; i < nameArray.length - 2; i++) {
+			imageNameWithoutEnding.append("." + nameArray[i]);
 		}
 		
 		
+		
+		StringBuffer fileName = new StringBuffer();
+		fileName.append("images/").append(username).append("/")
+				.append(imageNameWithoutEnding.toString());
+		
+		//Load image
+		File inputFile = new File(fileName.toString() + "." + nameArray[nameArray.length-1]);
+		BufferedImage img = ImageIO.read(inputFile);
+		
+		//Load imageContainer and set image and thumbnail 
+		ImageContainer ic;
+		ObjectInputStream in= new ObjectInputStream(
+				new BufferedInputStream(
+						new FileInputStream(fileName.toString() + ".data")));
+		ic= (ImageContainer)in.readObject();
+		ic.setImage(img);
+		in.close();
+		return ic;
+		
+	}
+		
+	/**
+	 * Deletes the imageContainer
+	 * @param username
+	 * @param imageName
+	 * @author Thomas Spanier
+	 */
+	public void deleteImageContainer(String username, String imageName) {
+		StringBuffer imageNameWithoutEnding = new StringBuffer();
+		String[] nameArray =  imageName.split("[.]");
+		
+		imageNameWithoutEnding.append(nameArray[0]);
+		for(int i=1; i < nameArray.length - 2; i++) {
+			imageNameWithoutEnding.append("." + nameArray[i]);
+		}
+		
+		
+		//Get location
+		StringBuffer fileName = new StringBuffer();
+		fileName.append("images/").append(username).append("/")
+				.append(imageNameWithoutEnding);
+		//Load image
+		File inputFile = new File(fileName.toString() + "." + nameArray[nameArray.length-1]);
+		inputFile.delete();
+		
+		inputFile = new File(fileName.toString() + "_thumbnail." + nameArray[nameArray.length-1]);
+		inputFile.delete();
+		
+		
+		inputFile = new File(fileName.toString() + ".data");
+		inputFile.delete();
+		
+		//If folder is empty, delete it
+		File userFolder = new File("images/" + username);
+		if(userFolder.isDirectory() && userFolder.listFiles().length == 0) {
+			userFolder.delete();
+		}
+		
+	}
+	
+	
 	/**
 	 * Deletes all Files in user's imageFolder
 	 * @param username
@@ -508,235 +633,51 @@ public class Peer {
 		}
 		folder.delete();
 	}
-		
 	
-		
-		
-		
-	
-	
-		/**
-		 * Edits the image's meta data
-		 * @throws IOException 
-		 * @throws ClassNotFoundException 
-		 * @throws FileNotFoundException 
-		 * @author Thomas Spanier
-		 */
-		public void editMeta(String username, String imageName, String location, LinkedList<String> tagList) throws FileNotFoundException, ClassNotFoundException, IOException {
-			//TODO routing
-			ImageContainer ic = loadImageContainer(username, imageName);
-			ic.setLocation(location);
-			ic.setTagList(tagList);
-			saveImageContainer(ic);
-		}
-		
-		/**
-		 * @author Raphaela Wagner 27.06.2018
-		 * Recursive method that returns the destinationPeer which holds the destinationCoordinate
-		 * @param destinationCoordinate
-		 * @return 
-		 */
-			public Peer shortestPath(Point destinationCoordinate) {
-				
-				double smallestSquare = this.getRoutingTable().get(0).getZone().calculateCentrePoint().distanceSq(destinationCoordinate);
-				Peer closestNeighbour = this.getRoutingTable().get(0);
-					
-					for(int i = 1; i < getRoutingTable().size(); i++) {
-						if (this.getRoutingTable().get(i).getZone().calculateCentrePoint().distanceSq(destinationCoordinate) < smallestSquare) {
-							closestNeighbour = this.getRoutingTable().get(i);
-							smallestSquare = this.getRoutingTable().get(i).getZone().calculateCentrePoint().distanceSq(destinationCoordinate);
-						}
-					}
-					System.out.println("Naechster Nachbar: " + closestNeighbour.getIp_adresse());
-					return closestNeighbour;//.routing(destinationCoordinate);
-				}
-	
-		/**
-		 * @author Raphaela Wagner 27.06.2018
-		 * looks up whether destinationCoordinate lies in this Peer's zone
-		 * @param destinationCoordinate
-		 * @return
-		 */
-		public boolean lookup(Point destinationCoordinate) {
-			if (this.getOwnZone().getBottomLeft().getX() <= destinationCoordinate.getX() 
-					&& this.getOwnZone().getUpperRight().getX() >= destinationCoordinate.getX()
-					&& this.getOwnZone().getBottomLeft().getY() <= destinationCoordinate.getY()
-					&& this.getOwnZone().getUpperRight().getY() >= destinationCoordinate.getY()) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-	
-		/**
-		 * @ author Raphaela Wagner 27.06.2018
-		 * routing method 
-		 * @param destinationCoordinate
-		 * @return
-		 */
-		public Peer routing(Point destinationCoordinate) {
-			// Temporärer Peer zur Zwischenspeicherung
-			//Peer tmpPeer = new Peer();
-			System.out.println("Routing auf Peer: " + getIp_adresse());
-			if (lookup(destinationCoordinate)) {
-				return this;
-			} else {
 
-				Peer tmpPeer = shortestPath(destinationCoordinate);
-				Peer routingPeer = new PeerClient().routing(tmpPeer, destinationCoordinate);
-				return routingPeer.routing(destinationCoordinate);
-			}
-		}
-		
-		/**
-		 * @author Raphaela Wagner 27.06.2018
-		 * after finding the destinationPeer denoted through the randomPoint
-		 * the destinationPeer performs splitZone with this Peer
-		 * @param randomPoint
-		 * @return
-		 */
-		public Peer joinRequest(Point randomPoint) {
-			return routing(randomPoint).splitZone(this);
-		}
+	/**
+	 * Edits the image's meta data
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
+	 * @throws FileNotFoundException 
+	 * @author Thomas Spanier
+	 */
+	public void editMeta(String username, String imageName, String location, LinkedList<String> tagList) throws FileNotFoundException, ClassNotFoundException, IOException {
+		//TODO routing
+		ImageContainer ic = loadImageContainer(username, imageName);
+		ic.setLocation(location);
+		ic.setTagList(tagList);
+		saveImageContainer(ic);
+	}
 	
-		/**
-		 * @author Raphaela Wagner 27.06.2018
-		 * creates a new Peer and invokes joinRequest for joining the coordinate space
-		 * @return
-		 * @throws IOException 
-		 * @throws ClientProtocolException 
-		 */
-		public Peer createPeer(String newPeerAdress, Point p) throws ClientProtocolException, IOException {
-			System.out.println("This peer vor createPeer(): " + this);
-			Peer newPeer;
-			if(getRoutingTable().size() == 0) {
-				newPeer = new Peer(newPeerAdress);
-				newPeer.setOwnZone(splitZone());
-				
-				transferImagesAfterSplit(newPeerAdress);
-				
-				// oldPeer becomes neighbour of new Peer
-				newPeer.mergeRoutingTableWithList(routingTable);
-				newPeer.mergeRoutingTableSinglePeer(this);
-				
-				//newPeer becomes neighbour of oldPeer
-			    this.mergeRoutingTableSinglePeer(newPeer);
-
-			    System.out.println("This peer nach createPeer(): "+ this);
-				return newPeer;
-			    
-			    
-			} else {
-				if(lookup(p)) {
-					newPeer = new Peer(newPeerAdress);
-					System.out.println("Fall Bootstrap splittet sich");
-					newPeer.setOwnZone(splitZone());
-					
-					transferImagesAfterSplit(newPeerAdress);
-					
-					initializeRoutingTable(newPeer);
-					checkNeighboursOldPeer();
-					newPeer.checkNeighboursNewPeer();
-					mergeRoutingTableSinglePeer(newPeer);
-					
-					System.out.println("Bootstrap nach createPeer(): "+ this);
-					System.out.println("New Peer nach createPeer(): "+ newPeer);
-					return newPeer;
-					
-				} else {
-					System.out.println("Fall anderer Peer splittet sich");
-					Peer zielP = routing(p);
-					System.out.println("ZielPeer: " + zielP);
-					//TODO: REST-Aufruf CreatePeer von zielP aus
-					
-					newPeer = new PeerClient().createPeer(zielP.getIp_adresse(), p, "p2p", new Peer(newPeerAdress)); 
-					//newPeer = zielP.createPeer(newPeerAdress); //ueber REST
-					
-					
-					System.out.println("Bootstrap nach createPeer(): "+ this);
-					System.out.println("New Peer nach createPeer(): "+ newPeer);
-					return newPeer;
-				}
-				
-			}		
-		  
+	
+	/**
+	 * @author Raphaela Wagner
+	 * @return
+	 */
+	public ArrayList<ImageContainer> findImagesToTransfer()  {
+		File directory = new File("images/");
+		File[] userList = directory.listFiles();
+		String userName, imageName;
+		String[] tmpArray;
+		ArrayList<ImageContainer> transferList = new ArrayList<>();
+		if(!directory.exists()) {
+			return new ArrayList<ImageContainer>();
 		}
-		
-		public String toString() {
-			return "[ ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTableToString()+ "]";
-		}
-		
-		
-		public boolean transferImagesAfterSplit(String destinationIP) {
+		//for each user-folder
+		for (File userFile : userList) {
 			
-			try {
-				ArrayList<ImageContainer> transferList = findImagesToTransfer();
-				transferPairs(destinationIP, transferList);
-				deletePairs(transferList);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			
-			
-			
-			
-			
-			return true;
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		/**
-		 * @author Raphaela Wagner
-		 * @return
-		 * @throws FileNotFoundException
-		 * @throws ClassNotFoundException
-		 * @throws IOException
-		 */
-		public ArrayList<ImageContainer> findImagesToTransfer() throws FileNotFoundException, ClassNotFoundException, IOException {
-			File directory = new File("images/");
-			File[] userList = directory.listFiles();
-			String userName, imageName;
-			String[] tmpArray;
-			ArrayList<ImageContainer> transferList = new ArrayList<>();
-			if(!directory.exists()) {
-				return new ArrayList<ImageContainer>();
-			}
-			//for each user-folder
-			for (File userFile : userList) {
-				
-				//for each image File in user folder
-				for(File imageFile : userFile.listFiles()) {
-					//Search for Meta-Data file
-					if(imageFile.toString().endsWith(".data")) {
-						userName = userFile.getName();
-
+			//for each image File in user folder
+			for(File imageFile : userFile.listFiles()) {
+				//Search for Meta-Data file
+				if(imageFile.toString().endsWith(".data")) {
+					userName = userFile.getName();
+					try {
 						ObjectInputStream in= new ObjectInputStream(
 								new BufferedInputStream(
 										new FileInputStream(imageFile)));
 						ImageContainer tmpIc= (ImageContainer)in.readObject();
-						in.close(); 
-						
+						in.close();
 						tmpArray = imageFile.getName().split(".data");
 						imageName = tmpArray[0] + tmpIc.getEnding();
 						
@@ -746,59 +687,81 @@ public class Peer {
 							System.out.println("To TransferList: " + userName + ", " + imageName);
 							transferList.add(ic);
 						}
-					}
-					
+					} catch (IOException | ClassNotFoundException e) {
+						System.out.println("File not Found");
+					}	
 				}
-			}
-			
-			return transferList;
+			}		
 		}
+		return transferList;
+	}
+	
+	
 		
-		/**
-		 * @author Raphaela Wagner 03.08.2018
-		 * @param p
-		 * @return
-		 */
-		
-		public boolean containsPoint(Point p) {
-			return ownZone.getBottomRight().getX() > p.getX() && p.getX() > ownZone.getUpperLeft().getX() 
-					&& ownZone.getUpperLeft().getY() > p.getY() && p.getY() > ownZone.getBottomRight().getY();
+	/**
+	 * @author Raphaela Wagner 03.08.2018
+	 * @param transferList
+	 * @param newPeer
+	 * @throws IOException 
+	 */
+	public void transferPairs(String destinationIP, ArrayList<ImageContainer> transferList) {
+		PeerClient pc = new PeerClient();
+		pc.transferImage(transferList, destinationIP);
+	}
+	
+	/**
+	 * @author Raphaela Wagner 03.08.2018
+	 * @param transferList
+	 */
+	public void deletePairs(ArrayList<ImageContainer> transferList) {
+		for(ImageContainer ic : transferList) {
+			this.deleteImageContainer(ic.getUsername(), ic.getImageName());
 		}
-		
-		/**
-		 * @author Raphaela Wagner 03.08.2018
-		 * @param transferList
-		 * @param newPeer
-		 * @throws IOException 
-		 */
-		public void transferPairs(String destinationIP, ArrayList<ImageContainer> transferList) {
-			PeerClient pc = new PeerClient();
-			pc.transferImage(transferList, destinationIP);
-			
+	}
+	
+	
+	
+	
+	
+	
+	
 
-		}
-		
-		/**
-		 * @author Raphaela Wagner 03.08.2018
-		 * @param transferList
-		 */
-		public void deletePairs(ArrayList<ImageContainer> transferList) {
-			for(ImageContainer ic : transferList) {
-				this.deleteImageContainer(ic.getUsername(), ic.getImageName());
-			}
-		}
+	
+	//To-String	
+	public String toString() {
+		return "[ ownZone=" + ownZone + ", ip_adresse=" + ip_adresse + ", routingTable=" + routingTableToString()+ "]";
+	}
+	
+	
+	
 
+
+	
 		
-		@Override
-		public boolean equals(Object o) {
-			//TODO vervollstaendigen
-			Peer p = (Peer) o;
-			if(p.getIp_adresse().equals(this.getIp_adresse())) {
-				return true;
-			} else {
-				return false;
-			}
+	
+	
+	
+
+	
+	@Override
+	public boolean equals(Object o) {
+		Peer p = (Peer) o;
+		if(p.getIp_adresse().equals(this.getIp_adresse())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public String routingTableToString() {
+		StringBuilder sb = new StringBuilder();
+		
+		for (Peer p : routingTable) {
+			sb.append(p.getIp_adresse()).append(" ").append(p.getZone()).append(System.lineSeparator());
 		}
 		
+		return sb.toString();	
+	}
+	
 	
 }
