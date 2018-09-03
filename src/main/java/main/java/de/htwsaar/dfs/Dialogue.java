@@ -1,6 +1,10 @@
 package main.java.de.htwsaar.dfs;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import main.java.de.htwsaar.dfs.utils.StaticFunctions;
+
 import java.io.IOException;
 
 
@@ -12,6 +16,7 @@ import java.io.IOException;
 public class Dialogue {
 	
 	private Scanner input = new Scanner(System.in);
+	public static String ip = "";
 	private boolean bootstrapExists = false;
 	private boolean peerExists = false;
 	
@@ -27,6 +32,9 @@ public class Dialogue {
     private static final int ADD_USER           			= 3;
     private static final int REMOVE_USER	    			= 4;
     private static final int REMOVE_ALL_USERS				= 5;
+    private static final int LIST_ALL_IMAGES				= 6;
+    private static final int LIST_USER_IMAGES				= 7;
+    
     
     // Submenue 2 (i_am_a_peer)
     private static final int JOIN_CAN_AS_PEER  				= 1;
@@ -80,11 +88,13 @@ public class Dialogue {
             ADD_USER                        			+ ": Add user\n" +
             REMOVE_USER                  				+ ": Remove user\n" +
             REMOVE_ALL_USERS							+ ": Remove all users\n" +
+            LIST_ALL_IMAGES								+ ": Print all image names\n" + 
+            LIST_USER_IMAGES							+ ": Print image names of a user\n" +
             END                           				+ ": END\n" +
             											 "\nYour input: ");
          readInput = input.nextInt();
         
-        if (readInput < 0 || readInput > 5)
+        if (readInput < 0 || readInput > 7)
         	System.out.println("Bad input, try again");
         return readInput;
     }
@@ -157,6 +167,30 @@ public class Dialogue {
         switch (func) {
             case START_NEW_CAN_AS_BOOTSTRAP:
 	            Thread bootstrapThread = new BootstrapThread();
+	            System.out.print("Select IP manually? (y/n) -> ");
+	            String selectIP = input.next();
+	            
+	            // manual selection of IP
+	            if (selectIP.equals("y")) {
+	            	ArrayList<String> ips = StaticFunctions.getAllIPs();
+	            	for (int i = 0; i < ips.size(); i++) {
+	            		System.out.println(i + ":\t" + ips.get(i));
+	            	}
+	            	System.out.print("Select IP by index -> ");
+	            	int index = input.nextInt();
+	            	if (index >= ips.size() || index < 0) {
+	            		System.out.println("Invalid index.\n");
+	            		break;
+	            	}
+	            	ip = ips.get(index);
+	            	
+	            }
+	            
+	            // automatic selection of IP
+	            else {
+	            	ip = StartBootstrap.getIP();
+	            }
+	            
 	            bootstrapThread.start(); // <-- hier wird der Bootstrap tatsächlich gestartet.
 	            bootstrapExists = true;
 	            break;
@@ -203,6 +237,24 @@ public class Dialogue {
             	System.out.println("\nDeleted all users.");
             	break;
                  
+            case LIST_ALL_IMAGES:
+            	if (!bootstrapExists) {
+            		printServiceNotStarted("bootstrap");
+            		break;
+            	}
+            	System.out.println(StartBootstrap.bootstrap.listImageNames() + "\n");
+            	break;
+            	
+            case LIST_USER_IMAGES:
+            	if (!bootstrapExists) {
+            		printServiceNotStarted("bootstrap");
+            		break;
+            	}
+            	System.out.print("Enter user name -> ");
+            	String user = input.next();
+            	System.out.println(StartBootstrap.bootstrap.listImageNames(user) + "\n");
+            	break;
+            	
             case END:
             	System.out.println("Stopped all servers and dialogue.");
 	            System.exit(0);

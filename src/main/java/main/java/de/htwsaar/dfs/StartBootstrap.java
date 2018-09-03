@@ -47,7 +47,7 @@ public class StartBootstrap {
                
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+getIP() +":" + Peer.port+ "/bootstrap/v1/"), rc);
+        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+ Dialogue.ip +":" + Peer.port+ "/bootstrap/v1/"), rc);
     }
     
     //just let full the database
