@@ -204,7 +204,7 @@ public class PeerClient {
 	 * @param imageName
 	 * @return
 	 */
-	public ImageContainer getImageContainer(String destinationIP,String username, String imageName ){
+	public Image getImageContainer(String destinationIP,String username, String imageName ){
 		
 		Image result = null;
 		System.out.println("---------------Start getImage---------------- " );	
@@ -221,7 +221,7 @@ public class PeerClient {
 		
 		client.close();
 		
-		return RestUtils.convertImgToIc(result);
+		return result;
 	}
 	
 	/**

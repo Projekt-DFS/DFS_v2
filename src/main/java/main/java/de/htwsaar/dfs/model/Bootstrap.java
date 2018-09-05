@@ -395,7 +395,13 @@ public class Bootstrap extends Peer {
 				} else {
 					destinationPeerIp = routing(p).getIp_adresse();
 					//REST-Aufruf zum Laden des ImageContainers von peer
-					ics.add(new PeerClient().getImageContainer(destinationPeerIp, username , imageName));
+					Image img =new PeerClient().getImageContainer(destinationPeerIp, username , imageName);
+					
+					System.out.println(img.getImageSource());
+					if(img != null) {
+						System.out.println("test2");
+						ics.add(RestUtils.convertImgToIc(img));	
+					}
 				}
 				
 			} catch (IOException e) {

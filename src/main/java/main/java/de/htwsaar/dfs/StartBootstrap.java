@@ -61,7 +61,7 @@ public class StartBootstrap {
 	      //images
 	      BufferedImage img = null;
 	    
-	    for(int i = 0; i <= 9; i++) {
+	    for(int i = 0; i <= 2; i++) {
 	      try {
 	        img = ImageIO.read(new File("./dummyBilder/"+i+".jpg"));
 	        LinkedList<String> tagList = new LinkedList<String>();  

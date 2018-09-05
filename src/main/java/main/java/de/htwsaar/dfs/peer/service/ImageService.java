@@ -55,7 +55,7 @@ public class ImageService {
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
-		return RestUtils.convertIcToImg(baseUri, ic, username);
+		return RestUtils.convertIcToImg("", ic, username);
 	}
 	
 	

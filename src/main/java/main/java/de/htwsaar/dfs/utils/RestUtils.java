@@ -77,6 +77,10 @@ public class RestUtils {
 		img.setThumbnail(baseUri + ic.getThumbnailPath() + "/download");
 		img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
 		img.setImageSource(baseUri + ic.getPath() + ic.getEnding() + "/download");
+		if(baseUri.isEmpty()) {
+			img.setThumbnail(RestUtils.encodeToString(ic.getThumbnail(),"jpg"));
+			img.setImageSource(RestUtils.encodeToString(ic.getImage(),"jpg"));
+		}
 		return img;
 	}
 
