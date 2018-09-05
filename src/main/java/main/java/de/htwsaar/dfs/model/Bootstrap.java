@@ -348,7 +348,7 @@ public class Bootstrap extends Peer {
 				//delete the files on remote Peer
 				destinationPeerIP = routing(p).getIp_adresse();
 				//REST Aufruf deleteImageContainer
-				PeerClient.deleteImage(destinationPeerIP, username, imageName);
+				new PeerClient().deleteImage(destinationPeerIP, username, imageName);
 			}
 			user.deleteFromImageList(imageName);
 			exportUserList();
@@ -395,7 +395,7 @@ public class Bootstrap extends Peer {
 				} else {
 					destinationPeerIp = routing(p).getIp_adresse();
 					//REST-Aufruf zum Laden des ImageContainers von peer
-					ics.add(PeerClient.getImageContainer(destinationPeerIp, username , imageName));
+					ics.add(new PeerClient().getImageContainer(destinationPeerIp, username , imageName));
 				}
 				
 			} catch (IOException e) {
@@ -439,7 +439,7 @@ public class Bootstrap extends Peer {
 		
 		//if not , make a post request to the peer of destination and save the image there
 		else {
-			image = PeerClient.createImage(destinationPeerIP, username, image);
+			image = new PeerClient().createImage(destinationPeerIP, username, image);
 			System.out.println(SUCCEED);
 		}
 		return image;

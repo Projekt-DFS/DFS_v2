@@ -22,8 +22,8 @@ import main.java.de.htwsaar.dfs.utils.RestUtils;
  */
 public class PeerClient {
 	
-	private static Client client= ClientBuilder.newClient();
-	private static Response response;
+	private Client client= ClientBuilder.newClient();
+	private Response response;
 
 	
 	/**
@@ -33,7 +33,7 @@ public class PeerClient {
 	 * @param peerToDeleteIP : the peer that should be delete
 	 * @return true if done
 	 */
-	public static boolean deleteNeighbor(String destinationIp , String api, Peer peerToDelete) {
+	public boolean deleteNeighbor(String destinationIp , String api, Peer peerToDelete) {
 		client = ClientBuilder.newClient();
 		
 		System.out.println("---------------------Start delete------------------- ");
@@ -60,7 +60,7 @@ public class PeerClient {
 	 * @param peerToAdd : the peer that should be added
 	 * @return true if done
 	 */
-	public static boolean addNeighbor(String destinationIp , String api, Peer peerToAdd) {
+	public boolean addNeighbor(String destinationIp , String api, Peer peerToAdd) {
 		
 		System.out.println("---------------------Start add -------------------");
 		System.out.println(peerToAdd.getIp_adresse() + " in the routing table of " + destinationIp);
@@ -87,7 +87,7 @@ public class PeerClient {
 	 * @param destinationCoordinate : the Point that should be send
 	 * @return the peer that have the point in his zone.
 	 */
-	public static Peer routing(Peer destinationPeer , Point destinationCoordinate) {
+	public Peer routing(Peer destinationPeer , Point destinationCoordinate) {
 		
 		System.out.println("---------------Start routing---------------- " );
 		System.out.println(destinationCoordinate + "to "+ destinationPeer.getIp_adresse() );
@@ -116,7 +116,7 @@ public class PeerClient {
      * @param api : the api that is install on the destinationpeer
 	 * @param newPeer
 	 */
-	public static Peer createPeer(String destinationIp, Point p, String api, Peer newPeer) {
+	public Peer createPeer(String destinationIp, Point p, String api, Peer newPeer) {
 
 		System.out.println("---------------Start createPeer---------------- " );
 		
@@ -144,7 +144,7 @@ public class PeerClient {
 	 * @throws IOException
 	 * @author Aude Nana 28.07.2017
 	 */
-	public static Image createImage(String destinationPeerIP, String username, Image image) throws ClientProtocolException, IOException {
+	public Image createImage(String destinationPeerIP, String username, Image image) throws ClientProtocolException, IOException {
 		
 		System.out.println("---------------Start createImage---------------- " );
 		
@@ -172,7 +172,7 @@ public class PeerClient {
 	 * @param username
 	 * @return
 	 */
-	public static List<Image> getImages(String neighborIP,String username ){
+	public List<Image> getImages(String neighborIP,String username ){
 	
 		List<Image> results = new ArrayList<>();
 		
@@ -204,7 +204,7 @@ public class PeerClient {
 	 * @param imageName
 	 * @return
 	 */
-	public static ImageContainer getImageContainer(String destinationIP,String username, String imageName ){
+	public ImageContainer getImageContainer(String destinationIP,String username, String imageName ){
 		
 		Image result = null;
 		System.out.println("---------------Start getImage---------------- " );	
@@ -230,7 +230,7 @@ public class PeerClient {
 	  * @param destinationIp
 	  * @return
 	  */
-	 public static void  transferImage(List<ImageContainer> images , String destinationIp ) {
+	 public void  transferImage(List<ImageContainer> images , String destinationIp ) {
 
 	  System.out.println("---------------Start transferImages---------------- " ); 
 	  System.out.println("Destination: " + destinationIp );
@@ -257,7 +257,7 @@ public class PeerClient {
 
 	 }
 	 
-	 public static boolean deleteImage( String destinationIP, String username , String imageName) {
+	 public boolean deleteImage( String destinationIP, String username , String imageName) {
 		 
 		 System.out.println("---------------------Start deleteImage------------------- ");
 		 

@@ -206,7 +206,7 @@ public class Peer {
 		} else {
 
 			Peer tmpPeer = shortestPath(destinationCoordinate);
-			Peer routingPeer = PeerClient.routing(tmpPeer, destinationCoordinate);
+			Peer routingPeer = new PeerClient().routing(tmpPeer, destinationCoordinate);
 			return routingPeer.routing(destinationCoordinate);
 		}
 	}	
@@ -239,11 +239,11 @@ public class Peer {
 			tmpPeer.dumpRoutingTable();
 			if(!isNeighbour(neighbour)) {
 				routingTable.remove(neighbour);
-				PeerClient.deleteNeighbor(neighbour.getIp_adresse(), api, tmpPeer);
+				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), api, tmpPeer);
 			} else {
 				//Update new Zone
-				PeerClient.deleteNeighbor(neighbour.getIp_adresse(), api, tmpPeer);
-				PeerClient.addNeighbor(neighbour.getIp_adresse(), api, tmpPeer);
+				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), api, tmpPeer);
+				new PeerClient().addNeighbor(neighbour.getIp_adresse(), api, tmpPeer);
 			}
 		}
 	}
@@ -256,9 +256,9 @@ public class Peer {
 				
 			} else {
 				if(!neighbour.getIp_adresse().equals(StartPeer.bootstrapIP)) {
-					PeerClient.addNeighbor(neighbour.getIp_adresse(), "p2p", this);
+					new PeerClient().addNeighbor(neighbour.getIp_adresse(), "p2p", this);
 				} else {
-					PeerClient.addNeighbor(neighbour.getIp_adresse(), "bootstrap", this);
+					new PeerClient().addNeighbor(neighbour.getIp_adresse(), "bootstrap", this);
 				}
 
 			}
@@ -448,7 +448,7 @@ public class Peer {
 				System.out.println("ZielPeer: " + zielP);
 				//TODO: REST-Aufruf CreatePeer von zielP aus
 				
-				newPeer = PeerClient.createPeer(zielP.getIp_adresse(), p, "p2p", new Peer(newPeerAdress)); 
+				newPeer = new PeerClient().createPeer(zielP.getIp_adresse(), p, "p2p", new Peer(newPeerAdress)); 
 				//newPeer = zielP.createPeer(newPeerAdress); //ueber REST
 				
 				
@@ -705,7 +705,7 @@ public class Peer {
 	 * @throws IOException 
 	 */
 	public void transferPairs(String destinationIP, ArrayList<ImageContainer> transferList) {
-		PeerClient.transferImage(transferList, destinationIP);
+		new PeerClient().transferImage(transferList, destinationIP);
 	}
 	
 	/**
