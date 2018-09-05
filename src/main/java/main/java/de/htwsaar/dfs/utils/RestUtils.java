@@ -66,7 +66,7 @@ public class RestUtils {
 
 	/**
 	 * 
-	 * This method convert an ImageContainer to Image
+	 * This method convert an ImageContainer to Image with link
 	 * @param ic
 	 * @param username
 	 * @return
@@ -79,7 +79,7 @@ public class RestUtils {
 		img.setImageSource(baseUri + ic.getPath() + ic.getEnding() + "/download");
 		return img;
 	}
-	
+
 	/**
 	 * This method tests the image's fied 
 	 * @param image
@@ -89,5 +89,19 @@ public class RestUtils {
 		if( image.getImageSource().equals("") || image.getImageName().equals(""))
 			return false;
 		return true;
+	}
+	
+	/**
+	 * this method converts a image to ImageContainer
+	 * @param image
+	 * @return
+	 */
+	public static ImageContainer convertImgToIc( Image image) {
+		return new ImageContainer(decodeToImage(image.getImageSource()),
+				image.getMetaData().getOwner(),
+				image.getImageName(), 
+				image.getMetaData().getLocation(),
+				image.getMetaData().getCreated(),
+				image.getMetaData().getTagList());
 	}
 }

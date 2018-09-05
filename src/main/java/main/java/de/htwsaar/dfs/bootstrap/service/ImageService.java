@@ -45,7 +45,7 @@ public class ImageService {
 			
 		}
 		//make a get request to the neighbor and get the images that are saved there
-		result.addAll(collectImages(username));
+		//result.addAll(collectImages(username));
 		
 		//return all images sorted 
 		return result.stream()

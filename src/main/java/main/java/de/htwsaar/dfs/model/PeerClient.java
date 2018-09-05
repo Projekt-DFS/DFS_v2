@@ -7,8 +7,6 @@ import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -24,12 +22,9 @@ import main.java.de.htwsaar.dfs.utils.RestUtils;
  */
 public class PeerClient {
 	
-	private Client client;
-	private Response response;
-	
-	public PeerClient() {
-		client = ClientBuilder.newClient();
-	}
+	private static Client client= ClientBuilder.newClient();
+	private static Response response;
+
 	
 	/**
 	 * This method deletes a neighbor entry in the routing table of a peer
@@ -38,7 +33,8 @@ public class PeerClient {
 	 * @param peerToDeleteIP : the peer that should be delete
 	 * @return true if done
 	 */
-	public boolean deleteNeighbor(String destinationIp , String api, Peer peerToDelete) {
+	public static boolean deleteNeighbor(String destinationIp , String api, Peer peerToDelete) {
+		client = ClientBuilder.newClient();
 		
 		System.out.println("---------------------Start delete------------------- ");
 	    System.out.println(peerToDelete.getIp_adresse() + " from the routing table of " + destinationIp);
@@ -64,7 +60,7 @@ public class PeerClient {
 	 * @param peerToAdd : the peer that should be added
 	 * @return true if done
 	 */
-	public boolean addNeighbor(String destinationIp , String api, Peer peerToAdd) {
+	public static boolean addNeighbor(String destinationIp , String api, Peer peerToAdd) {
 		
 		System.out.println("---------------------Start add -------------------");
 		System.out.println(peerToAdd.getIp_adresse() + " in the routing table of " + destinationIp);
@@ -91,7 +87,7 @@ public class PeerClient {
 	 * @param destinationCoordinate : the Point that should be send
 	 * @return the peer that have the point in his zone.
 	 */
-	public Peer routing(Peer destinationPeer , Point destinationCoordinate) {
+	public static Peer routing(Peer destinationPeer , Point destinationCoordinate) {
 		
 		System.out.println("---------------Start routing---------------- " );
 		System.out.println(destinationCoordinate + "to "+ destinationPeer.getIp_adresse() );
@@ -120,7 +116,7 @@ public class PeerClient {
      * @param api : the api that is install on the destinationpeer
 	 * @param newPeer
 	 */
-	public Peer createPeer(String destinationIp, Point p, String api, Peer newPeer) {
+	public static Peer createPeer(String destinationIp, Point p, String api, Peer newPeer) {
 
 		System.out.println("---------------Start createPeer---------------- " );
 		
@@ -148,7 +144,7 @@ public class PeerClient {
 	 * @throws IOException
 	 * @author Aude Nana 28.07.2017
 	 */
-	public Image createImage(String destinationPeerIP, String username, Image image) throws ClientProtocolException, IOException {
+	public static Image createImage(String destinationPeerIP, String username, Image image) throws ClientProtocolException, IOException {
 		
 		System.out.println("---------------Start createImage---------------- " );
 		
@@ -176,7 +172,7 @@ public class PeerClient {
 	 * @param username
 	 * @return
 	 */
-	public List<Image> getImages(String neighborIP,String username ){
+	public static List<Image> getImages(String neighborIP,String username ){
 	
 		List<Image> results = new ArrayList<>();
 		
@@ -194,13 +190,39 @@ public class PeerClient {
 			
 		}
 		
-		System.out.println("---------------Terminate getImage--------------- " );
+		System.out.println("---------------Terminate getImages--------------- " );
 		
 		client.close();
 		
 		return results;
 	}
 	
+	/**
+	 * This method returns an ImageConatiner Object saved in a special peer
+	 * @param destinationIP
+	 * @param username
+	 * @param imageName
+	 * @return
+	 */
+	public static ImageContainer getImageContainer(String destinationIP,String username, String imageName ){
+		
+		Image result = null;
+		System.out.println("---------------Start getImage---------------- " );	
+		
+		final String URL ="http://" + destinationIP + ":4434/p2p/v1/images/"+username+ "/"+imageName;	
+		System.out.println("Destination: " + URL );
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).get();
+		System.out.println("Response Code : " + response.getStatus());
+		
+		result =  response.readEntity(Image.class) ;	
+
+		System.out.println("---------------Terminate getImage--------------- " );
+		
+		client.close();
+		
+		return RestUtils.convertImgToIc(result);
+	}
 	
 	/**
 	  * This method is called when a peer entry to the  network
@@ -208,7 +230,7 @@ public class PeerClient {
 	  * @param destinationIp
 	  * @return
 	  */
-	 public void  transferImage(List<ImageContainer> images , String destinationIp ) {
+	 public static void  transferImage(List<ImageContainer> images , String destinationIp ) {
 
 	  System.out.println("---------------Start transferImages---------------- " ); 
 	  System.out.println("Destination: " + destinationIp );
@@ -233,6 +255,24 @@ public class PeerClient {
 	  System.out.println("---------------Terminate transferImage---------------- " );
 	    client.close();
 
+	 }
+	 
+	 public static boolean deleteImage( String destinationIP, String username , String imageName) {
+		 
+		 System.out.println("---------------------Start deleteImage------------------- ");
+		 
+		 final String URL ="http://" + destinationIP + ":4434/p2p/v1/images/"+username+ "/"+imageName;
+		 System.out.println("URL: " + URL);
+			
+		 response = client.target( URL ).request(MediaType.TEXT_PLAIN).delete();
+		 System.out.println("Response:" + response.getStatus());
+		 if( response.getStatus() == 200) {
+		    System.out.println("----------------------Terminate deleteImage ------------------------");
+		    return true;
+		 }
+		 client.close();
+			
+		 return false;
 	 }
 	
 	
