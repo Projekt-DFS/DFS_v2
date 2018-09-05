@@ -1,5 +1,6 @@
 package main.java.de.htwsaar.dfs.bootstrap.service;
 
+import java.awt.color.ICC_ColorSpace;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,7 +42,15 @@ public class ImageService {
 		File userFolder = new File("images/" + username);
 		if(userFolder.exists()) {
 			bootstrap.getAllImageContainers(username)
-					.forEach( (ImageContainer ic)-> result.add(RestUtils.convertIcToImg(baseUri, ic, username)));
+					.forEach( (ImageContainer ic)-> {
+						if ( !ic.getImageName().contains("#"))
+							result.add(RestUtils.convertIcToImg(baseUri, ic, username));
+						else {
+							String uri = "http://" + ic.getImageName().split("#")[0] + ":4434/p2p/v1/images/"+ username+"/";
+							//ic.setFileName(ic.getImageName().split("#")[1]);
+							result.add(RestUtils.convertIcToImg(uri, ic, username));
+						}
+						});
 			
 		}
 		//make a get request to the neighbor and get the images that are saved there

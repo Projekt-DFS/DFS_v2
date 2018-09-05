@@ -12,7 +12,6 @@ import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -61,7 +60,7 @@ public class StartBootstrap {
 	      //images
 	      BufferedImage img = null;
 	    
-	    for(int i = 0; i <= 2; i++) {
+	    for(int i = 0; i <= 1; i++) {
 	      try {
 	        img = ImageIO.read(new File("./dummyBilder/"+i+".jpg"));
 	        LinkedList<String> tagList = new LinkedList<String>();  
@@ -73,7 +72,7 @@ public class StartBootstrap {
 	      } catch (IOException e) {
 	        e.printStackTrace();
 	      }
-	      
+
 	    } 
 	   
 	}
