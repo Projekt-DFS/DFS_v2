@@ -514,7 +514,7 @@ public class Peer {
 	 */
 	public static void saveImageContainer(ImageContainer ic) throws IOException {
 		
-		ic.setPeerIp(StaticFunctions.loadBootstrapIp());
+		ic.setPeerIp(StaticFunctions.loadPeerIp());
 		
 		//Create folders if they do not already exist
 		File folder = new File("images");
