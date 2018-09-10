@@ -111,6 +111,7 @@ public class RestUtils {
 	 * @return
 	 */
 	public static ImageContainer convertImgToIc( Image image) {
+		System.out.println("imageSource: " + image.getImageSource());
 		ImageContainer ic = new ImageContainer(decodeToImage(image.getImageSource()),
 				image.getMetaData().getOwner(),
 				image.getImageName(), 

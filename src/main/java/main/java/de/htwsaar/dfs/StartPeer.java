@@ -34,7 +34,7 @@ import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 public class StartPeer {
 	
 	public static Peer peer = new Peer();
-	public static String bootstrapIP = "192.168.178.27";//"10.9.45.17";
+	public static String bootstrapIP = "10.9.45.17";//"192.168.178.27";
 
 	public StartPeer(String bootstrapIP) {
 		StartPeer.bootstrapIP = bootstrapIP;	
