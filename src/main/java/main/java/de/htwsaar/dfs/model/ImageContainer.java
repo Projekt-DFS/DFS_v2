@@ -30,8 +30,22 @@ public class ImageContainer implements Serializable {
 	private String path;
 	private String ending;
 	private Point coordinate;
+	private String peerIp;
 	
-	
+	public String getPeerIp() {
+		return peerIp;
+	}
+
+
+
+
+	public void setPeerIp(String peerIp) {
+		this.peerIp = peerIp;
+	}
+
+
+
+
 	//Meta-Data
 	private User user;
 	private String username;
@@ -88,7 +102,7 @@ public class ImageContainer implements Serializable {
 	
 	public String getThumbnailPath() {
 		//TODO
-		return path + "_thumbnail" + ending;
+		return path + "_thumbnail" ;
 	}
 	
 	// get-methods meta

@@ -80,6 +80,10 @@ public class RestUtils {
 		img.setImageName(ic.getImageName());
 		img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
 		
+		if(!ic.getPeerIp().equals(StartPeer.bootstrapIP)) {
+			baseUri = "http://" + ic.getPeerIp() + ":4434/p2p/v1/";
+		}
+		
 		if(baseUri.isEmpty()) {
 			img.setThumbnail(RestUtils.encodeToString(ic.getThumbnail(),"jpg"));
 			img.setImageSource(RestUtils.encodeToString(ic.getImage(),"jpg"));
