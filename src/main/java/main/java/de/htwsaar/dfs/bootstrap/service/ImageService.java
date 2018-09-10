@@ -20,6 +20,7 @@ import main.java.de.htwsaar.dfs.model.Metadata;
 import main.java.de.htwsaar.dfs.model.Peer;
 import main.java.de.htwsaar.dfs.model.PeerClient;
 import main.java.de.htwsaar.dfs.utils.RestUtils;
+import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
  * 
@@ -39,10 +40,8 @@ public class ImageService {
 		
 	
 		bootstrap.getAllImageContainers(username)
-				.forEach( (ImageContainer ic)-> {
-					System.out.println(ic.getPeerIp());
-					result.add(RestUtils.convertIcToImg(baseUri, ic, username));
-					});
+				.forEach( (ImageContainer ic)-> 
+					result.add(RestUtils.convertIcToImg(baseUri, ic, username)));
 		
 		//make a get request to the neighbor and get the images that are saved there
 		//result.addAll(collectImages(username));
@@ -119,8 +118,10 @@ public class ImageService {
 	 */
 	public BufferedImage getBufferedImage(String username, String imageName) 
 			throws FileNotFoundException, ClassNotFoundException, IOException {
-		
+//		String dest = bootstrap.routing( StaticFunctions.hashToPoint(username, imageName)).ip_adresse;
+//		if (dest.equals(bootstrap.ip_adresse))
 		String fileSrc = "images/"+ username + "/" + imageName;
+		
 		BufferedImage img = null;
 		try {
 			img = ImageIO.read(new File( fileSrc));

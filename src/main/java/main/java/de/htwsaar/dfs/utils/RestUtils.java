@@ -9,6 +9,7 @@ import java.util.Base64;
 import javax.imageio.ImageIO;
 
 import main.java.de.htwsaar.dfs.StartBootstrap;
+import main.java.de.htwsaar.dfs.StartPeer;
 import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.Image;
 import main.java.de.htwsaar.dfs.model.ImageContainer;
@@ -76,19 +77,15 @@ public class RestUtils {
 	 */
 	public static Image convertIcToImg(String baseUri, ImageContainer ic , String username) {
 		Image img = new Image();
-		String uri= "";
-		if(!ic.getPeerIp().equals("")) {
-			uri = "http://" + ic.getPeerIp() + ":4434/p2p/v1/";
-			img.setLink(uri);
-		}
-	
 		img.setImageName(ic.getImageName());
-		img.setThumbnail(baseUri + ic.getThumbnailPath()+ic.getEnding() + "/download");
 		img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
-		img.setImageSource(baseUri + ic.getPath()+ic.getEnding() + "/download");
+		
 		if(baseUri.isEmpty()) {
 			img.setThumbnail(RestUtils.encodeToString(ic.getThumbnail(),"jpg"));
 			img.setImageSource(RestUtils.encodeToString(ic.getImage(),"jpg"));
+		}else {
+			img.setThumbnail(baseUri + ic.getThumbnailPath()+ic.getEnding() + "/download");
+			img.setImageSource(baseUri + ic.getPath()+ic.getEnding() + "/download");
 		}
 		return img;
 	}
@@ -116,7 +113,6 @@ public class RestUtils {
 				image.getMetaData().getLocation(),
 				image.getMetaData().getCreated(),
 				image.getMetaData().getTagList());
-		ic.setPeerIp(image.getLink());
 		return ic;
 	}
 }

@@ -14,7 +14,6 @@ public class Image {
 	private Metadata metaData;
 	private String imageSource;
 	private String thumbnail;
-	private String link;
 
 	public Image() {}
 
@@ -63,15 +62,6 @@ public class Image {
 	public String toString() {
 		return "Image [imageName=" + imageName + ", metaData=" + metaData + ", imageSource=" + imageSource
 				+ ", thumbnail=" + thumbnail + "]";
-	}
-
-
-	public String getLink() {
-		return link;
-	}
-
-	public void setLink(String link) {
-		this.link = link;
 	}
 	
 	
