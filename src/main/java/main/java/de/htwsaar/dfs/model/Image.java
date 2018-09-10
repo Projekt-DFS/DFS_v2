@@ -14,6 +14,7 @@ public class Image {
 	private Metadata metaData;
 	private String imageSource;
 	private String thumbnail;
+	private String peerIp;
 
 	public Image() {}
 
@@ -57,6 +58,15 @@ public class Image {
 	public void setThumbnail(String thumbnailSource) {
 		this.thumbnail = thumbnailSource;
 	}
+	
+	public String getPeerIp() {
+		  return peerIp;
+		 }
+
+		 public void setPeerIp(String peerIp) {
+		  this.peerIp = peerIp;
+		 }
+	
 
 	@Override
 	public String toString() {
