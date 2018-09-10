@@ -40,13 +40,7 @@ public class ImageService {
 	
 		bootstrap.getAllImageContainers(username)
 				.forEach( (ImageContainer ic)-> {
-//					if ( !ic.getImageName().contains("#"))
-//						result.add(RestUtils.convertIcToImg(baseUri, ic, username));
-//					else {
-//						String uri = "http://" + ic.getImageName().split("#")[0] + ":4434/p2p/v1/images/"+ username+"/";
-//						//ic.setFileName(ic.getImageName().split("#")[1]);
-//						result.add(RestUtils.convertIcToImg(uri, ic, username));
-//					}
+					System.out.println(ic.getPeerIp());
 					result.add(RestUtils.convertIcToImg(baseUri, ic, username));
 					});
 		

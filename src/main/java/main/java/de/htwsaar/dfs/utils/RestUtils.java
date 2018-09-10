@@ -13,6 +13,7 @@ import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.Image;
 import main.java.de.htwsaar.dfs.model.ImageContainer;
 import main.java.de.htwsaar.dfs.model.Metadata;
+import main.java.de.htwsaar.dfs.model.Peer;
 
 /**
  * 
@@ -74,23 +75,19 @@ public class RestUtils {
 	 * @return
 	 */
 	public static Image convertIcToImg(String baseUri, ImageContainer ic , String username) {
-		
-		String api="";
-		if(!ic.getPeerIp().equals("")) {
-			if(ic.getPeerIp().equals(StartBootstrap.bootstrap.ip_adresse)) {
-				api = "bootstrap";
-			}else {
-				api= "p2p";
-			}
-			baseUri = "http://" + ic.getPeerIp() + ":4434/"+api+"/v1/";
-		}
 		Image img = new Image();
+		String uri= "";
+		if(!ic.getPeerIp().equals("")) {
+			uri = "http://" + ic.getPeerIp() + ":4434/p2p/v1/";
+			img.setLink(uri);
+		}
+	
+		img.setImageName(ic.getImageName());
 		img.setThumbnail(baseUri + ic.getThumbnailPath()+ic.getEnding() + "/download");
 		img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
 		img.setImageSource(baseUri + ic.getPath()+ic.getEnding() + "/download");
 		if(baseUri.isEmpty()) {
-			img.setThumbnail(baseUri);
-			//img.setThumbnail(RestUtils.encodeToString(ic.getThumbnail(),"jpg"));
+			img.setThumbnail(RestUtils.encodeToString(ic.getThumbnail(),"jpg"));
 			img.setImageSource(RestUtils.encodeToString(ic.getImage(),"jpg"));
 		}
 		return img;
@@ -119,7 +116,7 @@ public class RestUtils {
 				image.getMetaData().getLocation(),
 				image.getMetaData().getCreated(),
 				image.getMetaData().getTagList());
-		ic.setPeerIp(image.getThumbnail());
+		ic.setPeerIp(image.getLink());
 		return ic;
 	}
 }
