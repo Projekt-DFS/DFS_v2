@@ -33,6 +33,7 @@ public class ImageContainer implements Serializable {
 	
 	
 	//Meta-Data
+	private String peerIp;
 	private User user;
 	private String username;
 	private Date date;
@@ -278,7 +279,14 @@ public class ImageContainer implements Serializable {
 			this.ending = ending;
 		}
 	
-	
+
+		public void setPeerIp(String ip) {
+			peerIp = ip;
+		}
+		
+		public String getPeerIp() {
+			return peerIp;
+		}
 	
 	
 }

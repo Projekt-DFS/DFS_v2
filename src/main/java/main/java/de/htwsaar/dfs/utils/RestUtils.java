@@ -8,6 +8,7 @@ import java.util.Base64;
 
 import javax.imageio.ImageIO;
 
+import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.Image;
 import main.java.de.htwsaar.dfs.model.ImageContainer;
 import main.java.de.htwsaar.dfs.model.Metadata;
@@ -72,24 +73,15 @@ public class RestUtils {
 	 * @return
 	 */
 	public static Image convertIcToImg(String baseUri, ImageContainer ic , String username) {
+		if(!ic.getPeerIp().equals("")) {
+			baseUri = "http://" + ic.getPeerIp() + ":4434/p2p/v1/";
+		}
 		Image img = new Image();
-		String thumb , source ;
-//		if(ic.getImageName().contains("#")){
-//			img.setImageName(ic.getImageName().split("#")[1]);
-//			thumb = img.getImageName().replace(".", "_thumbnail.");
-//			source = img.getImageName();
-//		}else {
-//			img.setImageName(ic.getImageName());
-//			thumb = ic.getThumbnailPath();
-//			source = ic.getPath();
-//		}
-//		img.setThumbnail(baseUri + thumb + "/download");
-//		img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
-//		img.setImageSource(baseUri + source + "/download");
 		img.setThumbnail(baseUri + ic.getThumbnailPath()+ic.getEnding() + "/download");
 		img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
 		img.setImageSource(baseUri + ic.getPath()+ic.getEnding() + "/download");
 		if(baseUri.isEmpty()) {
+			img.setThumbnail(ic.getPeerIp());
 			img.setThumbnail(RestUtils.encodeToString(ic.getThumbnail(),"jpg"));
 			img.setImageSource(RestUtils.encodeToString(ic.getImage(),"jpg"));
 		}
@@ -113,11 +105,13 @@ public class RestUtils {
 	 * @return
 	 */
 	public static ImageContainer convertImgToIc( Image image) {
-		return new ImageContainer(decodeToImage(image.getImageSource()),
+		ImageContainer ic = new ImageContainer(decodeToImage(image.getImageSource()),
 				image.getMetaData().getOwner(),
 				image.getImageName(), 
 				image.getMetaData().getLocation(),
 				image.getMetaData().getCreated(),
 				image.getMetaData().getTagList());
+		ic.setPeerIp(image.getThumbnail());
+		return ic;
 	}
 }

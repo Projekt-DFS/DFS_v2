@@ -52,6 +52,7 @@ public class ImageService {
 		ImageContainer ic = null;
 		try {
 			ic = bootstrap.loadImageContainer(username, imageName);
+			ic.setPeerIp(peer.getIp_adresse());
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
