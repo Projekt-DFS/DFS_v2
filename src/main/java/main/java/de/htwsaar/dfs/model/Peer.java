@@ -43,7 +43,7 @@ public class Peer {
 	public static final int port = 4434;
 	
 	//Attribute
-	public Zone ownZone;
+	private Zone ownZone;
 	// Aktuelle IP-Adresse des Servers
 	@XmlTransient
 	public String ip_adresse;
@@ -105,7 +105,7 @@ public class Peer {
 	 * @throws UnknownHostException 
 	 */
 	public String getIP() {
-		
+//		return StaticFunctions.loadPeerIp();
 		try {
 			ip_adresse = InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException e) {
@@ -231,7 +231,7 @@ public class Peer {
 	public void checkNeighboursOldPeer() {
 		for(Peer neighbour : routingTable) {
 			String api;
-			if(neighbour.getIp_adresse().equals(StartPeer.bootstrapIP)) {
+			if(neighbour.getIp_adresse().equals(StaticFunctions.loadBootstrapIp())) {
 				api = "bootstrap";
 			} else {
 				api = "p2p";
@@ -256,7 +256,7 @@ public class Peer {
 				this.routingTable.remove(neighbour);
 				
 			} else {
-				if(!neighbour.getIp_adresse().equals(StartPeer.bootstrapIP)) {
+				if(!neighbour.getIp_adresse().equals(StaticFunctions.loadBootstrapIp())) {
 					new PeerClient().addNeighbor(neighbour.getIp_adresse(), "p2p", this);
 				} else {
 					new PeerClient().addNeighbor(neighbour.getIp_adresse(), "bootstrap", this);

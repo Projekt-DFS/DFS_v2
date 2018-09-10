@@ -83,13 +83,13 @@ public class RestUtils {
 		img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
 		
 		if(baseUri.equals("")) {
-			if(!ic.getPeerIp().equals(StartPeer.bootstrapIP)) {
+			if(!ic.getPeerIp().equals(StaticFunctions.loadBootstrapIp())) {
 				baseUri = "http://" + ic.getPeerIp() + ":4434/p2p/v1/";
 			}
 			img.setThumbnail(RestUtils.encodeToString(ic.getThumbnail(),"jpg"));
 			img.setImageSource(RestUtils.encodeToString(ic.getImage(),"jpg"));
 		}else {
-			if(!ic.getPeerIp().equals(StartPeer.bootstrapIP)) {
+			if(!ic.getPeerIp().equals(StaticFunctions.loadBootstrapIp())) {
 				baseUri = "http://" + ic.getPeerIp() + ":4434/p2p/v1/";
 			}
 			img.setThumbnail(baseUri + ic.getThumbnailPath()+ic.getEnding() + "/download");

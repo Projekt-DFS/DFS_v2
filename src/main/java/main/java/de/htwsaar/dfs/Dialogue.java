@@ -190,6 +190,7 @@ public class Dialogue {
 	            else {
 	            	ip = StartBootstrap.getIP();
 	            }
+	            StaticFunctions.saveIps(ip, ip);
 	            
 	            bootstrapThread.start(); // <-- hier wird der Bootstrap tatsächlich gestartet.
 	            bootstrapExists = true;
@@ -277,8 +278,9 @@ public class Dialogue {
 						System.out.println("The  IP must contain dots.\n");
 						break;
 					}				
-											
-					StartPeer.bootstrapIP = ip;
+					
+					StaticFunctions.saveIps(StaticFunctions.getRightIP(), ip);
+					//StartPeer.bootstrapIP = ip;
 					Thread peerThread = new PeerThread();
 		            peerThread.start(); // <-- hier wird der Peer tatsächlich gestartet.
 		            peerExists = true;

@@ -34,10 +34,10 @@ import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 public class StartPeer {
 	
 	public static Peer peer = new Peer();
-	public static String bootstrapIP = "10.9.45.17";//"192.168.178.27";
+	//public static String bootstrapIP;// = "10.9.45.17";//"192.168.178.27";
 
 	public StartPeer(String bootstrapIP) {
-		StartPeer.bootstrapIP = bootstrapIP;	
+		//StartPeer.bootstrapIP = bootstrapIP;	
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class StartPeer {
                
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+ StaticFunctions.getRightIP() +":" + Peer.port+ "/p2p/v1/"), rc);
+        return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+ StaticFunctions.loadPeerIp() +":" + Peer.port+ "/p2p/v1/"), rc);
     }
     
     /**
@@ -70,7 +70,7 @@ public class StartPeer {
 		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer/" +p.getX() + "-" + p.getY();
 		
 		//Build a Peer only with IP. The Bootstrap will give him a zone.
-		peer= new Peer(StaticFunctions.getRightIP());
+		peer= new Peer(StaticFunctions.loadPeerIp());
 		
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target(bootstrapURL);
@@ -93,7 +93,8 @@ public class StartPeer {
      * @throws UnknownHostException
      */
     static public String getIP() throws UnknownHostException {
-    	return InetAddress.getLocalHost().getHostAddress();
+//    	return InetAddress.getLocalHost().getHostAddress();
+    	return StaticFunctions.loadPeerIp();
     }
     
     /**
@@ -103,7 +104,7 @@ public class StartPeer {
      */
     public static void start() throws IOException {
         startServer();
-        joinPeer(bootstrapIP, "bootstrap");
+        joinPeer(StaticFunctions.loadBootstrapIp(), "bootstrap");
         System.in.read();
        
       

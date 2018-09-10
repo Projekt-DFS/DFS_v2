@@ -31,7 +31,7 @@ public class ImageService {
 	//Dies muss weg !!!
 	private Bootstrap bootstrap = new Bootstrap();
 	//URI for Image
-	private String baseUri = "http://" + peer.getIP()+ ":" + Peer.port +"/p2p/v1/";
+	private String baseUri = "http://" + peer.getIp_adresse() + ":" + Peer.port +"/p2p/v1/";
 	
 	public ImageService(){	}
 	

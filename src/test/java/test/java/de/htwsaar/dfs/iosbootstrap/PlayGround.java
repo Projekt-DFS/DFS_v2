@@ -42,7 +42,7 @@ public class PlayGround {
 		//new PlayGround().startImageTest();
 		try {
 			new PlayGround().start();
-			new PlayGround().startBootstrapTest();
+			//new PlayGround().startBootstrapTest();
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -51,7 +51,12 @@ public class PlayGround {
 	}
 	
 	private void start() {
-		System.out.println(StaticFunctions.getAllIPs());
+		//System.out.println(StaticFunctions.getAllIPs());
+		String peerIp = "192.168.178.20";
+		String bootstrapIp = "192.168.178.11";
+		StaticFunctions.saveIps(peerIp, bootstrapIp);
+		StaticFunctions.loadPeerIp();
+		StaticFunctions.loadBootstrapIp();
 	}
 	
 	

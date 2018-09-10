@@ -1,6 +1,13 @@
 package main.java.de.htwsaar.dfs.utils;
 
 import java.awt.image.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -180,7 +187,61 @@ public class StaticFunctions {
 		return ips;
 	}
 	
+	public static String loadPeerIp() {
+		File file= new File("ip.csv");
+        if (!(file.exists() && file.isFile()&& file.canRead())) {
+            throw new IllegalArgumentException("");
+        }
+        try {
+			BufferedReader input=new BufferedReader(new FileReader(file));
+			String line;
+			line=input.readLine();
+			
+			input.close();
+			return line;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+        
+	}
 	
+	public static String loadBootstrapIp() {
+		File file= new File("ip.csv");
+        if (!(file.exists() && file.isFile()&& file.canRead())) {
+            throw new IllegalArgumentException("");
+        }
+        try {
+			BufferedReader input=new BufferedReader(new FileReader(file));
+			String line;
+			line=input.readLine();
+			line=input.readLine();
+			input.close();
+			return line;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static void saveIps(String peerIp, String bootstrapIp) {
+		File file= new File("ip.csv");
+		try {
+			BufferedWriter input=new BufferedWriter(new FileWriter(file));
+			String line;
+			input.write(peerIp);
+			input.newLine();
+			input.write(bootstrapIp);
+			
+			input.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	
 	/**
