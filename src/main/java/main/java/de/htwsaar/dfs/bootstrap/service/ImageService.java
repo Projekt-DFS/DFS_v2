@@ -1,6 +1,5 @@
 package main.java.de.htwsaar.dfs.bootstrap.service;
 
-import java.awt.color.ICC_ColorSpace;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,21 +37,19 @@ public class ImageService {
 	public List<Image> getAllImages( String username) throws ClassNotFoundException, IOException{
 		List<Image> result = new ArrayList<>();
 		
-		//check if folder exist
-		File userFolder = new File("images/" + username);
-		if(userFolder.exists()) {
-			bootstrap.getAllImageContainers(username)
-					.forEach( (ImageContainer ic)-> {
-						if ( !ic.getImageName().contains("#"))
-							result.add(RestUtils.convertIcToImg(baseUri, ic, username));
-						else {
-							String uri = "http://" + ic.getImageName().split("#")[0] + ":4434/p2p/v1/images/"+ username+"/";
-							//ic.setFileName(ic.getImageName().split("#")[1]);
-							result.add(RestUtils.convertIcToImg(uri, ic, username));
-						}
-						});
-			
-		}
+	
+		bootstrap.getAllImageContainers(username)
+				.forEach( (ImageContainer ic)-> {
+//					if ( !ic.getImageName().contains("#"))
+//						result.add(RestUtils.convertIcToImg(baseUri, ic, username));
+//					else {
+//						String uri = "http://" + ic.getImageName().split("#")[0] + ":4434/p2p/v1/images/"+ username+"/";
+//						//ic.setFileName(ic.getImageName().split("#")[1]);
+//						result.add(RestUtils.convertIcToImg(uri, ic, username));
+//					}
+					result.add(RestUtils.convertIcToImg(baseUri, ic, username));
+					});
+		
 		//make a get request to the neighbor and get the images that are saved there
 		//result.addAll(collectImages(username));
 		

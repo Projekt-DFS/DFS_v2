@@ -74,18 +74,21 @@ public class RestUtils {
 	public static Image convertIcToImg(String baseUri, ImageContainer ic , String username) {
 		Image img = new Image();
 		String thumb , source ;
-		if(ic.getImageName().contains("#")){
-			img.setImageName(ic.getImageName().split("#")[1]);
-			thumb = img.getImageName().replace(".", "_thumbnail.");
-			source = img.getImageName();
-		}else {
-			img.setImageName(ic.getImageName());
-			thumb = ic.getThumbnailPath();
-			source = ic.getPath();
-		}
-		img.setThumbnail(baseUri + thumb + "/download");
+//		if(ic.getImageName().contains("#")){
+//			img.setImageName(ic.getImageName().split("#")[1]);
+//			thumb = img.getImageName().replace(".", "_thumbnail.");
+//			source = img.getImageName();
+//		}else {
+//			img.setImageName(ic.getImageName());
+//			thumb = ic.getThumbnailPath();
+//			source = ic.getPath();
+//		}
+//		img.setThumbnail(baseUri + thumb + "/download");
+//		img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
+//		img.setImageSource(baseUri + source + "/download");
+		img.setThumbnail(baseUri + ic.getThumbnailPath()+ic.getEnding() + "/download");
 		img.setMetaData(new Metadata(username, ic.getDate(), ic.getLocation(), ic.getTagList()));
-		img.setImageSource(baseUri + source + "/download");
+		img.setImageSource(baseUri + ic.getPath()+ic.getEnding() + "/download");
 		if(baseUri.isEmpty()) {
 			img.setThumbnail(RestUtils.encodeToString(ic.getThumbnail(),"jpg"));
 			img.setImageSource(RestUtils.encodeToString(ic.getImage(),"jpg"));
