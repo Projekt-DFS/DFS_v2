@@ -8,6 +8,7 @@ import java.util.Base64;
 
 import javax.imageio.ImageIO;
 
+import main.java.de.htwsaar.dfs.StartBootstrap;
 import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.Image;
 import main.java.de.htwsaar.dfs.model.ImageContainer;
@@ -73,8 +74,15 @@ public class RestUtils {
 	 * @return
 	 */
 	public static Image convertIcToImg(String baseUri, ImageContainer ic , String username) {
+		
+		String api="";
 		if(!ic.getPeerIp().equals("")) {
-			baseUri = "http://" + ic.getPeerIp() + ":4434/p2p/v1/";
+			if(ic.getPeerIp().equals(StartBootstrap.bootstrap.ip_adresse)) {
+				api = "bootstrap";
+			}else {
+				api= "p2p";
+			}
+			baseUri = "http://" + ic.getPeerIp() + ":4434/"+api+"/v1/";
 		}
 		Image img = new Image();
 		img.setThumbnail(baseUri + ic.getThumbnailPath()+ic.getEnding() + "/download");
