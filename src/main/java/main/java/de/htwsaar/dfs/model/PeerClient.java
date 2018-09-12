@@ -264,9 +264,9 @@ public class PeerClient {
 		 final String URL ="http://" + destinationIP + ":4434/p2p/v1/images/"+username+ "/"+imageName;
 		 System.out.println("URL: " + URL);
 			
-		 response = client.target( URL ).request(MediaType.TEXT_PLAIN).delete();
+		 response = client.target( URL ).request(MediaType.APPLICATION_JSON).delete();
 		 System.out.println("Response:" + response.getStatus());
-		 if( response.getStatus() == 200) {
+		 if( response.getStatus() == 204) {
 		    System.out.println("----------------------Terminate deleteImage ------------------------");
 		    return true;
 		 }
