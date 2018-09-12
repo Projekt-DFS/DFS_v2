@@ -25,8 +25,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.http.client.ClientProtocolException;
-
-import main.java.de.htwsaar.dfs.StartPeer;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
@@ -645,11 +643,17 @@ public class Peer {
 	 * @author Thomas Spanier
 	 */
 	public void editMeta(String username, String imageName, String location, LinkedList<String> tagList) throws FileNotFoundException, ClassNotFoundException, IOException {
-		//TODO routing
-		ImageContainer ic = loadImageContainer(username, imageName);
-		ic.setLocation(location);
-		ic.setTagList(tagList);
-		saveImageContainer(ic);
+		Point p = StaticFunctions.hashToPoint(username, imageName);
+		if(lookup(p)) {
+			ImageContainer ic = loadImageContainer(username, imageName);
+			ic.setLocation(location);
+			ic.setTagList(tagList);
+			saveImageContainer(ic);
+		} else {
+			String destinationPeerIP = routing(p).getIp_adresse();
+			new PeerClient().updateMetadata(destinationPeerIP, username, imageName, new Metadata(username, null, location, tagList));
+		}
+		
 	}
 	
 	

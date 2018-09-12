@@ -275,5 +275,25 @@ public class PeerClient {
 		 return false;
 	 }
 	
-	
+	 public Metadata updateMetadata(String destinationPeerIP, String username, String imagename , Metadata metadata) throws ClientProtocolException, IOException {
+		   
+		   System.out.println("---------------Start updateMetadata---------------- " );
+		   
+		   final String URL ="http://" + destinationPeerIP + ":4434/p2p/v1/images/"+username + "/" + imagename + "/metadata";
+		   System.out.println("Destination: " + URL );
+		   
+		   response = client.target( URL ).
+		     request(MediaType.APPLICATION_JSON).
+		     post(Entity.entity(metadata, MediaType.APPLICATION_JSON));
+		   System.out.println("Response Code : " + response.getStatus());
+		   
+		   if(response.getStatus()==200 || response.getStatus()==201) {
+		    metadata = response.readEntity(Metadata.class);
+		   }
+		   System.out.println("---------------Terminate updateMetadata---------------- " );
+		   
+		   client.close();
+		   
+		   return metadata;
+		  }
 }
