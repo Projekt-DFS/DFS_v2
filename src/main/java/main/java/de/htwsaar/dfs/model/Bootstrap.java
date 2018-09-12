@@ -316,6 +316,41 @@ public class Bootstrap extends Peer {
 		return image;
 	}
 	
+	
+	public ImageContainer getImage(String username, String imageName) {
+		ImageContainer ic;
+		Point p = StaticFunctions.hashToPoint(username, imageName);
+		if(lookup(p)) {
+			try {
+				ic = loadImageContainer(username, imageName);
+				return ic;
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			String destinationPeerIP = routing(p).getIp_adresse();
+			Image img = new PeerClient().getImageContainer(destinationPeerIP, username, imageName);
+		     if(img != null) {
+		    	 ic = RestUtils.convertImgToIc(img);
+		    	 return ic;
+		     }
+			
+			
+		}
+		
+		return null;
+		
+	}
+	
+	
+	
 	/**
 	 * Function to delete an image, incl Metadata and Thumbnail. Is called by Bootstrap
 	 * @param username
