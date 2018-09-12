@@ -38,15 +38,5 @@ public class UserService {
 		return Bootstrap.getUser(username);
 	}
 	
-	/**
-	 * This method update the data of a special user
-	 * @param user
-	 * @return
-	 */
-	public User updateUser(User user) {
-		
-		bootstrap.createUser(user.getName(), user.getPassword());
-		return user;
-	}
 
 }
