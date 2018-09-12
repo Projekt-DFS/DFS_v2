@@ -73,7 +73,7 @@ public class ImageService {
 
 	public Metadata getMetadata(String username, String imageName) 
 			throws FileNotFoundException, ClassNotFoundException, IOException {
-		ImageContainer ic = bootstrap.loadImageContainer(username, imageName);
+		ImageContainer ic = bootstrap.getImage(username, imageName);
 		
 		return new Metadata(ic.getUsername()
 				, ic.getDate(), ic.getLocation()
