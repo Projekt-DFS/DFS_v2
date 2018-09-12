@@ -52,13 +52,9 @@ public class ImageService {
 				.collect(Collectors.toList()); 
 	}
 
-	public Image getImage(String username , String imageName)  {
+	public Image getImage(String username , String imageName) throws ClassNotFoundException  {
 		ImageContainer ic = null;
-		try {
-			ic = bootstrap.loadImageContainer(username, imageName);
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
+		ic = bootstrap.getImage(username, imageName);
 		return RestUtils.convertIcToImg(baseUri, ic, username);
 	}
 	
