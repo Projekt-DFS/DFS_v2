@@ -28,6 +28,10 @@ import javax.imageio.ImageIO;
  */
 public class StartBootstrap {
 	
+	public StartBootstrap() {
+		
+	}
+	
 	public static Bootstrap bootstrap = new Bootstrap();
 	
 	/**

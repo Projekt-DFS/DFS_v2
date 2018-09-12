@@ -188,7 +188,7 @@ public class Dialogue {
 	            
 	            // automatic selection of IP
 	            else {
-	            	ip = StartBootstrap.getIP();
+	            	ip = StaticFunctions.getRightIP();
 	            }
 	            StaticFunctions.saveIps(ip, ip);
 	            

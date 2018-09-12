@@ -51,7 +51,7 @@ public class Bootstrap extends Peer {
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		this.ip_adresse = StaticFunctions.getRightIP();
+		this.ip_adresse = StaticFunctions.loadPeerIp();
 		
 		//Create a new Zone
 		createZone(new Point(0.0, 0.0), new Point(1.0, 1.0));

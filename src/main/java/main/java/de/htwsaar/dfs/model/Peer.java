@@ -78,7 +78,6 @@ public class Peer {
 		this.ownZone = ownZone;
 		this.ip_adresse = ip_adresse;
 		this.routingTable = routingTable;
-		System.out.println(this.ownZone);
 	}
 
 	
