@@ -768,5 +768,227 @@ public class Peer {
 		return sb.toString();	
 	}
 	
+	/**
+	 * @author Raphaela Wagner 12.09.2018
+	 */
+	public void leaveNetwork() {
+		if(findNeighbourToMergeWith() != null) {
+			mergeZones(findNeighbourToMergeWith());
+		
+		} else {
+			Peer peerToSwap = findPeerForZoneSwapping();
+			swapPeers(peerToSwap);
+			mergeZones(findNeighbourToMergeWith());
+		}
+		
+	}
+	
+	/**
+	 * @author Raphaela Wagner 12.09.2018
+	 * @return 
+	 */
+	
+	public Peer findNeighbourToMergeWith() {
+		for(Peer neighbour : routingTable) {
+			if(isValidZone(neighbour.getOwnZone())) {
+				return neighbour;
+			} 
+		}
+		return null;
+	}
+	
+	/**
+	 * @author Raphaela Wagner 12.09.2018
+	 * @param neighboursZone
+	 * @return
+	 */
+	public boolean isValidZone(Zone neighboursZone) {
+		if(ownZone.getZoneVolume() == neighboursZone.getZoneVolume() && neighboursZone.isSquare() && this.ownZone.getUpperRight().getY() != neighboursZone.getUpperRight().getY() && zoneHasValidPlaceInSpace(neighboursZone)) {
+			return true;
+		} else if(ownZone.getZoneVolume() == neighboursZone.getZoneVolume() && neighboursZone.getUpperRight().getX() != ownZone.getUpperRight().getX() && zoneHasValidPlaceInSpace(neighboursZone)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * @author Raphaela Wagner 12.09.2018
+	 * @param neighboursZone
+	 * @return
+	 */
+	public boolean zoneHasValidPlaceInSpace(Zone neighboursZone) {
+		double sh, sl;
+			
+			if(ownZone.isSquare()) {
+				if(neighboursZone.getUpperRight().getY() > ownZone.getUpperRight().getY()) {
+					sh = neighboursZone.getUpperRight().getY();
+					sl = ownZone.getBottomLeft().getY();
+					if(((1 - sh)/(sh - sl)) % 1 == 0) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					sh = ownZone.getUpperRight().getY();
+					sl = neighboursZone.getBottomLeft().getY();
+					if(((1 - sh)/(sh - sl)) % 1 == 0) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			} else { 
+				if(neighboursZone.getUpperRight().getX() > ownZone.getUpperRight().getX()) {
+					sh = neighboursZone.getUpperRight().getX();
+					sl = ownZone.getBottomLeft().getX();
+					
+					if(((1 - sh)/(sh - sl)) % 1 == 0) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					sh = ownZone.getUpperRight().getX();
+					sl = neighboursZone.getBottomLeft().getX();
+					
+					if(((1 - sh)/(sh - sl)) % 1 == 0) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			}	
+		}
+	
+	/**
+	 * Merges two zones into one
+	 * @author Raphaela Wagner 12.08.2018
+	 * @param mergeNeighbour
+	 */
+	public void mergeZones(Peer mergeNeighbour) {
+		// sets valid merged Zone
+		if(mergeNeighbour.getOwnZone().getUpperRight().getX() > ownZone.getUpperRight().getX() ||
+				mergeNeighbour.getOwnZone().getUpperRight().getY() > ownZone.getUpperRight().getY()) {
+			mergeNeighbour.getOwnZone().setZone(ownZone.getBottomLeft(), mergeNeighbour.getOwnZone().getUpperRight());
+			} else {
+				mergeNeighbour.getOwnZone().setZone(mergeNeighbour.getOwnZone().getBottomLeft(), ownZone.getUpperRight());
+			}
+		
+		// This Peer transfers its Pairs to its mergeNeighbour
+		ArrayList<ImageContainer> imagesToTransfer = findImagesToTransfer();
+		transferPairs(mergeNeighbour.getIp_adresse(), imagesToTransfer);
+		deletePairs(imagesToTransfer);
+				
+		
+		//Adds leaving Peer's neighbours to routingTable if absent
+		mergeNeighbour.getRoutingTable().addAllAbsent(this.routingTable);
+		
+		//Leaving Peer gets removed from routingTables and mergeNeighbour's newly set zone is conveyed to its neighbours
+		for(Peer p : mergeNeighbour.getRoutingTable()) {
+			
+			
+			if(p.getRoutingTable().equals(mergeNeighbour)) {
+				//TODO Kommunikation über REST
+				int index = p.getRoutingTable().indexOf(mergeNeighbour);
+				p.getRoutingTable().get(index).setOwnZone(mergeNeighbour.getOwnZone());
+			}
+			
+			//TODO Kommunikation über REST
+			if(p.getRoutingTable().contains(this)) {
+				p.getRoutingTable().remove(this);
+			}
+				
+		}
+		
+	}
+	
+	/**
+	 * @author Raphaela Wagner 12.09.2018
+	 * @return
+	 */
+	public Peer findPeerForZoneSwapping() {
+		if(findNeighbourToMergeWith() != null) {
+			return findNeighbourToMergeWith();
+		} else {
+			Peer peerWithSmallestZoneVolume = routingTable.get(0);
+			for(int i = 1; i < routingTable.size(); i++) {
+				if(routingTable.get(i).getOwnZone().getZoneVolume() < peerWithSmallestZoneVolume.getOwnZone().getZoneVolume()) {
+					peerWithSmallestZoneVolume = routingTable.get(i);
+				}
+			}
+		return peerWithSmallestZoneVolume.findPeerForZoneSwapping();
+		}
+	}
+	
+	/**
+	 * @author Raphaela Wagner 12.09.2018
+	 * @param peerToSwapWith
+	 */
+	public void swapPeers(Peer peerToSwapWith) {
+		Zone tempZone = this.ownZone;
+		CopyOnWriteArrayList<Peer> tempRoutingTable = this.routingTable;
+		
+		// Removes this leaving Peer from its neighbour's routingTables
+		for(Peer p : routingTable) {
+			//TODO Kommunikation über REST
+			p.getRoutingTable().remove(this);
+		}
+		
+		// Removes peerToSwapWith from its neighbour's routingTables
+		for(Peer p : peerToSwapWith.getRoutingTable()) {
+			//TODO Kommunikation über REST
+			p.getRoutingTable().remove(peerToSwapWith);
+		}
+		
+		// dumps this leaving Peer's routingTable and replaces it with peerToSwapWith's routingTable
+		this.dumpRoutingTable();
+		this.mergeRoutingTableWithList(peerToSwapWith.getRoutingTable());
+		
+		//dumps peerToSwapWith's routingTable and replaces it with this leaving Peer's routingTable
+		peerToSwapWith.dumpRoutingTable();
+		peerToSwapWith.mergeRoutingTableWithList(tempRoutingTable);
+		
+		//Replaces this leaving Peer's Zone with peerToSwapWith's Zone
+		this.setOwnZone(peerToSwapWith.getOwnZone());
+		
+		//Replaces peerToSwapWith's Zone with this leaving Peer's Zone
+		peerToSwapWith.setOwnZone(tempZone);
+		
+		//This leaving Peer is added to its new neighbours' routingTables
+		for(Peer p : routingTable) {
+			//TODO Kommunikation über REST
+			p.getRoutingTable().add(this);
+		}
+		
+		//peerToSwapWith is added to its new neighbours' routingTables
+		for(Peer p : peerToSwapWith.getRoutingTable()) {
+			//TODO Kommunikation über REST
+			p.getRoutingTable().add(peerToSwapWith);
+		}
+		
+		//This leaving Peer and peerToSwapWith swap their (k,v) pairs
+		swapPairs(peerToSwapWith);
+	}
+	
+	/**
+	 * @author Raphaela Wagner 12.09.2018
+	 * @param peerToSwapWith
+	 */
+	public void swapPairs(Peer peerToSwapWith) {
+		ArrayList<ImageContainer> myImagesToTransfer = findImagesToTransfer();
+		ArrayList<ImageContainer> peersImagesToTransfer = peerToSwapWith.findImagesToTransfer();
+		
+		transferPairs(peerToSwapWith.getIp_adresse(), myImagesToTransfer);
+		deletePairs(myImagesToTransfer);
+		
+		peerToSwapWith.transferPairs(this.getIp_adresse(), peersImagesToTransfer);
+		peerToSwapWith.deletePairs(peersImagesToTransfer);
+	}
+	
+		
 	
 }
+	
+	
+
