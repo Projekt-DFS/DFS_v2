@@ -336,7 +336,7 @@ public class Bootstrap extends Peer {
 			}
 		} else {
 			String destinationPeerIP = routing(p).getIp_adresse();
-			Image img = new PeerClient().getImageContainer(destinationPeerIP, username, imageName);
+			Image img = new PeerClient().getImage(destinationPeerIP, username, imageName);
 		     if(img != null) {
 		    	 ic = RestUtils.convertImgToIc(img);
 		    	 return ic;
@@ -420,7 +420,7 @@ public class Bootstrap extends Peer {
 				} else {
 					destinationPeerIp = routing(p).getIp_adresse();
 					//REST-Aufruf zum Laden des ImageContainers von peer
-					Image img =new PeerClient().getImageContainer(destinationPeerIp, username , imageName);
+					Image img =new PeerClient().getImage(destinationPeerIp, username , imageName);
 					if(img != null) {
 						ics.add(RestUtils.convertImgToIc(img));	
 					}

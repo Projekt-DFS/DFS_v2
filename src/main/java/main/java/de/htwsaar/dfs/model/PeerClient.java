@@ -26,32 +26,33 @@ public class PeerClient {
 	private Response response;
 
 	
+	/*------------------------------Peer's administration ----------------------------   */
+	
+	
 	/**
-	 * This method deletes a neighbor entry in the routing table of a peer
-	 * @param destinationIp : the peer where the operation will be done
-	 * @param api : the web context Path 
-	 * @param peerToDeleteIP : the peer that should be delete
-	 * @return true if done
+	 * This method sent a joinRequest to a peer
+     * @param destinationIp : the ip of the destination peer
+     * @param api : the api that is install on the destinationpeer
+	 * @param newPeer
 	 */
-	public boolean deleteNeighbor(String destinationIp , String api, Peer peerToDelete) {
-		client = ClientBuilder.newClient();
+	public Peer createPeer(String destinationIp, Point p, String api, Peer newPeer) {
+
+		System.out.println("---------------Start createPeer---------------- " );
 		
-		System.out.println("---------------------Start delete------------------- ");
-	    System.out.println(peerToDelete.getIp_adresse() + " from the routing table of " + destinationIp);
+		final String URL ="http://" + destinationIp + ":4434/"+api+"/v1/createPeer/"+p.getX() + "-"+ p.getY();
+		System.out.println("Destination: " + URL );
 		
-		final String URL ="http://"+ destinationIp + ":4434/" + api + "/v1/neighbors/" + peerToDelete.getIp_adresse();
-		System.out.println("URL: " + URL);
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).
+				post(Entity.entity(newPeer, MediaType.APPLICATION_JSON));
+		System.out.println("Response Code : " + response.getStatus());
+		newPeer = response.readEntity(Peer.class);
+		System.out.println("---------------Terminate CreatePeer---------------- " );
+		System.out.println("This Peer :" + newPeer );
 		
-	    response = client.target( URL ).request(MediaType.TEXT_PLAIN).delete();
-	    System.out.println("Response:" + response.getStatus());
-	    if( response.getStatus() == 200) {
-	    	System.out.println("----------------------Terminate delete ------------------------");
-	    	return true;
-	    }
-		client.close();
-		
-		return false;
+		return newPeer;
 	}
+	
 	
 	/**
 	 *  This method adds a neighbor in the routing table of a peer
@@ -80,6 +81,35 @@ public class PeerClient {
 		
 		return false;
 	}
+	
+	
+	/**
+	 * This method deletes a neighbor entry in the routing table of a peer
+	 * @param destinationIp : the peer where the operation will be done
+	 * @param api : the web context Path 
+	 * @param peerToDeleteIP : the peer that should be delete
+	 * @return true if done
+	 */
+	public boolean deleteNeighbor(String destinationIp , String api, Peer peerToDelete) {
+		client = ClientBuilder.newClient();
+		
+		System.out.println("---------------------Start delete------------------- ");
+	    System.out.println(peerToDelete.getIp_adresse() + " from the routing table of " + destinationIp);
+		
+		final String URL ="http://"+ destinationIp + ":4434/" + api + "/v1/neighbors/" + peerToDelete.getIp_adresse();
+		System.out.println("URL: " + URL);
+		
+	    response = client.target( URL ).request(MediaType.TEXT_PLAIN).delete();
+	    System.out.println("Response:" + response.getStatus());
+	    if( response.getStatus() == 200) {
+	    	System.out.println("----------------------Terminate delete ------------------------");
+	    	return true;
+	    }
+		client.close();
+		
+		return false;
+	}
+	
 	
 	/**
 	 * This method forward a point to another Peer
@@ -110,29 +140,11 @@ public class PeerClient {
 	}
 	
 
-	/**
-	 * This method sent a joinRequest to a peer
-     * @param destinationIp : the ip of the destination peer
-     * @param api : the api that is install on the destinationpeer
-	 * @param newPeer
-	 */
-	public Peer createPeer(String destinationIp, Point p, String api, Peer newPeer) {
-
-		System.out.println("---------------Start createPeer---------------- " );
-		
-		final String URL ="http://" + destinationIp + ":4434/"+api+"/v1/createPeer/"+p.getX() + "-"+ p.getY();
-		System.out.println("Destination: " + URL );
-		
-		response = client.target( URL ).
-				request(MediaType.APPLICATION_JSON).
-				post(Entity.entity(newPeer, MediaType.APPLICATION_JSON));
-		System.out.println("Response Code : " + response.getStatus());
-		newPeer = response.readEntity(Peer.class);
-		System.out.println("---------------Terminate CreatePeer---------------- " );
-		System.out.println("This Peer :" + newPeer );
-		
-		return newPeer;
-	}
+	
+	/*------------------------------Images's administration ----------------------------   */
+	
+	
+	
 	
 	/**
 	 * This method forward the createImage Request to another peer 
@@ -204,7 +216,7 @@ public class PeerClient {
 	 * @param imageName
 	 * @return
 	 */
-	public Image getImageContainer(String destinationIP,String username, String imageName ){
+	public Image getImage(String destinationIP,String username, String imageName ){
 		
 		Image result = null;
 		System.out.println("---------------Start getImage---------------- " );	
@@ -225,7 +237,8 @@ public class PeerClient {
 	}
 	
 	/**
-	  * This method is called when a peer entry to the  network
+	  * This method is called when a peer entry to the  network. 
+	  * All images that belong to the zone of the new peer should be transfer .
 	  * @param images
 	  * @param destinationIp
 	  * @return
@@ -257,6 +270,13 @@ public class PeerClient {
 
 	 }
 	 
+	 /**
+	  * This method deletes an image stored in a special peer
+	  * @param destinationIP
+	  * @param username
+	  * @param imageName
+	  * @return
+	  */
 	 public boolean deleteImage( String destinationIP, String username , String imageName) {
 		 
 		 System.out.println("---------------------Start deleteImage------------------- ");
@@ -275,6 +295,16 @@ public class PeerClient {
 		 return false;
 	 }
 	
+	 /**
+	  * This method returns update the metadata of an image stored in a special peer
+	  * @param destinationPeerIP
+	  * @param username
+	  * @param imagename
+	  * @param metadata
+	  * @return
+	  * @throws ClientProtocolException
+	  * @throws IOException
+	  */
 	 public Metadata updateMetadata(String destinationPeerIP, String username, String imagename , Metadata metadata) throws ClientProtocolException, IOException {
 		   
 		   System.out.println("---------------Start updateMetadata---------------- " );

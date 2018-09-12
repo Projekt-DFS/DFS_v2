@@ -3,19 +3,14 @@ package main.java.de.htwsaar.dfs.utils;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 
 import javax.imageio.ImageIO;
 
-import main.java.de.htwsaar.dfs.StartBootstrap;
-import main.java.de.htwsaar.dfs.StartPeer;
-import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.Image;
 import main.java.de.htwsaar.dfs.model.ImageContainer;
 import main.java.de.htwsaar.dfs.model.Metadata;
-import main.java.de.htwsaar.dfs.model.Peer;
 
 /**
  * 

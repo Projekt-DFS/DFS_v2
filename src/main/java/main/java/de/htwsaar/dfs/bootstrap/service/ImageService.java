@@ -17,10 +17,7 @@ import main.java.de.htwsaar.dfs.model.Bootstrap;
 import main.java.de.htwsaar.dfs.model.ImageContainer;
 import main.java.de.htwsaar.dfs.model.Image;
 import main.java.de.htwsaar.dfs.model.Metadata;
-import main.java.de.htwsaar.dfs.model.Peer;
-import main.java.de.htwsaar.dfs.model.PeerClient;
 import main.java.de.htwsaar.dfs.utils.RestUtils;
-import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
  * 
@@ -42,9 +39,6 @@ public class ImageService {
 		bootstrap.getAllImageContainers(username)
 				.forEach( (ImageContainer ic)-> 
 					result.add(RestUtils.convertIcToImg(baseUri, ic, username)));
-		
-		//make a get request to the neighbor and get the images that are saved there
-		//result.addAll(collectImages(username));
 		
 		//return all images sorted 
 		return result.stream()
@@ -126,19 +120,6 @@ public class ImageService {
 		}
 
 		return img;
-	}
-	
-	/**
-	 * This method collected all images from a user in different peers
-	 * @param username
-	 * @return
-	 */
-	
-	private List<Image> collectImages(String username) {
-		List<Image> images = new ArrayList<>();
-		bootstrap.getRoutingTable().stream()
-			.forEach((Peer p)-> images.addAll(new PeerClient().getImages(p.getIp_adresse(), username)));
-		return images ;
 	}
 	
 }

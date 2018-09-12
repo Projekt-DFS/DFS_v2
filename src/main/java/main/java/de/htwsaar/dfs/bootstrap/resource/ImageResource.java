@@ -38,8 +38,7 @@ public class ImageResource {
 	 * @throws ClassNotFoundException 
 	 * */
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	//funktioniert 
+	@Produces(MediaType.APPLICATION_JSON) 
 	public List<Image> getListOfImages(@PathParam("username") String username) 
 			throws ClassNotFoundException, IOException{
 		return imageService.getAllImages(username);
@@ -51,7 +50,6 @@ public class ImageResource {
 	 * @param image
 	 * @return
 	 */
-	//funktioniert
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON )
@@ -87,7 +85,6 @@ public class ImageResource {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	//funktioniert
 	@GET
 	@Path("/{imageName}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -106,7 +103,6 @@ public class ImageResource {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	//funktioniert
 	@GET
 	@Path("/{imageName}/download")
 	@Produces({ "image/png" , "image/jpg"})
@@ -142,7 +138,6 @@ public class ImageResource {
 	@DELETE
 	@Path("/{imageName}")
 	@Produces({MediaType.APPLICATION_JSON})
-	//funktioniert
 	public void deleteImage(@PathParam("username") String username, 
 			@PathParam("imageName") String imageName) {
 		  imageService.deleteImage(username, imageName);
@@ -161,7 +156,6 @@ public class ImageResource {
 	@GET
 	@Path("/{imageName}/metadata")
 	@Produces(MediaType.APPLICATION_JSON)
-	//funktioniert
 	public Metadata getMetadata(@PathParam("username") String username, 
 			@PathParam("imageName") String imageName) 
 					throws FileNotFoundException, ClassNotFoundException, IOException {
@@ -182,7 +176,6 @@ public class ImageResource {
 	@Path("/{imagename}/metadata")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_JSON })
-	//funktioniert
 	public Metadata updateMetadata(@PathParam("username") String username, 
 			@PathParam("imagename") String imageName, Metadata metadata ) 
 					throws FileNotFoundException, ClassNotFoundException, IOException {
