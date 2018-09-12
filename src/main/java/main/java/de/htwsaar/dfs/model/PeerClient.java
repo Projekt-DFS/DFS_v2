@@ -284,7 +284,7 @@ public class PeerClient {
 		   
 		   response = client.target( URL ).
 		     request(MediaType.APPLICATION_JSON).
-		     post(Entity.entity(metadata, MediaType.APPLICATION_JSON));
+		     put(Entity.entity(metadata, MediaType.APPLICATION_JSON));
 		   System.out.println("Response Code : " + response.getStatus());
 		   
 		   if(response.getStatus()==200 || response.getStatus()==201) {
