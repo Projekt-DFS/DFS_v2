@@ -289,6 +289,7 @@ public class Dialogue {
             case LEAVE_CAN_AS_PEER:
             	if (peerExists) {
             		System.out.print("Stopped peer and dialogue.");
+            		StartPeer.peer.leaveNetwork();
             		System.exit(0);
             	} else {
             		printServiceNotStarted("peer");
@@ -349,4 +350,5 @@ class PeerThread extends Thread {
 			e.printStackTrace();
 		}
 	}
+	
 } 
