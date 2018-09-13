@@ -408,7 +408,7 @@ public class PeerClient {
 
 	public CopyOnWriteArrayList<Peer> getNeigbours(Peer mergeNeighbour) {
 
-		ArrayList<Peer> results = new ArrayList<>();
+		List<Peer> results = new ArrayList<>();
 		
 		System.out.println("---------------Start getNeighbors---------------- " );	
 		
@@ -419,7 +419,7 @@ public class PeerClient {
 		System.out.println("Response Code : " + response.getStatus());
 		
 		if(response.getStatus()==200) {
-			results = (ArrayList<Peer>) response.readEntity(new GenericType<List<Peer>>() {
+			results = (List<Peer>) response.readEntity(new GenericType<List<Peer>>() {
 	        });
 			
 		}
