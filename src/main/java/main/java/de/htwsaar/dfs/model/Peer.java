@@ -863,8 +863,7 @@ public class Peer {
 	public void mergeZones(Peer mergeNeighbour) {
 		// sets valid merged Zone
 		if(mergeNeighbour.getOwnZone().getUpperRight().getX() > ownZone.getUpperRight().getX() ||
-				mergeNeighbour.getOwnZone().getUpperRight().getY() > ownZone.getUpperRight().getY()) {
-				//TODO 
+				mergeNeighbour.getOwnZone().getUpperRight().getY() > ownZone.getUpperRight().getY()) { 
 				new PeerClient().setZone(mergeNeighbour,
 						StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()),
 						ownZone.getBottomLeft(), 

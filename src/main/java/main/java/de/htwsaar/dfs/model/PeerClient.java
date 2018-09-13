@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import org.apache.http.client.ClientProtocolException;
 
 import main.java.de.htwsaar.dfs.utils.RestUtils;
+import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
  * This Class represent a Peer as Client
@@ -363,7 +364,7 @@ public class PeerClient {
 		
 		System.out.println("---------------Start setZone---------------- " );	
 	
-		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/+"+ api +"/v1/ownzone";	
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ api +"/v1/ownzone";	
 		System.out.println("Destination: " + URL );
 		response = client.target( URL ).
 				request(MediaType.APPLICATION_JSON).
@@ -383,11 +384,11 @@ public class PeerClient {
 	}
 
 
-	public void addAllAbsent(Peer mergeNeighbour, CopyOnWriteArrayList<Peer> routingTable) {
+	public void addAllAbsent(Peer mergeNeighbour ,CopyOnWriteArrayList<Peer> routingTable) {
 		
 		System.out.println("---------------Start addAllAbsent---------------- " );	
 	
-		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/p2p/v1/addAllAbsent";	
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/addAllAbsent";	
 		System.out.println("Destination: " + URL );
 		response = client.target( URL ).
 				request(MediaType.APPLICATION_JSON).
@@ -409,7 +410,7 @@ public class PeerClient {
 		
 		System.out.println("---------------Start getNeighbors---------------- " );	
 		
-		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/p2p/v1/neighbors/";	
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse())+"/v1/neighbors/";	
 		System.out.println("Destination: " + URL );
 		response = client.target( URL ).
 				request(MediaType.APPLICATION_JSON).get();
