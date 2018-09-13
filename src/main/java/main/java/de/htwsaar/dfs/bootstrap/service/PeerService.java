@@ -1,6 +1,7 @@
 package main.java.de.htwsaar.dfs.bootstrap.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -86,7 +87,7 @@ public class PeerService {
 		return bootstrap.findPeerForZoneSwapping();
 	}
 	
-	public void addAllAbsent(CopyOnWriteArrayList <Peer> routingTable) {
+	public void addAllAbsent(ArrayList <Peer> routingTable) {
 		 bootstrap.getRoutingTable().addAllAbsent(routingTable);
 	}
 

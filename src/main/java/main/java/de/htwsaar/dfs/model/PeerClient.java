@@ -388,11 +388,13 @@ public class PeerClient {
 		
 		System.out.println("---------------Start addAllAbsent---------------- " );	
 	
+		ArrayList<Peer> rt = new ArrayList<>();
+		rt.addAll(routingTable);
 		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/addAllAbsent";	
 		System.out.println("Destination: " + URL );
 		response = client.target( URL ).
 				request(MediaType.APPLICATION_JSON).
-				post(Entity.entity(routingTable, MediaType.APPLICATION_JSON));
+				post(Entity.entity(rt, MediaType.APPLICATION_JSON));
 		System.out.println("Response Code : " + response.getStatus());
 		
 		if(response.getStatus()==200) {
@@ -406,7 +408,7 @@ public class PeerClient {
 
 	public CopyOnWriteArrayList<Peer> getNeigbours(Peer mergeNeighbour) {
 
-		CopyOnWriteArrayList<Peer> results = new CopyOnWriteArrayList<>();
+		ArrayList<Peer> results = new ArrayList<>();
 		
 		System.out.println("---------------Start getNeighbors---------------- " );	
 		
@@ -417,7 +419,7 @@ public class PeerClient {
 		System.out.println("Response Code : " + response.getStatus());
 		
 		if(response.getStatus()==200) {
-			results = (CopyOnWriteArrayList<Peer>) response.readEntity(new GenericType<List<Peer>>() {
+			results = (ArrayList<Peer>) response.readEntity(new GenericType<List<Peer>>() {
 	        });
 			
 		}
@@ -425,6 +427,8 @@ public class PeerClient {
 		
 		client.close();
 		
-		return results;
+		CopyOnWriteArrayList<Peer> peers = new CopyOnWriteArrayList<>();
+		peers.addAll(results);
+		return peers;
 	}
 }

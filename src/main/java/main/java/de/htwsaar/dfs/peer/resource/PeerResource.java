@@ -1,6 +1,7 @@
 package main.java.de.htwsaar.dfs.peer.resource;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -193,7 +194,7 @@ public class PeerResource {
 	@Path("/addAllAbsent")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void addAllAbsent(CopyOnWriteArrayList < Peer> routingTable) {
+	public void addAllAbsent(ArrayList < Peer> routingTable) {
 		ps.addAllAbsent(routingTable);
 	}
 	
