@@ -82,5 +82,12 @@ public class PeerService {
 		return bootstrap.routing(destinationPoint);
 	}
 	
+	public Peer findPeerForZoneSwapping() {
+		return bootstrap.findPeerForZoneSwapping();
+	}
+	
+	public void addAllAbsent(CopyOnWriteArrayList <Peer> routingTable) {
+		 bootstrap.getRoutingTable().addAllAbsent(routingTable);
+	}
 
 }

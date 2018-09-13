@@ -3,6 +3,7 @@ package main.java.de.htwsaar.dfs.model;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -326,4 +327,104 @@ public class PeerClient {
 		   
 		   return metadata;
 		  }
+
+
+	public Peer findPeerForZoneSwapping(Peer peerWithSmallestZoneVolume) {
+
+		Peer result = null ;
+		
+		System.out.println("---------------Start findPeerForZoneSwapping---------------- " );	
+		
+		final String URL ="http://" + peerWithSmallestZoneVolume.getIp_adresse() + ":4434/p2p/v1/findPeerForZoneSwapping/";	
+		System.out.println("Destination: " + URL );
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).get();
+		System.out.println("Response Code : " + response.getStatus());
+		
+		if(response.getStatus()==200) {
+			result = (Peer) response.readEntity(Peer.class);
+			
+		}
+		
+		System.out.println("---------------Terminate findPeerForZoneSwapping--------------- " );
+		
+		client.close();
+		
+		return result;
+		
+	}
+
+
+	public Zone setZone(Peer mergeNeighbour, Point bottomLeft, Point upperRight) {
+
+		Zone result = null ;
+		Zone newZone = new Zone();
+		newZone.setZone(bottomLeft, upperRight);
+		
+		System.out.println("---------------Start setZone---------------- " );	
+	
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/p2p/v1/ownzone";	
+		System.out.println("Destination: " + URL );
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).
+				post(Entity.entity(newZone, MediaType.APPLICATION_JSON));
+		System.out.println("Response Code : " + response.getStatus());
+		
+		if(response.getStatus()==200) {
+			result = (Zone) response.readEntity(Zone.class);
+			
+		}
+		
+		System.out.println("---------------Terminate setZone--------------- " );
+		
+		client.close();
+		
+		return result;
+	}
+
+
+	public void addAllAbsent(Peer mergeNeighbour, CopyOnWriteArrayList<Peer> routingTable) {
+		
+		System.out.println("---------------Start addAllAbsent---------------- " );	
+	
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/p2p/v1/addAllAbsent";	
+		System.out.println("Destination: " + URL );
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).
+				post(Entity.entity(routingTable, MediaType.APPLICATION_JSON));
+		System.out.println("Response Code : " + response.getStatus());
+		
+		if(response.getStatus()==200) {
+			System.out.println("---------------Terminate addAllAbsent--------------- " );
+			
+		}
+		
+		client.close();
+	}
+
+
+	public CopyOnWriteArrayList<Peer> getNeigbours(Peer mergeNeighbour) {
+
+		CopyOnWriteArrayList<Peer> results = new CopyOnWriteArrayList<>();
+		
+		System.out.println("---------------Start getNeighbors---------------- " );	
+		
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/p2p/v1/neighbors/";	
+		System.out.println("Destination: " + URL );
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).get();
+		System.out.println("Response Code : " + response.getStatus());
+		
+		if(response.getStatus()==200) {
+			results = (CopyOnWriteArrayList<Peer>) response.readEntity(new GenericType<List<Peer>>() {
+	        });
+			
+		}
+		
+		System.out.println("---------------Terminate getNeighbors--------------- " );
+		
+		client.close();
+		
+		return results;
+	}
 }

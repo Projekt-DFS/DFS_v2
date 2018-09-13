@@ -227,12 +227,7 @@ public class Peer {
 	
 	public void checkNeighboursOldPeer() {
 		for(Peer neighbour : routingTable) {
-			String api;
-			if(neighbour.getIp_adresse().equals(StaticFunctions.loadBootstrapIp())) {
-				api = "bootstrap";
-			} else {
-				api = "p2p";
-			}
+			String api =  StaticFunctions.chekApi(neighbour.getIp_adresse());
 			Peer tmpPeer = new Peer(this);
 			tmpPeer.dumpRoutingTable();
 			if(!isNeighbour(neighbour)) {
@@ -870,9 +865,10 @@ public class Peer {
 		// sets valid merged Zone
 		if(mergeNeighbour.getOwnZone().getUpperRight().getX() > ownZone.getUpperRight().getX() ||
 				mergeNeighbour.getOwnZone().getUpperRight().getY() > ownZone.getUpperRight().getY()) {
-			mergeNeighbour.getOwnZone().setZone(ownZone.getBottomLeft(), mergeNeighbour.getOwnZone().getUpperRight());
+				//TODO 
+				new PeerClient().setZone(mergeNeighbour, ownZone.getBottomLeft(), mergeNeighbour.getOwnZone().getUpperRight());//mergeNeighbour.getOwnZone().setZone(ownZone.getBottomLeft(), mergeNeighbour.getOwnZone().getUpperRight());
 			} else {
-				mergeNeighbour.getOwnZone().setZone(mergeNeighbour.getOwnZone().getBottomLeft(), ownZone.getUpperRight());
+				new PeerClient().setZone(mergeNeighbour,mergeNeighbour.getOwnZone().getBottomLeft(), ownZone.getUpperRight());
 			}
 		
 		// This Peer transfers its Pairs to its mergeNeighbour
@@ -882,21 +878,27 @@ public class Peer {
 				
 		
 		//Adds leaving Peer's neighbours to routingTable if absent
-		mergeNeighbour.getRoutingTable().addAllAbsent(this.routingTable);
+		//TODO REST-Kommunikation
+		//mergeNeighbour.getRoutingTable().addAllAbsent(this.routingTable);
+		new PeerClient().addAllAbsent(mergeNeighbour, this.routingTable);
 		
 		//Leaving Peer gets removed from routingTables and mergeNeighbour's newly set zone is conveyed to its neighbours
 		for(Peer p : mergeNeighbour.getRoutingTable()) {
 			
 			
 			if(p.getRoutingTable().equals(mergeNeighbour)) {
-				//TODO Kommunikation über REST
-				int index = p.getRoutingTable().indexOf(mergeNeighbour);
-				p.getRoutingTable().get(index).setOwnZone(mergeNeighbour.getOwnZone());
+				new PeerClient().deleteNeighbor(p.getIp_adresse(), 
+						StaticFunctions.chekApi(p.getIp_adresse()), p);
+				new PeerClient().addNeighbor(p.getIp_adresse(), 
+						StaticFunctions.chekApi(p.getIp_adresse()), p);
+//				int index = p.getRoutingTable().indexOf(mergeNeighbour);
+//				p.getRoutingTable().get(index).setOwnZone(mergeNeighbour.getOwnZone());
 			}
 			
 			//TODO Kommunikation über REST
 			if(p.getRoutingTable().contains(this)) {
-				p.getRoutingTable().remove(this);
+				new PeerClient().deleteNeighbor(p.getIp_adresse(), 
+						StaticFunctions.chekApi(p.getIp_adresse()), this);
 			}
 				
 		}
@@ -917,7 +919,8 @@ public class Peer {
 					peerWithSmallestZoneVolume = routingTable.get(i);
 				}
 			}
-		return peerWithSmallestZoneVolume.findPeerForZoneSwapping();
+		return //peerWithSmallestZoneVolume.findPeerForZoneSwapping(); 
+				new PeerClient().findPeerForZoneSwapping(peerWithSmallestZoneVolume);
 		}
 	}
 	
@@ -931,14 +934,16 @@ public class Peer {
 		
 		// Removes this leaving Peer from its neighbour's routingTables
 		for(Peer p : routingTable) {
-			//TODO Kommunikation über REST
-			p.getRoutingTable().remove(this);
+			//Kommunikation über REST
+			new PeerClient().deleteNeighbor(p.getIp_adresse(),
+					StaticFunctions.chekApi(p.getIp_adresse()), this);
 		}
 		
 		// Removes peerToSwapWith from its neighbour's routingTables
 		for(Peer p : peerToSwapWith.getRoutingTable()) {
-			//TODO Kommunikation über REST
-			p.getRoutingTable().remove(peerToSwapWith);
+			// Kommunikation über REST
+			new PeerClient().deleteNeighbor(p.getIp_adresse(),
+					StaticFunctions.chekApi(p.getIp_adresse()), peerToSwapWith);
 		}
 		
 		// dumps this leaving Peer's routingTable and replaces it with peerToSwapWith's routingTable
@@ -957,14 +962,17 @@ public class Peer {
 		
 		//This leaving Peer is added to its new neighbours' routingTables
 		for(Peer p : routingTable) {
-			//TODO Kommunikation über REST
-			p.getRoutingTable().add(this);
+			// Kommunikation über REST
+			new PeerClient().addNeighbor(p.getIp_adresse(), 
+					StaticFunctions.chekApi(p.getIp_adresse()), this);
 		}
 		
 		//peerToSwapWith is added to its new neighbours' routingTables
 		for(Peer p : peerToSwapWith.getRoutingTable()) {
-			//TODO Kommunikation über REST
-			p.getRoutingTable().add(peerToSwapWith);
+			// Kommunikation über REST
+			new PeerClient().addNeighbor(p.getIp_adresse(), 
+					StaticFunctions.chekApi(p.getIp_adresse())
+					, peerToSwapWith);
 		}
 		
 		//This leaving Peer and peerToSwapWith swap their (k,v) pairs
@@ -987,6 +995,7 @@ public class Peer {
 	}
 	
 		
+	
 	
 }
 	

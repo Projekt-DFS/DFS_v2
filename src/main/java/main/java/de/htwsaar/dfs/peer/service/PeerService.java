@@ -1,8 +1,9 @@
 package main.java.de.htwsaar.dfs.peer.service;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
-
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -76,6 +77,14 @@ public class PeerService {
 	
 	public Peer routing(Point destinationPoint) {
 		return peer.routing(destinationPoint);
+	}
+
+	public Peer findPeerForZoneSwapping() {
+		return peer.findPeerForZoneSwapping();
+	}
+
+	public void addAllAbsent(CopyOnWriteArrayList <Peer> routingTable) {
+		 peer.getRoutingTable().addAllAbsent(routingTable);
 	}
 
 }

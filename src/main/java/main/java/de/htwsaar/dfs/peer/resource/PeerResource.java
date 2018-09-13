@@ -1,7 +1,9 @@
 package main.java.de.htwsaar.dfs.peer.resource;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -178,6 +180,22 @@ public class PeerResource {
 		return ps.routing(destinationPoint);
 	}
 	
+	
+	@POST
+	@Path("/findPeerForZoneSwapping")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Peer findPeerForZoneSwapping() {
+		return ps.findPeerForZoneSwapping();
+	}
+	
+	@POST
+	@Path("/addAllAbsent")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void addAllAbsent(CopyOnWriteArrayList < Peer> routingTable) {
+		ps.addAllAbsent(routingTable);
+	}
 	
 }
 
