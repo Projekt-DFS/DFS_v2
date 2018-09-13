@@ -388,7 +388,7 @@ public class PeerClient {
 		
 		System.out.println("---------------Start addAllAbsent---------------- " );	
 	
-		ArrayList<Peer> rt = new ArrayList<>();
+		List<Peer> rt = new ArrayList<>();
 		rt.addAll(routingTable);
 		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/addAllAbsent";	
 		System.out.println("Destination: " + URL );

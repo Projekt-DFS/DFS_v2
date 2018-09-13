@@ -195,7 +195,7 @@ public class PeerResource {
 	@Path("/addAllAbsent")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void addAllAbsent(ArrayList < Peer> routingTable) {
+	public void addAllAbsent(List < Peer> routingTable) {
 		ps.addAllAbsent(routingTable);
 	}
 }

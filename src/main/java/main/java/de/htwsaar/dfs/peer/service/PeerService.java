@@ -84,7 +84,7 @@ public class PeerService {
 		return peer.findPeerForZoneSwapping();
 	}
 
-	public void addAllAbsent(ArrayList <Peer> routingTable) {
+	public void addAllAbsent(List <Peer> routingTable) {
 		 peer.getRoutingTable().addAllAbsent(routingTable);
 	}
 
