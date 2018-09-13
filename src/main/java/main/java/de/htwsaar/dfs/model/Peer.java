@@ -775,7 +775,6 @@ public class Peer {
 			swapPeers(peerToSwap);
 			mergeZones(findNeighbourToMergeWith());
 		}
-		
 	}
 	
 	/**
@@ -866,9 +865,14 @@ public class Peer {
 		if(mergeNeighbour.getOwnZone().getUpperRight().getX() > ownZone.getUpperRight().getX() ||
 				mergeNeighbour.getOwnZone().getUpperRight().getY() > ownZone.getUpperRight().getY()) {
 				//TODO 
-				new PeerClient().setZone(mergeNeighbour, ownZone.getBottomLeft(), mergeNeighbour.getOwnZone().getUpperRight());//mergeNeighbour.getOwnZone().setZone(ownZone.getBottomLeft(), mergeNeighbour.getOwnZone().getUpperRight());
+				new PeerClient().setZone(mergeNeighbour,
+						StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()),
+						ownZone.getBottomLeft(), 
+						mergeNeighbour.getOwnZone().getUpperRight());
 			} else {
-				new PeerClient().setZone(mergeNeighbour,mergeNeighbour.getOwnZone().getBottomLeft(), ownZone.getUpperRight());
+				new PeerClient().setZone(mergeNeighbour,
+						StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()),
+						mergeNeighbour.getOwnZone().getBottomLeft(), ownZone.getUpperRight());
 			}
 		
 		// This Peer transfers its Pairs to its mergeNeighbour

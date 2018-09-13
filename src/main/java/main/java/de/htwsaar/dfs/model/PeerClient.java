@@ -355,7 +355,7 @@ public class PeerClient {
 	}
 
 
-	public Zone setZone(Peer mergeNeighbour, Point bottomLeft, Point upperRight) {
+	public Zone setZone(Peer mergeNeighbour, String api, Point bottomLeft, Point upperRight) {
 
 		Zone result = null ;
 		Zone newZone = new Zone();
@@ -363,11 +363,11 @@ public class PeerClient {
 		
 		System.out.println("---------------Start setZone---------------- " );	
 	
-		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/p2p/v1/ownzone";	
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/+"+ api +"/v1/ownzone";	
 		System.out.println("Destination: " + URL );
 		response = client.target( URL ).
 				request(MediaType.APPLICATION_JSON).
-				post(Entity.entity(newZone, MediaType.APPLICATION_JSON));
+				put(Entity.entity(newZone, MediaType.APPLICATION_JSON));
 		System.out.println("Response Code : " + response.getStatus());
 		
 		if(response.getStatus()==200) {
@@ -420,7 +420,6 @@ public class PeerClient {
 	        });
 			
 		}
-		
 		System.out.println("---------------Terminate getNeighbors--------------- " );
 		
 		client.close();
