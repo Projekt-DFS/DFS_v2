@@ -267,19 +267,48 @@ public class Dialogue {
          switch (func) {            
             
             case JOIN_CAN_AS_PEER:
- 					System.out.print("Enter the bootstrap's IP -> ");
-					String ip = input.next();
+ 								
 					
-					if (ip.length() < 10) {
-						System.out.println("The entered IP is too short.\n");
+					System.out.print("Select IP manually? (y/n) -> ");
+		            String selectIP = input.next();
+		            
+		            // manual selection of IP
+		            if (selectIP.equals("y")) {
+		            	ArrayList<String> ips = StaticFunctions.getAllIPs();
+		            	for (int i = 0; i < ips.size(); i++) {
+		            		System.out.println(i + ":\t" + ips.get(i));
+		            	}
+		            	System.out.print("Select IP by index -> ");
+		            	int index = input.nextInt();
+		            	if (index >= ips.size() || index < 0) {
+		            		System.out.println("Invalid index.\n");
+		            		break;
+		            	}
+		            	ip = ips.get(index);
+		            	
+		            }
+		            
+		            // automatic selection of IP
+		            else {
+		            	ip = StaticFunctions.getRightIP();
+		            }
+					
+		            String[] tmpArray;
+		            System.out.print("Enter the bootstrap's IP -> ");
+					String bootstrapIp = input.next();
+					tmpArray = bootstrapIp.split("[.]");
+					
+					if (tmpArray.length != 4) {
+						System.out.println("The  IP must contain 3 dots.\n");
 						break;
 					}
-					if (!ip.contains(".")) {
-						System.out.println("The  IP must contain dots.\n");
+					if (bootstrapIp.equals(ip)) {
+						System.out.println("The bootstrap's IP must not be the same as the peer's IP.\n");
 						break;
-					}				
+					}	
+		            
 					
-					StaticFunctions.saveIps(StaticFunctions.getRightIP(), ip);
+					StaticFunctions.saveIps(ip, bootstrapIp);
 					//StartPeer.bootstrapIP = ip;
 					Thread peerThread = new PeerThread();
 		            peerThread.start(); // <-- hier wird der Peer tatsächlich gestartet.
