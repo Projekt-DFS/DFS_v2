@@ -865,12 +865,10 @@ public class Peer {
 		if(mergeNeighbour.getOwnZone().getUpperRight().getX() > ownZone.getUpperRight().getX() ||
 				mergeNeighbour.getOwnZone().getUpperRight().getY() > ownZone.getUpperRight().getY()) { 
 				new PeerClient().setZone(mergeNeighbour,
-						StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()),
 						ownZone.getBottomLeft(), 
 						mergeNeighbour.getOwnZone().getUpperRight());
 			} else {
 				new PeerClient().setZone(mergeNeighbour,
-						StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()),
 						mergeNeighbour.getOwnZone().getBottomLeft(), ownZone.getUpperRight());
 			}
 		

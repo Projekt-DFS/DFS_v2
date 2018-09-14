@@ -356,7 +356,7 @@ public class PeerClient {
 	}
 
 
-	public Zone setZone(Peer mergeNeighbour, String api, Point bottomLeft, Point upperRight) {
+	public Zone setZone(Peer mergeNeighbour, Point bottomLeft, Point upperRight) {
 
 		Zone result = null ;
 		Zone newZone = new Zone();
@@ -364,7 +364,7 @@ public class PeerClient {
 		
 		System.out.println("---------------Start setZone---------------- " );	
 	
-		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ api +"/v1/ownzone";	
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/ownzone";	
 		System.out.println("Destination: " + URL );
 		response = client.target( URL ).
 				request(MediaType.APPLICATION_JSON).
@@ -388,8 +388,12 @@ public class PeerClient {
 		
 		System.out.println("---------------Start addAllAbsent---------------- " );	
 	
-		List<Peer> rt = new ArrayList<>();
-		rt.addAll(routingTable);
+		Peer[] rt = new Peer[routingTable.size()];
+		rt = routingTable.toArray(rt);
+		
+		for(Peer p: rt) {
+			System.out.println("peer :" + p.getIp_adresse());
+		}
 		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/addAllAbsent";	
 		System.out.println("Destination: " + URL );
 		response = client.target( URL ).
@@ -397,7 +401,7 @@ public class PeerClient {
 				post(Entity.entity(rt, MediaType.APPLICATION_JSON));
 		System.out.println("Response Code : " + response.getStatus());
 		
-		if(response.getStatus()==200) {
+		if(response.getStatus()==200 || response.getStatus()==201) {
 			System.out.println("---------------Terminate addAllAbsent--------------- " );
 			
 		}
