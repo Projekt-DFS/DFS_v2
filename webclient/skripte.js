@@ -82,6 +82,7 @@
 			}
 			else{
 				json = JSON.parse(request.responseText);
+				console.log(json);
                 loggedIn = true;
                 createNavi();
 			}
@@ -124,7 +125,7 @@
 
 		var refreshButton = document.createElement("BUTTON");
 		refreshButton.setAttribute("id", "refresh");
-		refreshButton.setAttribute("onclick", "getImageInfo()");
+		refreshButton.setAttribute("onclick", "createImages()");
 		refreshButton.innerHTML = "Refresh";
 		document.getElementById("navigator").appendChild(refreshButton);
 
@@ -148,12 +149,6 @@
 		document.getElementById("LoginButton").innerHTML="Logout";
 		document.getElementById("LoginButton").setAttribute("onClick", "logout()");
 		document.getElementById("LoginButton").setAttribute("class", "logout");
-
-		var showButton = document.createElement("BUTTON");
-		showButton.setAttribute("id", "show");
-		showButton.setAttribute("onclick", "createImages()");
-		showButton.innerHTML = "Show";
-		document.getElementById("navigator").appendChild(showButton);
 		
 	}
 
@@ -213,7 +208,7 @@
 	function showImage(i){
 		var imgTag = document.createElement("IMG");
 		imgTag.setAttribute("class", "picture");
-		imgTag.setAttribute("src", "images[i].thumbnailBlobUrl");   //blobUrl, da sonst keine Authentication mitgesendet werden kann
+		imgTag.setAttribute("src", images[i].thumbnailBlobUrl);   //blobUrl, da sonst keine Authentication mitgesendet werden kann
 		imgTag.setAttribute("onClick", "markImage(" + i + ")");
 		imgTag.setAttribute("id", "img_" + i);
 		
@@ -295,9 +290,15 @@
 			}
 		}
 
+		if(queryString == ""){
+			return;
+		}
+
+		console.log(queryString);
+
 		requestLink += queryString;
 
-		console.log(requestLink);
+		console.log("Link zum Loeschen : " + requestLink);
 
 		var request = new XMLHttpRequest();
 			
