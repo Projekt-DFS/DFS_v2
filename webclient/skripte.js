@@ -186,7 +186,7 @@
 		var dataSources = new Array();
 
 		for(var i = 0; i < elements.length; i++){
-			setDataSourcesToBlob(elements[i].getAttribute("data-source"), i);
+			setDataSourcesToBlob(elements[i].getAttribute("data-source"), i + page * 16);
 		}
 		
 	}
@@ -329,7 +329,7 @@
             return;
         }
         page--;
-        createImages();
+        getImageInfo();
     }
 
     function goRight(){
@@ -337,7 +337,7 @@
             return;
         }
         page++;
-        createImages();
+        getImageInfo();
 	}
 	
     function logout(){
