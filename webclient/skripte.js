@@ -84,7 +84,8 @@
 				json = JSON.parse(request.responseText);
 				console.log(json);
                 loggedIn = true;
-                createNavi();
+				createNavi();
+				createImages();
 			}
 		});
         request.send();
@@ -125,7 +126,7 @@
 
 		var refreshButton = document.createElement("BUTTON");
 		refreshButton.setAttribute("id", "refresh");
-		refreshButton.setAttribute("onclick", "createImages()");
+		refreshButton.setAttribute("onclick", "getImageInfo()");
 		refreshButton.innerHTML = "Refresh";
 		document.getElementById("navigator").appendChild(refreshButton);
 
@@ -169,15 +170,29 @@
 				break;
 			}
 
-			var image = new Image(json[i]);
-			images.push(image);
-			getThumbnailToUrl(json[i].imageSource, i);
+			var imgTag = document.createElement("IMG");
+			imgTag.setAttribute("class", "picture");
+			imgTag.setAttribute("onClick", "markImage(" + i + ")");
+			imgTag.setAttribute("id", "img_" + i);
+			imgTag.setAttribute("data-source", json[i].imageSource);
+			imgTag.setAttribute("data-name", json[i].imageName);
+			document.getElementById("pictureDiv").appendChild(imgTag);	
+		}
+		dataSourceToBlobUrl();		
+	}
+
+	function dataSourceToBlobUrl(){
+		var elements = document.getElementsByClassName("picture");
+		var dataSources = new Array();
+
+		for(var i = 0; i < elements.length; i++){
+			setDataSourcesToBlob(elements[i].getAttribute("data-source"), i);
 		}
 		
 	}
 
 
-	function getThumbnailToUrl(linkToImage, i){
+	function setDataSourcesToBlob(linkToImage, i){
         var request = new XMLHttpRequest();
 		
 		request.open("GET", linkToImage, true);
@@ -189,7 +204,7 @@
 		request.addEventListener('load', function(event) {
 			if (request.status != 200){
 				if(request.status == 401){
-					alert(request.status + " Wrong Login")
+					alert(request.status + " Bad URL")
 				}
 				else{
 					alert("Internal error");
@@ -198,29 +213,18 @@
 			else{
 				var blob = new Blob([request.response], {type: "image/jpeg"});
 				var url = URL.createObjectURL(blob);
-				images[i].thumbnailBlobUrl = url;
-				showImage(i);
+				console.log("Jetzt will ich img_" + i + "ansprechen");
+				document.getElementById("img_" + i).setAttribute("src", url);
 			}
 		});
 		request.send();
 	} 
 
-	function showImage(i){
-		var imgTag = document.createElement("IMG");
-		imgTag.setAttribute("class", "picture");
-		imgTag.setAttribute("src", images[i].thumbnailBlobUrl);   //blobUrl, da sonst keine Authentication mitgesendet werden kann
-		imgTag.setAttribute("onClick", "markImage(" + i + ")");
-		imgTag.setAttribute("id", "img_" + i);
-		
-		var imageContainer = document.createElement("A");
-		imageContainer.innerHTML = imgTag.outerHTML;
-		document.getElementById("pictureDiv").appendChild(imageContainer);	
-		
-	}
-
-
+	var uploads = 0;
+	var files;
 	function uploadImage() {
 		var fileArray = document.getElementById('upload-input').files;
+		files = fileArray.length;
 
 		for(var i = 0; i < fileArray.length; i++){
 			readAndUpload(fileArray[i]);
@@ -253,6 +257,11 @@
 				}
 				else{
 					console.log("Upload successful :-)");
+					uploads++;
+					if(uploads == files){
+						uploads = 0;
+						getImageInfo();
+					}
 				}
 			});
 			request.send(JSON.stringify(jsonString));
@@ -281,24 +290,22 @@
 		var queryString = "";
 
 		for(var i = 0; i < markedImages.length; i++){
-			var value = markedImages[i].getAttribute("value");
-			
-			queryString += images[value].imageName;
+			var name = markedImages[i].getAttribute("data-name");
+			console.log(name);
+			queryString += name;
 
 			if(i != markedImages.length - 1){
 				queryString += ",";
 			}
+
+
 		}
 
 		if(queryString == ""){
 			return;
 		}
 
-		console.log(queryString);
-
 		requestLink += queryString;
-
-		console.log("Link zum Loeschen : " + requestLink);
 
 		var request = new XMLHttpRequest();
 			
@@ -338,12 +345,3 @@
 		page = 0;
         window.location.href = logoutLink;
 	}
-
-	function sleep(milliseconds) {
-        var start = new Date().getTime();
-        for (var i = 0; i < 1e7; i++) {
-          if ((new Date().getTime() - start) > milliseconds){
-            break;
-          }
-        }
-      }
