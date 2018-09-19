@@ -88,9 +88,8 @@ public class PeerService {
 		return bootstrap.findPeerForZoneSwapping();
 	}
 	
-	public void addAllAbsent(Peer[] routingTable) {
-		CopyOnWriteArrayList<Peer> peers = (CopyOnWriteArrayList<Peer>) Arrays.asList(routingTable);
-		 bootstrap.getRoutingTable().addAllAbsent(peers);
+	public void addAllAbsent(Peer peer) {
+		 bootstrap.getRoutingTable().addIfAbsent(peer);
 	}
 
 }

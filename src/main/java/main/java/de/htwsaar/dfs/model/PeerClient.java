@@ -388,23 +388,16 @@ public class PeerClient {
 		
 		System.out.println("---------------Start addAllAbsent---------------- " );	
 	
-		Peer[] rt = new Peer[routingTable.size()];
-		rt = routingTable.toArray(rt);
-		
-		for(Peer p: rt) {
-			System.out.println("peer :" + p.getIp_adresse());
+		for(Peer p: routingTable) {
+			final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/addallabsent/";	
+			System.out.println("Destination: " + URL );
+			response = client.target( URL ).
+					request(MediaType.APPLICATION_JSON).
+					post(Entity.entity(p, MediaType.APPLICATION_JSON));
+			System.out.println("Response Code : " + response.getStatus());
 		}
-		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/addAllAbsent";	
-		System.out.println("Destination: " + URL );
-		response = client.target( URL ).
-				request(MediaType.APPLICATION_JSON).
-				post(Entity.entity(rt, MediaType.APPLICATION_JSON));
-		System.out.println("Response Code : " + response.getStatus());
 		
-		if(response.getStatus()==200 || response.getStatus()==201) {
-			System.out.println("---------------Terminate addAllAbsent--------------- " );
-			
-		}
+		System.out.println("---------------Terminate addAllAbsent--------------- " );
 		
 		client.close();
 	}
