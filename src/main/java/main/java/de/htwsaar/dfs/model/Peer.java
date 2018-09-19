@@ -785,7 +785,6 @@ public class Peer {
 	public Peer findNeighbourToMergeWith() {
 		for(Peer neighbour : routingTable) {
 			if(isValidZone(neighbour.getOwnZone())) {
-				System.out.println(neighbour);
 				return neighbour;
 			} 
 		}
@@ -880,48 +879,43 @@ public class Peer {
 		deletePairs(imagesToTransfer);
 				
 		
-		//Adds leaving Peer's neighbours to routingTable if absent
-		//REST-Kommunikation
+		//Adds leaving Peer's neighbors to routingTable if absent
 		new PeerClient().addAllAbsent(mergeNeighbour, this.routingTable);
 		
+		//removes leaving Peer's from the routingTable of it's mergeNeighbour
 		new PeerClient().deleteNeighbor(mergeNeighbour.getIp_adresse(), 
                 StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()), this);
+		
+		//get the mergeNeighbour with the new configuration
+		mergeNeighbour =  new PeerClient().getPeer(mergeNeighbour);
+		
 		//Checks whether mergeNeighbour's routingTable contains mergeNeighbour
-//	    if(mergeNeighbour.getRoutingTable().contains(mergeNeighbour))
-//	    	new PeerClient().deleteNeighbor(mergeNeighbour.getIp_adresse(), 
-//		            StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()), mergeNeighbour);
-//	  
+	    if(mergeNeighbour.getRoutingTable().contains(mergeNeighbour))
+	    	new PeerClient().deleteNeighbor(mergeNeighbour.getIp_adresse(), 
+		            StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()), mergeNeighbour);
+	  
 	    
 		//Leaving Peer gets removed from routingTables and mergeNeighbour's newly set zone 
 	    //is conveyed to its neighbours
 		
-	    if(new PeerClient().getNeigbours(mergeNeighbour).size() == 0) {
-	        //TODO Kommunikation über REST
-	 
-	        
+	    if(mergeNeighbour.getRoutingTable().size() == 0) {
 	        new PeerClient().deleteNeighbor(mergeNeighbour.getIp_adresse(), 
 	            StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()), this);
 	        
-	      } else {
-	    	  mergeNeighbour = new PeerClient().getPeer(mergeNeighbour);
+	    } else {
+	    	 
 	        for(Peer p : mergeNeighbour.getRoutingTable()) {
-	        
-	        System.out.println("peer" + p.getIp_adresse());
-	        //if(p.getRoutingTable().equals(mergeNeighbour)) {
-	          new PeerClient().deleteNeighbor(p.getIp_adresse(), 
+	          
+	        	new PeerClient().deleteNeighbor(p.getIp_adresse(), 
 	              StaticFunctions.chekApi(p.getIp_adresse()), mergeNeighbour);
-	          new PeerClient().addNeighbor(p.getIp_adresse(), 
+	        	new PeerClient().addNeighbor(p.getIp_adresse(), 
 	              StaticFunctions.chekApi(p.getIp_adresse()), mergeNeighbour);
-//	          int index = p.getRoutingTable().indexOf(mergeNeighbour);
-//	          p.getRoutingTable().get(index).setOwnZone(mergeNeighbour.getOwnZone());
-	        //}
-	          //TODO Kommunikation über REST 
-	        
 	        }  
 	        
 	          }
+	    
+	    //remove leaving peer from routingTable of the mergeNeighbor neighbor
 	    for(Peer p : mergeNeighbour.getRoutingTable()) {
-	    	System.out.println("peer neigbor: " + p.getIp_adresse());
 	    	new PeerClient().deleteNeighbor(p.getIp_adresse(), 
 		                StaticFunctions.chekApi(p.getIp_adresse()), this);
 		          
@@ -943,8 +937,7 @@ public class Peer {
 					peerWithSmallestZoneVolume = routingTable.get(i);
 				}
 			}
-		return //peerWithSmallestZoneVolume.findPeerForZoneSwapping(); 
-				new PeerClient().findPeerForZoneSwapping(peerWithSmallestZoneVolume);
+		return new PeerClient().findPeerForZoneSwapping(peerWithSmallestZoneVolume);
 		}
 	}
 	
@@ -958,14 +951,12 @@ public class Peer {
 		
 		// Removes this leaving Peer from its neighbour's routingTables
 		for(Peer p : routingTable) {
-			//Kommunikation über REST
 			new PeerClient().deleteNeighbor(p.getIp_adresse(),
 					StaticFunctions.chekApi(p.getIp_adresse()), this);
 		}
 		
 		// Removes peerToSwapWith from its neighbour's routingTables
 		for(Peer p : peerToSwapWith.getRoutingTable()) {
-			// Kommunikation über REST
 			new PeerClient().deleteNeighbor(p.getIp_adresse(),
 					StaticFunctions.chekApi(p.getIp_adresse()), peerToSwapWith);
 		}
