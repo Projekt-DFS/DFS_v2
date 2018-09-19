@@ -31,20 +31,17 @@ div.navi{
 	height: 90px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-bottom: 30px;
 }
 
-div.navi.sticky{
-	width: 1080px;
-	height: 90px;
-
-	margin: auto;
-
-	top: 1;
-
-	background-color: rgba(243, 239, 224, 0.5);
+div.navi.bordered{
 	border-bottom: solid black 1.5px;
+}
 
-	margin-bottom: 20px;
+#imageAndPageCounter{
+	font-weight: bold;
+	font-size: 18px;
+	margin-left: 125px;
 }
 
 #arrowDiv{
@@ -111,6 +108,14 @@ img.arrow{
 	width: 65px;
 	margin-right: 25px;
 	
+}
+
+img.arrow:hover{
+	width: 64px;
+}
+
+img.arrow:active{
+	filter: blur(1px);
 }
 
 img.picture{

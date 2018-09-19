@@ -32,20 +32,19 @@
 		this.imageSourceBlobUrl = ""
 	} 
 
-	//Links
+
+//---------------Funktionen---------------//	
 	function updateLinks(){
-        ip = window.location.hostname;
+		ip = window.location.hostname;
 		getImageInfoLink = "http://" + ip + ":4434/bootstrap/v1/images/" + userName;
 		uploadLink       = "http://" + ip + ":4434/bootstrap/v1/images/" + userName;
 		deletionLink     = "http://" + ip + ":4434/bootstrap/v1/images/" + userName + "?imageName="; // + "?imageName=";   // + Name=bild1, bild2,...
 		setMetaDataLink  = "http://" + ip + ":4434/bootstrap/v1/images/" + userName; // + "?imageName=";   // + $imageName/metadata"
-        graphicsLink     = "http://" + ip + ":4434/bootstrap/v1/webclient/graphics/";
-        logoutLink       = "http://" + ip + ":4434/bootstrap/v1/webclient/";
+		graphicsLink     = "http://" + ip + ":4434/bootstrap/v1/webclient/graphics/";
+		logoutLink       = "http://" + ip + ":4434/bootstrap/v1/webclient/";
 	}
 
 
-
-//---------------Funktionen---------------//	
 	function updateAuthentication(){
 		var userNameAndPwBase64 = userName + ":" + password;
 		userNameAndPwBase64 = btoa(userNameAndPwBase64);
@@ -58,10 +57,6 @@
 			userName = document.getElementById("userName").value;
 			password = document.getElementById("password").value;
 		}
-
-		userName = "user2";
-		password = "password";
-		
 
 		updateLinks();
 		updateAuthentication();
@@ -130,6 +125,10 @@
 		refreshButton.innerHTML = "Refresh";
 		document.getElementById("navigator").appendChild(refreshButton);
 
+		var imageAndPageCounter = document.createElement("LABEL");
+		imageAndPageCounter.setAttribute("id", "imageAndPageCounter");
+		document.getElementById("navigator").appendChild(imageAndPageCounter);
+
 		var arrowLeft = document.createElement("IMG");
 		var arrowRight = document.createElement("IMG");
 		arrowLeft.setAttribute("class", "arrow");
@@ -145,7 +144,7 @@
 		arrowDiv.appendChild(arrowRight);
 		document.getElementById("navigator").appendChild(arrowDiv);
 
-		document.getElementById("navigator").setAttribute("class", "navi sticky");
+		document.getElementById("navigator").setAttribute("class", "navi bordered");
 
 		document.getElementById("LoginButton").innerHTML="Logout";
 		document.getElementById("LoginButton").setAttribute("onClick", "logout()");
@@ -169,7 +168,6 @@
 			if(json[i] == null){
 				break;
 			}
-
 			var imgTag = document.createElement("IMG");
 			imgTag.setAttribute("class", "picture");
 			imgTag.setAttribute("onClick", "markImage(" + i + ")");
@@ -188,7 +186,13 @@
 		for(var i = 0; i < elements.length; i++){
 			setDataSourcesToBlob(elements[i].getAttribute("data-source"), i + page * 16);
 		}
-		
+
+		if(json.length >= 1){
+			document.getElementById("imageAndPageCounter").innerHTML = (page + 1) + " / " 
+			+ (Math.floor((json.length - 1) / 16) + 1);
+		}else{
+			document.getElementById("imageAndPageCounter").innerHTML = "";
+		}
 	}
 
 
@@ -198,8 +202,6 @@
 		request.open("GET", linkToImage, true);
 		request.setRequestHeader("Authorization", auth);
 		request.responseType = "arraybuffer";
-
-		thumbnailUrl = null;
 
 		request.addEventListener('load', function(event) {
 			if (request.status != 200){
@@ -213,7 +215,6 @@
 			else{
 				var blob = new Blob([request.response], {type: "image/jpeg"});
 				var url = URL.createObjectURL(blob);
-				console.log("Jetzt will ich img_" + i + "ansprechen");
 				document.getElementById("img_" + i).setAttribute("src", url);
 			}
 		});
@@ -285,39 +286,36 @@
 
 	function deleteMarkedImages(){
 		var markedImages = document.getElementsByClassName("picture marked");
-		
+		if(markedImages.length == 0) return;
+
 		var requestLink = deletionLink;
 		var queryString = "";
 
 		for(var i = 0; i < markedImages.length; i++){
 			var name = markedImages[i].getAttribute("data-name");
-			console.log(name);
 			queryString += name;
 
 			if(i != markedImages.length - 1){
 				queryString += ",";
 			}
-
-
-		}
-
-		if(queryString == ""){
-			return;
 		}
 
 		requestLink += queryString;
 
+		var currentImageCount = document.getElementsByClassName("picture").length;
 		var request = new XMLHttpRequest();
-			
 		request.open("DELETE", requestLink);
 		request.setRequestHeader("Authorization", auth);
 
 		request.addEventListener('load', function(event) {
 			if (request.status != 204){
-				console.log("Deletion failed\nStatus Code: "+ request.status);
+				alert("Deletion failed\nStatus Code: "+ request.status);
 			}
 			else{
 				console.log("Deletion successful");
+				if(currentImageCount == markedImages.length && page > 0){
+					page--;
+				}
 				getImageInfo();
 			}
 		});
