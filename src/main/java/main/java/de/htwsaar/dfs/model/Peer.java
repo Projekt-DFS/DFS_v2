@@ -884,7 +884,9 @@ public class Peer {
 		
 		//Checks whether mergeNeighbour's routingTable contains mergeNeighbour
 	    if(mergeNeighbour.getRoutingTable().contains(mergeNeighbour))
-	      mergeNeighbour.getRoutingTable().remove(mergeNeighbour);
+	    	new PeerClient().deleteNeighbor(mergeNeighbour.getIp_adresse(), 
+		            StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()), mergeNeighbour);
+	  
 	    
 		//Leaving Peer gets removed from routingTables and mergeNeighbour's newly set zone 
 	    //is conveyed to its neighbours
