@@ -32,20 +32,19 @@
 		this.imageSourceBlobUrl = ""
 	} 
 
-	//Links
+
+//---------------Funktionen---------------//	
 	function updateLinks(){
-        ip = window.location.hostname;
+		ip = window.location.hostname;
 		getImageInfoLink = "http://" + ip + ":4434/bootstrap/v1/images/" + userName;
 		uploadLink       = "http://" + ip + ":4434/bootstrap/v1/images/" + userName;
 		deletionLink     = "http://" + ip + ":4434/bootstrap/v1/images/" + userName + "?imageName="; // + "?imageName=";   // + Name=bild1, bild2,...
 		setMetaDataLink  = "http://" + ip + ":4434/bootstrap/v1/images/" + userName; // + "?imageName=";   // + $imageName/metadata"
-        graphicsLink     = "http://" + ip + ":4434/bootstrap/v1/webclient/graphics/";
-        logoutLink       = "http://" + ip + ":4434/bootstrap/v1/webclient/";
+		graphicsLink     = "http://" + ip + ":4434/bootstrap/v1/webclient/graphics/";
+		logoutLink       = "http://" + ip + ":4434/bootstrap/v1/webclient/";
 	}
 
 
-
-//---------------Funktionen---------------//	
 	function updateAuthentication(){
 		var userNameAndPwBase64 = userName + ":" + password;
 		userNameAndPwBase64 = btoa(userNameAndPwBase64);
@@ -58,10 +57,6 @@
 			userName = document.getElementById("userName").value;
 			password = document.getElementById("password").value;
 		}
-
-		userName = "user2";
-		password = "password";
-		
 
 		updateLinks();
 		updateAuthentication();
@@ -82,9 +77,10 @@
 			}
 			else{
 				json = JSON.parse(request.responseText);
+				console.log(json);
                 loggedIn = true;
-                createNavi();
-                createImages();
+				createNavi();
+				createImages();
 			}
 		});
         request.send();
@@ -129,6 +125,10 @@
 		refreshButton.innerHTML = "Refresh";
 		document.getElementById("navigator").appendChild(refreshButton);
 
+		var imageAndPageCounter = document.createElement("LABEL");
+		imageAndPageCounter.setAttribute("id", "imageAndPageCounter");
+		document.getElementById("navigator").appendChild(imageAndPageCounter);
+
 		var arrowLeft = document.createElement("IMG");
 		var arrowRight = document.createElement("IMG");
 		arrowLeft.setAttribute("class", "arrow");
@@ -144,7 +144,7 @@
 		arrowDiv.appendChild(arrowRight);
 		document.getElementById("navigator").appendChild(arrowDiv);
 
-		document.getElementById("navigator").setAttribute("class", "navi sticky");
+		document.getElementById("navigator").setAttribute("class", "navi bordered");
 
 		document.getElementById("LoginButton").innerHTML="Logout";
 		document.getElementById("LoginButton").setAttribute("onClick", "logout()");
@@ -168,28 +168,45 @@
 			if(json[i] == null){
 				break;
 			}
-
-			var image = new Image(json[i]);
-			images.push(image);
-			getThumbnailToUrl(json[i].imageSource, i);
+			var imgTag = document.createElement("IMG");
+			imgTag.setAttribute("class", "picture");
+			imgTag.setAttribute("onClick", "markImage(" + i + ")");
+			imgTag.setAttribute("id", "img_" + i);
+			imgTag.setAttribute("data-source", json[i].imageSource);
+			imgTag.setAttribute("data-name", json[i].imageName);
+			document.getElementById("pictureDiv").appendChild(imgTag);	
 		}
-		
+		dataSourceToBlobUrl();		
+	}
+
+	function dataSourceToBlobUrl(){
+		var elements = document.getElementsByClassName("picture");
+		var dataSources = new Array();
+
+		for(var i = 0; i < elements.length; i++){
+			setDataSourcesToBlob(elements[i].getAttribute("data-source"), i + page * 16);
+		}
+
+		if(json.length >= 1){
+			document.getElementById("imageAndPageCounter").innerHTML = (page + 1) + " / " 
+			+ (Math.floor((json.length - 1) / 16) + 1);
+		}else{
+			document.getElementById("imageAndPageCounter").innerHTML = "";
+		}
 	}
 
 
-	function getThumbnailToUrl(linkToImage, i){
+	function setDataSourcesToBlob(linkToImage, i){
         var request = new XMLHttpRequest();
 		
 		request.open("GET", linkToImage, true);
 		request.setRequestHeader("Authorization", auth);
 		request.responseType = "arraybuffer";
 
-		thumbnailUrl = null;
-
 		request.addEventListener('load', function(event) {
 			if (request.status != 200){
 				if(request.status == 401){
-					alert(request.status + " Wrong Login")
+					alert(request.status + " Bad URL")
 				}
 				else{
 					alert("Internal error");
@@ -198,29 +215,17 @@
 			else{
 				var blob = new Blob([request.response], {type: "image/jpeg"});
 				var url = URL.createObjectURL(blob);
-				images[i].thumbnailBlobUrl = url;
-				showImage(i);
+				document.getElementById("img_" + i).setAttribute("src", url);
 			}
 		});
 		request.send();
 	} 
 
-	function showImage(i){
-		var imgTag = document.createElement("IMG");
-		imgTag.setAttribute("class", "picture");
-		imgTag.setAttribute("src", images[i].thumbnailBlobUrl);
-		imgTag.setAttribute("onClick", "markImage(" + i + ")");
-		imgTag.setAttribute("id", "img_" + i);
-		
-		var imageContainer = document.createElement("A");
-		imageContainer.innerHTML = imgTag.outerHTML;
-		document.getElementById("pictureDiv").appendChild(imageContainer);	
-		
-	}
-
-
+	var uploads = 0;
+	var files;
 	function uploadImage() {
 		var fileArray = document.getElementById('upload-input').files;
+		files = fileArray.length;
 
 		for(var i = 0; i < fileArray.length; i++){
 			readAndUpload(fileArray[i]);
@@ -253,6 +258,11 @@
 				}
 				else{
 					console.log("Upload successful :-)");
+					uploads++;
+					if(uploads == files){
+						uploads = 0;
+						getImageInfo();
+					}
 				}
 			});
 			request.send(JSON.stringify(jsonString));
@@ -276,14 +286,14 @@
 
 	function deleteMarkedImages(){
 		var markedImages = document.getElementsByClassName("picture marked");
-		
+		if(markedImages.length == 0) return;
+
 		var requestLink = deletionLink;
 		var queryString = "";
 
 		for(var i = 0; i < markedImages.length; i++){
-			var value = markedImages[i].getAttribute("value");
-			
-			queryString += images[value].imageName;
+			var name = markedImages[i].getAttribute("data-name");
+			queryString += name;
 
 			if(i != markedImages.length - 1){
 				queryString += ",";
@@ -292,19 +302,20 @@
 
 		requestLink += queryString;
 
-		console.log(requestLink);
-
+		var currentImageCount = document.getElementsByClassName("picture").length;
 		var request = new XMLHttpRequest();
-			
 		request.open("DELETE", requestLink);
 		request.setRequestHeader("Authorization", auth);
 
 		request.addEventListener('load', function(event) {
 			if (request.status != 204){
-				console.log("Deletion failed\nStatus Code: "+ request.status);
+				alert("Deletion failed\nStatus Code: "+ request.status);
 			}
 			else{
 				console.log("Deletion successful");
+				if(currentImageCount == markedImages.length && page > 0){
+					page--;
+				}
 				getImageInfo();
 			}
 		});
@@ -316,7 +327,7 @@
             return;
         }
         page--;
-        createImages();
+        getImageInfo();
     }
 
     function goRight(){
@@ -324,7 +335,7 @@
             return;
         }
         page++;
-        createImages();
+        getImageInfo();
 	}
 	
     function logout(){
@@ -332,12 +343,3 @@
 		page = 0;
         window.location.href = logoutLink;
 	}
-
-	function sleep(milliseconds) {
-        var start = new Date().getTime();
-        for (var i = 0; i < 1e7; i++) {
-          if ((new Date().getTime() - start) > milliseconds){
-            break;
-          }
-        }
-      }
