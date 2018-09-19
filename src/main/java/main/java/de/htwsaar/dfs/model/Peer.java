@@ -879,30 +879,44 @@ public class Peer {
 				
 		
 		//Adds leaving Peer's neighbours to routingTable if absent
-		//TODO REST-Kommunikation
-		//mergeNeighbour.getRoutingTable().addAllAbsent(this.routingTable);
+		//REST-Kommunikation
 		new PeerClient().addAllAbsent(mergeNeighbour, this.routingTable);
 		
-		//Leaving Peer gets removed from routingTables and mergeNeighbour's newly set zone is conveyed to its neighbours
-		for(Peer p : mergeNeighbour.getRoutingTable()) {
-			
-			
-			if(p.getRoutingTable().equals(mergeNeighbour)) {
-				new PeerClient().deleteNeighbor(p.getIp_adresse(), 
-						StaticFunctions.chekApi(p.getIp_adresse()), p);
-				new PeerClient().addNeighbor(p.getIp_adresse(), 
-						StaticFunctions.chekApi(p.getIp_adresse()), p);
-//				int index = p.getRoutingTable().indexOf(mergeNeighbour);
-//				p.getRoutingTable().get(index).setOwnZone(mergeNeighbour.getOwnZone());
-			}
-			
-			//TODO Kommunikation über REST
-			if(p.getRoutingTable().contains(this)) {
-				new PeerClient().deleteNeighbor(p.getIp_adresse(), 
-						StaticFunctions.chekApi(p.getIp_adresse()), this);
-			}
-				
-		}
+		//Checks whether mergeNeighbour's routingTable contains mergeNeighbour
+	    if(mergeNeighbour.getRoutingTable().contains(mergeNeighbour))
+	      mergeNeighbour.getRoutingTable().remove(mergeNeighbour);
+	    
+		//Leaving Peer gets removed from routingTables and mergeNeighbour's newly set zone 
+	    //is conveyed to its neighbours
+		
+	    if(mergeNeighbour.getRoutingTable().size() == 0) {
+	        //TODO Kommunikation über REST
+	        
+	        new PeerClient().deleteNeighbor(mergeNeighbour.getIp_adresse(), 
+	            StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()), this);
+	        
+	      } else {
+	        for(Peer p : mergeNeighbour.getRoutingTable()) {
+	        
+	        
+	        //if(p.getRoutingTable().equals(mergeNeighbour)) {
+	          new PeerClient().deleteNeighbor(p.getIp_adresse(), 
+	              StaticFunctions.chekApi(p.getIp_adresse()), p);
+	          new PeerClient().addNeighbor(p.getIp_adresse(), 
+	              StaticFunctions.chekApi(p.getIp_adresse()), p);
+//	          int index = p.getRoutingTable().indexOf(mergeNeighbour);
+//	          p.getRoutingTable().get(index).setOwnZone(mergeNeighbour.getOwnZone());
+	        //}
+	          //TODO Kommunikation über REST
+	          if(p.getRoutingTable().contains(this)) {
+	            new PeerClient().deleteNeighbor(p.getIp_adresse(), 
+	                StaticFunctions.chekApi(p.getIp_adresse()), this);
+	          }
+	        
+	        }  
+	        
+	          
+	      }
 		
 	}
 	

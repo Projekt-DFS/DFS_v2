@@ -85,7 +85,8 @@ public class PeerService {
 	}
 
 	public void addAllAbsent(Peer peer) {
-		 peer.getRoutingTable().addIfAbsent(peer);
+		CopyOnWriteArrayList< Peer> neighbors = peer.getRoutingTable();
+		neighbors.addIfAbsent(peer);
+		peer.setRoutingTable(neighbors);
 	}
-
 }
