@@ -785,9 +785,11 @@ public class Peer {
 	public Peer findNeighbourToMergeWith() {
 		for(Peer neighbour : routingTable) {
 			if(isValidZone(neighbour.getOwnZone())) {
+				System.out.println(neighbour);
 				return neighbour;
 			} 
 		}
+		
 		return null;
 	}
 	
@@ -882,11 +884,13 @@ public class Peer {
 		//REST-Kommunikation
 		new PeerClient().addAllAbsent(mergeNeighbour, this.routingTable);
 		
+		new PeerClient().deleteNeighbor(mergeNeighbour.getIp_adresse(), 
+                StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()), this);
 		//Checks whether mergeNeighbour's routingTable contains mergeNeighbour
-	    if(mergeNeighbour.getRoutingTable().contains(mergeNeighbour))
-	    	new PeerClient().deleteNeighbor(mergeNeighbour.getIp_adresse(), 
-		            StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()), mergeNeighbour);
-	  
+//	    if(mergeNeighbour.getRoutingTable().contains(mergeNeighbour))
+//	    	new PeerClient().deleteNeighbor(mergeNeighbour.getIp_adresse(), 
+//		            StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()), mergeNeighbour);
+//	  
 	    
 		//Leaving Peer gets removed from routingTables and mergeNeighbour's newly set zone 
 	    //is conveyed to its neighbours
@@ -900,25 +904,26 @@ public class Peer {
 	      } else {
 	        for(Peer p : mergeNeighbour.getRoutingTable()) {
 	        
-	        
+	        System.out.println("peer" + p.getIp_adresse());
 	        //if(p.getRoutingTable().equals(mergeNeighbour)) {
 	          new PeerClient().deleteNeighbor(p.getIp_adresse(), 
-	              StaticFunctions.chekApi(p.getIp_adresse()), p);
+	              StaticFunctions.chekApi(p.getIp_adresse()), mergeNeighbour);
 	          new PeerClient().addNeighbor(p.getIp_adresse(), 
-	              StaticFunctions.chekApi(p.getIp_adresse()), p);
+	              StaticFunctions.chekApi(p.getIp_adresse()), mergeNeighbour);
 //	          int index = p.getRoutingTable().indexOf(mergeNeighbour);
 //	          p.getRoutingTable().get(index).setOwnZone(mergeNeighbour.getOwnZone());
 	        //}
-	          //TODO Kommunikation über REST
-	          if(p.getRoutingTable().contains(this)) {
-	            new PeerClient().deleteNeighbor(p.getIp_adresse(), 
-	                StaticFunctions.chekApi(p.getIp_adresse()), this);
-	          }
+	          //TODO Kommunikation über REST 
 	        
 	        }  
 	        
 	          
 	      }
+	    for(Peer p : this.getRoutingTable()) {
+	    	new PeerClient().deleteNeighbor(p.getIp_adresse(), 
+		                StaticFunctions.chekApi(p.getIp_adresse()), this);
+		          
+	    }
 		
 	}
 	

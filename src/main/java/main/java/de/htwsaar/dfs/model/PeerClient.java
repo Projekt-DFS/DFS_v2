@@ -390,6 +390,7 @@ public class PeerClient {
 	
 		for(Peer p: routingTable) {
 			final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/addallabsent/";	
+			System.out.println("Add "+ p.getIp_adresse() +" in " + mergeNeighbour.getIp_adresse());
 			System.out.println("Destination: " + URL );
 			response = client.target( URL ).
 					request(MediaType.APPLICATION_JSON).
