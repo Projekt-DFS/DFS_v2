@@ -895,13 +895,15 @@ public class Peer {
 		//Leaving Peer gets removed from routingTables and mergeNeighbour's newly set zone 
 	    //is conveyed to its neighbours
 		
-	    if(mergeNeighbour.getRoutingTable().size() == 0) {
+	    if(new PeerClient().getNeigbours(mergeNeighbour).size() == 0) {
 	        //TODO Kommunikation über REST
+	 
 	        
 	        new PeerClient().deleteNeighbor(mergeNeighbour.getIp_adresse(), 
 	            StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()), this);
 	        
 	      } else {
+	    	  mergeNeighbour = new PeerClient().getPeer(mergeNeighbour);
 	        for(Peer p : mergeNeighbour.getRoutingTable()) {
 	        
 	        System.out.println("peer" + p.getIp_adresse());
@@ -917,9 +919,9 @@ public class Peer {
 	        
 	        }  
 	        
-	          
-	      }
-	    for(Peer p : this.getRoutingTable()) {
+	          }
+	    for(Peer p : mergeNeighbour.getRoutingTable()) {
+	    	System.out.println("peer neigbor: " + p.getIp_adresse());
 	    	new PeerClient().deleteNeighbor(p.getIp_adresse(), 
 		                StaticFunctions.chekApi(p.getIp_adresse()), this);
 		          

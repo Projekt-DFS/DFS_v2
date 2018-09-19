@@ -429,4 +429,27 @@ public class PeerClient {
 		peers.addAll(results);
 		return peers;
 	}
+	
+	public Peer getPeer(Peer mergeNeighbour) {
+
+		Peer result = null;
+		System.out.println("---------------Star getPeer---------------- " );	
+		
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse())+"/v1/";	
+		System.out.println("Destination: " + URL );
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).get();
+		System.out.println("Response Code : " + response.getStatus());
+		
+		if(response.getStatus()==200) {
+			result= (Peer) response.readEntity(Peer.class) ;
+			
+		}
+		System.out.println("---------------Terminate getPeer--------------- " );
+		
+		client.close();
+		
+		return result;
+	}
+	
 }
