@@ -929,7 +929,8 @@ public class Peer {
 	 */
 	public Peer findPeerForZoneSwapping() {
 		if(findNeighbourToMergeWith() != null) {
-			return findNeighbourToMergeWith();
+			Peer result = new Peer(findNeighbourToMergeWith());
+			return result;
 		} else {
 			Peer peerWithSmallestZoneVolume = routingTable.get(0);
 			for(int i = 1; i < routingTable.size(); i++) {
@@ -946,34 +947,38 @@ public class Peer {
 	 * @param peerToSwapWith
 	 */
 	public void swapPeers(Peer peerToSwapWith) {
-		Zone tempZone = this.ownZone;
+		Zone tempZone = new Zone();
+		tempZone.setZone(this.getOwnZone().getBottomLeft(), this.getOwnZone().getUpperRight());
+	
 		CopyOnWriteArrayList<Peer> tempRoutingTable = this.routingTable;
+		
+		System.out.println("==>>> " + this.getIp_adresse() +"  swap with: " + peerToSwapWith.getIp_adresse());
 		
 		// Removes this leaving Peer from its neighbour's routingTables
 		for(Peer p : routingTable) {
 			new PeerClient().deleteNeighbor(p.getIp_adresse(),
 					StaticFunctions.chekApi(p.getIp_adresse()), this);
 		}
-		
+		CopyOnWriteArrayList<Peer> routingTablePTSW = new PeerClient().getNeigbours(peerToSwapWith);
 		// Removes peerToSwapWith from its neighbour's routingTables
-		for(Peer p : peerToSwapWith.getRoutingTable()) {
+		for(Peer p : routingTablePTSW) {
 			new PeerClient().deleteNeighbor(p.getIp_adresse(),
 					StaticFunctions.chekApi(p.getIp_adresse()), peerToSwapWith);
 		}
-		
 		// dumps this leaving Peer's routingTable and replaces it with peerToSwapWith's routingTable
 		this.dumpRoutingTable();
-		this.mergeRoutingTableWithList(peerToSwapWith.getRoutingTable());
+		this.mergeRoutingTableWithList(new PeerClient().getNeigbours(peerToSwapWith));
 		
 		//dumps peerToSwapWith's routingTable and replaces it with this leaving Peer's routingTable
 		peerToSwapWith.dumpRoutingTable();
 		peerToSwapWith.mergeRoutingTableWithList(tempRoutingTable);
 		
 		//Replaces this leaving Peer's Zone with peerToSwapWith's Zone
-		this.setOwnZone(peerToSwapWith.getOwnZone());
+		this.getOwnZone().setZone(peerToSwapWith.getOwnZone().getBottomLeft(), peerToSwapWith.getOwnZone().getUpperRight());
 		
 		//Replaces peerToSwapWith's Zone with this leaving Peer's Zone
-		peerToSwapWith.setOwnZone(tempZone);
+		peerToSwapWith.getOwnZone().setZone(tempZone.getBottomLeft(), tempZone.getUpperRight());
+		
 		
 		//This leaving Peer is added to its new neighbours' routingTables
 		for(Peer p : routingTable) {
@@ -989,6 +994,9 @@ public class Peer {
 					StaticFunctions.chekApi(p.getIp_adresse())
 					, peerToSwapWith);
 		}
+		System.out.println("new Zone PeerTSW: " + peerToSwapWith.getOwnZone());
+		System.out.println("new Zone this peer: " + this.getOwnZone());
+		new PeerClient().updatePeer(peerToSwapWith);
 		
 		//This leaving Peer and peerToSwapWith swap their (k,v) pairs
 		swapPairs(peerToSwapWith);

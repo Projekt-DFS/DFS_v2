@@ -336,10 +336,12 @@ public class PeerClient {
 		
 		System.out.println("---------------Start findPeerForZoneSwapping---------------- " );	
 		
-		final String URL ="http://" + peerWithSmallestZoneVolume.getIp_adresse() + ":4434/p2p/v1/findPeerForZoneSwapping/";	
+		final String URL ="http://" + peerWithSmallestZoneVolume.getIp_adresse() + ":4434/"+ 
+				StaticFunctions.chekApi(peerWithSmallestZoneVolume.getIp_adresse()) +"/v1/findPeerForZoneSwapping/";	
 		System.out.println("Destination: " + URL );
 		response = client.target( URL ).
-				request(MediaType.APPLICATION_JSON).get();
+				request(MediaType.APPLICATION_JSON).//post(Entity.text(null));
+				post(Entity.entity(null, MediaType.APPLICATION_JSON));
 		System.out.println("Response Code : " + response.getStatus());
 		
 		if(response.getStatus()==200) {
@@ -364,7 +366,8 @@ public class PeerClient {
 		
 		System.out.println("---------------Start setZone---------------- " );	
 	
-		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/ownzone";	
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ 
+				StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/ownzone";	
 		System.out.println("Destination: " + URL );
 		response = client.target( URL ).
 				request(MediaType.APPLICATION_JSON).
@@ -389,7 +392,8 @@ public class PeerClient {
 		System.out.println("---------------Start addAllAbsent---------------- " );	
 	
 		for(Peer p: routingTable) {
-			final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/addallabsent/";	
+			final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ 
+					StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/addallabsent/";	
 			System.out.println("Add "+ p.getIp_adresse() +" in " + mergeNeighbour.getIp_adresse());
 			System.out.println("Destination: " + URL );
 			response = client.target( URL ).
@@ -450,6 +454,32 @@ public class PeerClient {
 		client.close();
 		
 		return result;
+	}
+
+
+	public Peer updatePeer(Peer peerToSwapWith) {
+		
+		Peer result = null;
+		
+		final String URL ="http://" + peerToSwapWith.getIp_adresse() + ":4434/"+ 
+		 StaticFunctions.chekApi(peerToSwapWith.getIp_adresse())+"/v1/update";
+		System.out.println("-->> Update " + peerToSwapWith.getIp_adresse() + " with new Zone and new neighbors" );
+		System.out.println("Destination: " + URL );
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).
+				put(Entity.entity(peerToSwapWith, MediaType.APPLICATION_JSON));
+		System.out.println("Response Code : " + response.getStatus());
+		
+		if(response.getStatus()==200) {
+			result= (Peer) response.readEntity(Peer.class) ;
+			
+		}
+
+		
+		client.close();
+		
+		return result;
+		
 	}
 	
 }
