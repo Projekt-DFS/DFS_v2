@@ -1,9 +1,7 @@
 package main.java.de.htwsaar.dfs.bootstrap.resource;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -192,7 +190,7 @@ public class PeerResource {
 	}
 	
 	@POST
-	@Path("/addAllAbsent")
+	@Path("/addallabsent")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes( MediaType.APPLICATION_JSON)
 	public void addAllAbsent(Peer peer) {

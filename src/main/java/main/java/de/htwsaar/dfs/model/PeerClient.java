@@ -142,6 +142,175 @@ public class PeerClient {
 	}
 	
 
+	/**
+	 * This method returns the peer with then the the leaving's peer
+	 * should swap his zone
+	 * @param peerWithSmallestZoneVolume
+	 * @return
+	 */
+	public Peer findPeerForZoneSwapping(Peer peerWithSmallestZoneVolume) {
+
+		Peer result = null ;
+		
+		final String URL ="http://" + peerWithSmallestZoneVolume.getIp_adresse() + ":4434/"+ 
+				StaticFunctions.chekApi(peerWithSmallestZoneVolume.getIp_adresse()) +"/v1/findPeerForZoneSwapping/";	
+		System.out.println("===>> Search peer to swap with : Destination: " + URL );
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).
+				post(Entity.entity(null, MediaType.APPLICATION_JSON));
+		System.out.println("Response Code : " + response.getStatus());
+		
+		if(response.getStatus()==200) {
+			result = (Peer) response.readEntity(Peer.class);
+			
+		}
+		
+		client.close();
+		
+		return result;
+		
+	}
+
+
+	/**
+	 * This method updates the zone a peer
+	 * @param mergeNeighbour
+	 * @param bottomLeft
+	 * @param upperRight
+	 * @return
+	 */
+	public Zone setZone(Peer mergeNeighbour, Point bottomLeft, Point upperRight) {
+
+		Zone result = null ;
+		Zone newZone = new Zone();
+		newZone.setZone(bottomLeft, upperRight);
+	
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ 
+				StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/ownzone";	
+		System.out.println("==>> Update the zone of peer " + mergeNeighbour.getIp_adresse() );	
+		System.out.println("Destination: " + URL );
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).
+				put(Entity.entity(newZone, MediaType.APPLICATION_JSON));
+		System.out.println("Response Code : " + response.getStatus());
+		
+		if(response.getStatus()==200) {
+			result = (Zone) response.readEntity(Zone.class);
+			
+		}
+		
+		client.close();
+		
+		return result;
+	}
+
+
+	/**
+	 * This method copy the neighbors of a peer to the neigbor's list of another peer
+	 * @param mergeNeighbour
+	 * @param routingTable
+	 */
+	public void addAllAbsent(Peer mergeNeighbour ,CopyOnWriteArrayList<Peer> routingTable) {
+	
+		for(Peer p: routingTable) {
+			final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ 
+					StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/addallabsent/";	
+			System.out.println("==>> Add peer "+ p.getIp_adresse() +" as neighnor of peer" + mergeNeighbour.getIp_adresse());
+			System.out.println("Destination: " + URL );
+			response = client.target( URL ).
+					request(MediaType.APPLICATION_JSON).
+					post(Entity.entity(p, MediaType.APPLICATION_JSON));
+			System.out.println("Response Code : " + response.getStatus());
+		}
+		
+		client.close();
+	}
+
+
+	/**
+	 * this method returns the neighbor's list of a peer
+	 * @param mergeNeighbour
+	 * @return
+	 */
+	public CopyOnWriteArrayList<Peer> getNeigbours(Peer mergeNeighbour) {
+
+		List<Peer> results = new ArrayList<>();
+		
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse())+"/v1/neighbors/";	
+		System.out.println("==>> Get neighbors of peer : " + mergeNeighbour.getIp_adresse() );	
+		System.out.println("Destination: " + URL );
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).get();
+		System.out.println("Response Code : " + response.getStatus());
+		
+		if(response.getStatus()==200) {
+			results = (List<Peer>) response.readEntity(new GenericType<List<Peer>>() {
+	        });
+			
+		}
+		client.close();
+		
+		CopyOnWriteArrayList<Peer> peers = new CopyOnWriteArrayList<>();
+		peers.addAll(results);
+		return peers;
+	}
+	
+	/**
+	 * This method returns a peer with his locals informations
+	 * @param mergeNeighbour
+	 * @return
+	 */
+	public Peer getPeer(Peer mergeNeighbour) {
+
+		Peer result = null;	
+		
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ 
+				StaticFunctions.chekApi(mergeNeighbour.getIp_adresse())+"/v1/";	
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).get();
+		
+		if(response.getStatus()==200) {
+			result= (Peer) response.readEntity(Peer.class) ;
+			
+		}
+		
+		client.close();
+		
+		return result;
+	}
+
+
+	/**
+	 * This method updates a peer 
+	 * @param peerToSwapWith
+	 * @return
+	 */
+	public Peer updatePeer(Peer peerToSwapWith) {
+		
+		Peer result = null;
+		
+		final String URL ="http://" + peerToSwapWith.getIp_adresse() + ":4434/"+ 
+		 StaticFunctions.chekApi(peerToSwapWith.getIp_adresse())+"/v1/update";
+		System.out.println("-->> Update peer " + peerToSwapWith.getIp_adresse() + " with new Zone and new neighbors" );
+		System.out.println("Destination: " + URL );
+		response = client.target( URL ).
+				request(MediaType.APPLICATION_JSON).
+				put(Entity.entity(peerToSwapWith, MediaType.APPLICATION_JSON));
+		System.out.println("Response Code : " + response.getStatus());
+		
+		if(response.getStatus()==200) {
+			result= (Peer) response.readEntity(Peer.class) ;
+			
+		}
+
+		
+		client.close();
+		
+		return result;
+		
+	}
+	
+
 	
 	/*------------------------------Images's administration ----------------------------   */
 	
@@ -328,158 +497,5 @@ public class PeerClient {
 		   
 		   return metadata;
 		  }
-
-
-	public Peer findPeerForZoneSwapping(Peer peerWithSmallestZoneVolume) {
-
-		Peer result = null ;
-		
-		System.out.println("---------------Start findPeerForZoneSwapping---------------- " );	
-		
-		final String URL ="http://" + peerWithSmallestZoneVolume.getIp_adresse() + ":4434/"+ 
-				StaticFunctions.chekApi(peerWithSmallestZoneVolume.getIp_adresse()) +"/v1/findPeerForZoneSwapping/";	
-		System.out.println("Destination: " + URL );
-		response = client.target( URL ).
-				request(MediaType.APPLICATION_JSON).//post(Entity.text(null));
-				post(Entity.entity(null, MediaType.APPLICATION_JSON));
-		System.out.println("Response Code : " + response.getStatus());
-		
-		if(response.getStatus()==200) {
-			result = (Peer) response.readEntity(Peer.class);
-			
-		}
-		
-		System.out.println("---------------Terminate findPeerForZoneSwapping--------------- " );
-		
-		client.close();
-		
-		return result;
-		
-	}
-
-
-	public Zone setZone(Peer mergeNeighbour, Point bottomLeft, Point upperRight) {
-
-		Zone result = null ;
-		Zone newZone = new Zone();
-		newZone.setZone(bottomLeft, upperRight);
-		
-		System.out.println("---------------Start setZone---------------- " );	
-	
-		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ 
-				StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/ownzone";	
-		System.out.println("Destination: " + URL );
-		response = client.target( URL ).
-				request(MediaType.APPLICATION_JSON).
-				put(Entity.entity(newZone, MediaType.APPLICATION_JSON));
-		System.out.println("Response Code : " + response.getStatus());
-		
-		if(response.getStatus()==200) {
-			result = (Zone) response.readEntity(Zone.class);
-			
-		}
-		
-		System.out.println("---------------Terminate setZone--------------- " );
-		
-		client.close();
-		
-		return result;
-	}
-
-
-	public void addAllAbsent(Peer mergeNeighbour ,CopyOnWriteArrayList<Peer> routingTable) {
-		
-		System.out.println("---------------Start addAllAbsent---------------- " );	
-	
-		for(Peer p: routingTable) {
-			final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ 
-					StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/addallabsent/";	
-			System.out.println("Add "+ p.getIp_adresse() +" in " + mergeNeighbour.getIp_adresse());
-			System.out.println("Destination: " + URL );
-			response = client.target( URL ).
-					request(MediaType.APPLICATION_JSON).
-					post(Entity.entity(p, MediaType.APPLICATION_JSON));
-			System.out.println("Response Code : " + response.getStatus());
-		}
-		
-		System.out.println("---------------Terminate addAllAbsent--------------- " );
-		
-		client.close();
-	}
-
-
-	public CopyOnWriteArrayList<Peer> getNeigbours(Peer mergeNeighbour) {
-
-		List<Peer> results = new ArrayList<>();
-		
-		System.out.println("---------------Start getNeighbors---------------- " );	
-		
-		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse())+"/v1/neighbors/";	
-		System.out.println("Destination: " + URL );
-		response = client.target( URL ).
-				request(MediaType.APPLICATION_JSON).get();
-		System.out.println("Response Code : " + response.getStatus());
-		
-		if(response.getStatus()==200) {
-			results = (List<Peer>) response.readEntity(new GenericType<List<Peer>>() {
-	        });
-			
-		}
-		System.out.println("---------------Terminate getNeighbors--------------- " );
-		
-		client.close();
-		
-		CopyOnWriteArrayList<Peer> peers = new CopyOnWriteArrayList<>();
-		peers.addAll(results);
-		return peers;
-	}
-	
-	public Peer getPeer(Peer mergeNeighbour) {
-
-		Peer result = null;
-		System.out.println("---------------Star getPeer---------------- " );	
-		
-		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse())+"/v1/";	
-		System.out.println("Destination: " + URL );
-		response = client.target( URL ).
-				request(MediaType.APPLICATION_JSON).get();
-		System.out.println("Response Code : " + response.getStatus());
-		
-		if(response.getStatus()==200) {
-			result= (Peer) response.readEntity(Peer.class) ;
-			
-		}
-		System.out.println("---------------Terminate getPeer--------------- " );
-		
-		client.close();
-		
-		return result;
-	}
-
-
-	public Peer updatePeer(Peer peerToSwapWith) {
-		
-		Peer result = null;
-		
-		final String URL ="http://" + peerToSwapWith.getIp_adresse() + ":4434/"+ 
-		 StaticFunctions.chekApi(peerToSwapWith.getIp_adresse())+"/v1/update";
-		System.out.println("-->> Update " + peerToSwapWith.getIp_adresse() + " with new Zone and new neighbors" );
-		System.out.println("Destination: " + URL );
-		response = client.target( URL ).
-				request(MediaType.APPLICATION_JSON).
-				put(Entity.entity(peerToSwapWith, MediaType.APPLICATION_JSON));
-		System.out.println("Response Code : " + response.getStatus());
-		
-		if(response.getStatus()==200) {
-			result= (Peer) response.readEntity(Peer.class) ;
-			
-		}
-
-		
-		client.close();
-		
-		return result;
-		
-	}
 	
 }

@@ -1,8 +1,6 @@
 package main.java.de.htwsaar.dfs.peer.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -86,7 +84,10 @@ public class PeerService {
 
 	public void addAllAbsent(Peer peer) {
 		CopyOnWriteArrayList< Peer> neighbors = peer.getRoutingTable();
-		neighbors.addIfAbsent(peer);
+		if(neighbors.addIfAbsent(peer))
+			System.out.println("new neighbor :" + peer.getIp_adresse());
+		else
+			System.out.println("Neighbor allready exist !");
 		peer.setRoutingTable(neighbors);
 	}
 }

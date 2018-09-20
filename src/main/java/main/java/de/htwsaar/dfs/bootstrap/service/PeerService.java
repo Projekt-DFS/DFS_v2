@@ -88,7 +88,10 @@ public class PeerService {
 	
 	public void addAllAbsent(Peer peer) {
 		CopyOnWriteArrayList< Peer> neighbors = bootstrap.getRoutingTable();
-		neighbors.addIfAbsent(peer);
+		if(neighbors.addIfAbsent(peer))
+			System.out.println("new neighbor :" + peer.getIp_adresse());
+		else
+			System.out.println("Neighbor allready exist !");
 		bootstrap.setRoutingTable(neighbors);
 	}
 
