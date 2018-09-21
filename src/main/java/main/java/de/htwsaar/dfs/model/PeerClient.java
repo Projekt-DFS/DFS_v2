@@ -432,13 +432,20 @@ public class PeerClient {
 	     RestUtils.encodeToString(ic.getImage(), "jpg"),
 	     null);
 	   
-	    final String usernameAndPassword = ic.getUser().getName() + ":" + ic.getUser().getPassword();
-	    final String authorizationHeaderValue = "Basic " + java.util.Base64.getEncoder().encodeToString( usernameAndPassword.getBytes() );
-	    
-	   response = client.target( URL ).
-	     request(MediaType.APPLICATION_JSON).
-	     header("Authorization", authorizationHeaderValue).
-	     post(Entity.entity(image, MediaType.APPLICATION_JSON));     
+	   //Authentication is needed when image resource of bootstrap 
+	   if(StaticFunctions.chekApi(destinationIp).equals("bootstrap")) {
+		    final String usernameAndPassword = ic.getUser().getName() + ":" + ic.getUser().getPassword();
+		    final String authorizationHeaderValue = "Basic " + java.util.Base64.getEncoder().encodeToString( usernameAndPassword.getBytes() );
+		    
+		    response = client.target( URL ).
+		    request(MediaType.APPLICATION_JSON).
+		    header("Authorization", authorizationHeaderValue).
+		    post(Entity.entity(image, MediaType.APPLICATION_JSON));  
+	   } else {
+		   response = client.target( URL ).
+				    request(MediaType.APPLICATION_JSON).
+				    post(Entity.entity(image, MediaType.APPLICATION_JSON));  
+	   }
 	   
 	   System.out.println("Tranfering "+ ic.getImageName() +" Response Code : " + response.getStatus());
 	   
