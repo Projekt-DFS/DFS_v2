@@ -457,8 +457,7 @@ public class PeerClient {
 		 
 		 System.out.println("---------------------Start deleteImage------------------- ");
 		 
-		 final String URL ="http://" + destinationIP + ":4434/" + 
-				   StaticFunctions.checkApi(destinationIP) +"/images/"+username+ "/"+imageName;
+		 final String URL ="http://" + destinationIP + ":4434/p2p/images/"+username+ "/"+imageName;
 		 System.out.println("URL: " + URL);
 			
 		 response = client.target( URL ).request(MediaType.APPLICATION_JSON).delete();
