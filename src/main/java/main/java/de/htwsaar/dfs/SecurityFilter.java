@@ -16,7 +16,7 @@ import main.java.de.htwsaar.dfs.model.*;
 
 /**
  * SecurityFilter class.
- * this class filters all access to Images resources. 
+ * this class filters all access to Images resources from a client. 
  * @author Aude Nana
  *
  */
@@ -33,21 +33,20 @@ public class SecurityFilter implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		
-		//specify that the URI path musts contain "images" before process to secure
 		if(requestContext.getUriInfo().getPath().contains(SECURED_URL_PREFIX)) {
 			//get authentication header of the request
 			List<String> authHeader = requestContext.getHeaders().get(AUTHENTICATION_HEADER_KEY);
 			
 			//authenticate the user only when the authentication header has informations 
 			if(authHeader != null && authHeader.size() > 0) {
-				//get the header
+				//header
 				String authToken = authHeader.get(0);
 				authToken = authToken.replaceFirst(AUTHENTICATION_HEADER_PREFIX, "");
 				authToken = authToken.trim();
 				//decode the header
 				String decodedString = Base64.decodeAsString(authToken);
 				StringTokenizer tokenizer = new StringTokenizer(decodedString, ":");
-				//read the header
+				
 				String username = tokenizer.nextToken();
 				String password = tokenizer.nextToken();
 				

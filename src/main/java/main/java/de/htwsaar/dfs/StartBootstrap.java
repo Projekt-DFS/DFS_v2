@@ -9,16 +9,9 @@ import org.glassfish.jersey.server.ResourceConfig;
 import main.java.de.htwsaar.dfs.model.*;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.UnknownHostException;
-import java.util.Date;
-import java.util.LinkedList;
-
-import javax.imageio.ImageIO;
-
 
 /**
  * Main Class
@@ -32,6 +25,7 @@ public class StartBootstrap {
 		
 	}
 	
+	//main object 
 	public static Bootstrap bootstrap = new Bootstrap();
 	
 	/**
@@ -71,8 +65,8 @@ public class StartBootstrap {
     public static void start() throws IOException {
         startServer();
         System.in.read();
-       
-      
+        System.out.println("New network is started");
+  
     }
 }
 

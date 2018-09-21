@@ -33,7 +33,7 @@ public class ImageResource {
 	 * this method returns all images of the current user
 	 * that are actually in the database as objects
 	 * @param username
-	 * @return
+	 * @return Images as list
 	 * @throws IOException 
 	 * @throws ClassNotFoundException 
 	 * */
@@ -46,9 +46,9 @@ public class ImageResource {
 	
 	/**
 	 * this method allows to add a picture in the database 
-	 * @param username
-	 * @param image
-	 * @return
+	 * @param username as String
+	 * @param image as String
+	 * @return image that has been added
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -62,13 +62,14 @@ public class ImageResource {
 	
 	/**
 	 * This method allows the user to delete many pictures at the same time
-	 * @param username
-	 * @param imageName
+	 * @param username as String
+	 * @param imageName as String 
 	 */
 	@DELETE
 	@Produces({MediaType.APPLICATION_JSON})
 	public void deleteImages(@PathParam("username") String username, 
 			@QueryParam("imageName") String imageName) {
+		
 		if( !imageName.equals(null)) {
 			String[] list = imageName.split(",");
 			for ( String str : list)
@@ -78,9 +79,9 @@ public class ImageResource {
 
 	/**
 	 * this method returns a special image object 
-	 * @param username
-	 * @param imageName
-	 * @return
+	 * @param username as String
+	 * @param imageName as String
+	 * @return Image 
 	 * @throws FileNotFoundException
 	 * @throws ClassNotFoundException
 	 * @throws IOException
@@ -96,9 +97,9 @@ public class ImageResource {
 	
 	/**
 	 * this method returns a picture as BufferedImage
-	 * @param username
-	 * @param imageName
-	 * @return
+	 * @param username as String
+	 * @param imageName as String
+	 * @return BufferedImage 
 	 * @throws FileNotFoundException
 	 * @throws ClassNotFoundException
 	 * @throws IOException
@@ -114,16 +115,15 @@ public class ImageResource {
 	
 	/**
 	 * this method allows to update a image object in the database
-	 * @param username
-	 * @param imageName
-	 * @param image
-	 * @return
+	 * @param username as String 
+	 * @param imageName as String 
+	 * @param image to be updated as Image
+	 * @return image that has been updated
 	 */
 	@PUT
 	@Path("/{imagename}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON )
-	//funktioniert zum teil es fehlt noch zu prufen ob das Bild schon existiert
 	public Image updateImage(@PathParam("username") String username, 
 			@PathParam("imageName") String imageName, Image image) {
 		return imageService.updateImage(username,imageName, image);
@@ -131,9 +131,8 @@ public class ImageResource {
 	
 	/**
 	 * this method deletes a picture in the database
-	 * @param username
-	 * @param imageName
-	 * @return
+	 * @param username as string
+	 * @param imageName as String
 	 */
 	@DELETE
 	@Path("/{imageName}")
@@ -146,9 +145,9 @@ public class ImageResource {
 	
 	/**
 	 * This method returns the metadata of a picture
-	 * @param username
-	 * @param imageName
-	 * @return
+	 * @param username as string
+	 * @param imageName as String 
+	 * @return all meatadata assigned to a picture
 	 * @throws FileNotFoundException
 	 * @throws ClassNotFoundException
 	 * @throws IOException
@@ -164,10 +163,10 @@ public class ImageResource {
 	
 	/**
 	 * This method allows to update the metadata of a picture
-	 * @param username
-	 * @param imageName
-	 * @param metadata
-	 * @return
+	 * @param username as string
+	 * @param imageName as String 
+	 * @param metadata : new metadata
+	 * @return new metadata
 	 * @throws FileNotFoundException
 	 * @throws ClassNotFoundException
 	 * @throws IOException

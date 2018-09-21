@@ -399,7 +399,7 @@ public class Peer {
 	 * @throws ClientProtocolException 
 	 */
 	public Peer createPeer(String newPeerAdress, Point p) throws ClientProtocolException, IOException {
-		System.out.println("This peer vor createPeer(): " + this);
+
 		Peer newPeer;
 		if(getRoutingTable().size() == 0) {
 			newPeer = new Peer(newPeerAdress);
@@ -414,7 +414,6 @@ public class Peer {
 			//newPeer becomes neighbour of oldPeer
 		    this.mergeRoutingTableSinglePeer(newPeer);
 
-		    System.out.println("This peer nach createPeer(): "+ this);
 			return newPeer;
 		    
 		    

@@ -281,6 +281,11 @@ public class StaticFunctions {
 	}
 
 
+	/**
+	 * Check which API is installed on an address
+	 * @param Ip IP-address as String
+	 * @return "bootstrap" oder "p2p"
+	 */
 	public static String checkApi(String Ip) {
 		if(Ip.equals(loadBootstrapIp())) {
 			return "bootstrap";
@@ -288,6 +293,19 @@ public class StaticFunctions {
 		return "p2p";
 	}
 	
+	/**
+	 * 
+	 * @param code is the response code of the request
+	 * @return "Succeed " if request succeeded and "failed " if not.
+	 */
+	public static String checkResponse(int code) {
+		if(code == 200 || code == 201 || code == 204 ) 
+			return "SUCCEED";
+		if (code == 401)
+			return "FAILED - unauthorized ";
+		return "FAILED";
+		
+	}
 	
 	
 	

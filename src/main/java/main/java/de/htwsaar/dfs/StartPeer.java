@@ -33,11 +33,8 @@ import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 public class StartPeer {
 	
 	public static Peer peer = new Peer();
-	//public static String bootstrapIP;// = "10.9.45.17";//"192.168.178.27";
 
-	public StartPeer(String bootstrapIP) {
-		//StartPeer.bootstrapIP = bootstrapIP;	
-	}
+	public StartPeer() {}
 
 	/**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
@@ -45,10 +42,10 @@ public class StartPeer {
      */
 	
     public static HttpServer startServer() throws UnknownHostException {
-        // create a resource config that scans for JAX-RS resources and providers
+        // create a resource configuration that scans for JAX-RS resources and providers
         final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.peer.resource");
         rc.register(MultiPartFeature.class);
-        rc.register(LoggingFilter.class);
+       // rc.register(LoggingFilter.class);
                
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
@@ -58,18 +55,19 @@ public class StartPeer {
     /**
      * This method sent a joinRequest to a peer. Once a peer is started , the request 
      * will be sent to the bootstrap first
-     * @param ip : the ip of the destination peer
-     * @param api : the api that is install on the destinationpeer
+     * @param ip : is the IP address of the destination's peer
+     * @param api : is the API that is installed on the destination's peer
      * @throws ClientProtocolException
      * @throws IOException
      */
     private static void joinPeer(String ip, String api) throws ClientProtocolException, IOException {
+    	
     	Point p = Peer.generateRandomPoint();
-    	//every join request commes to the bootstrap first
+    	//every join request comes at the bootstrap first
 		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer/" +p.getX() + "-" + p.getY();
 		
 		//Build a Peer only with IP. The Bootstrap will give him a zone.
-		peer= new Peer(StaticFunctions.loadPeerIp());
+		peer = new Peer(StaticFunctions.loadPeerIp());
 		
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target(bootstrapURL);
@@ -78,10 +76,9 @@ public class StartPeer {
 		Response response 
 		  = invocationBuilder
 		  .post(Entity.entity(peer, MediaType.APPLICATION_JSON));
-		System.out.println("Response Code : " + response.getStatus());
 		peer = response.readEntity(Peer.class);
 		
-		System.out.println("This Peer :" + peer );
+		System.out.println("Join network :" + StaticFunctions.checkResponse(response.getStatus()) );
 		
 	}
     
