@@ -420,7 +420,8 @@ public class PeerClient {
 	  System.out.println("Destination: " + destinationIp );
 	  
 	  images.forEach( ic -> {
-	   final String URL ="http://" + destinationIp + ":4434/p2p/v1/images/"+ic.getUsername();
+	   final String URL ="http://" + destinationIp + ":4434/" + 
+			   StaticFunctions.chekApi(destinationIp) +"/v1/images/"+ic.getUsername();
 	   //build an Image from imageContainer
 	   Image image =  new Image(ic.getImageName(), 
 	     new Metadata(ic.getUsername(),
@@ -452,7 +453,8 @@ public class PeerClient {
 		 
 		 System.out.println("---------------------Start deleteImage------------------- ");
 		 
-		 final String URL ="http://" + destinationIP + ":4434/p2p/v1/images/"+username+ "/"+imageName;
+		 final String URL ="http://" + destinationIP + ":4434/" + 
+				   StaticFunctions.chekApi(destinationIP) +"/images/"+username+ "/"+imageName;
 		 System.out.println("URL: " + URL);
 			
 		 response = client.target( URL ).request(MediaType.APPLICATION_JSON).delete();
