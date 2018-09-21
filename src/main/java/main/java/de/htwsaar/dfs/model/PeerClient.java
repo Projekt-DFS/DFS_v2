@@ -41,7 +41,7 @@ public class PeerClient {
 
 		System.out.println("---------------Start createPeer---------------- " );
 		
-		final String URL ="http://" + destinationIp + ":4434/"+api+"/v1/createPeer/"+p.getX() + "-"+ p.getY();
+		final String URL ="http://" + destinationIp + ":4434/"+ api + "/v1/createPeer/"+p.getX() + "-"+ p.getY();
 		System.out.println("Destination: " + URL );
 		
 		response = client.target( URL ).
@@ -422,6 +422,7 @@ public class PeerClient {
 	  images.forEach( ic -> {
 	   final String URL ="http://" + destinationIp + ":4434/" + 
 			   StaticFunctions.chekApi(destinationIp) +"/v1/images/"+ic.getUsername();
+	   
 	   //build an Image from imageContainer
 	   Image image =  new Image(ic.getImageName(), 
 	     new Metadata(ic.getUsername(),
@@ -430,9 +431,15 @@ public class PeerClient {
 	       ic.getTagList()),
 	     RestUtils.encodeToString(ic.getImage(), "jpg"),
 	     null);
+	   
+	    final String usernameAndPassword = ic.getUser().getName() + ":" + ic.getUser().getPassword();
+	    final String authorizationHeaderValue = "Basic " + java.util.Base64.getEncoder().encodeToString( usernameAndPassword.getBytes() );
+	    
 	   response = client.target( URL ).
 	     request(MediaType.APPLICATION_JSON).
-	     post(Entity.entity(image, MediaType.APPLICATION_JSON));
+	     header("Authorization", authorizationHeaderValue).
+	     post(Entity.entity(image, MediaType.APPLICATION_JSON));     
+	   
 	   System.out.println("Tranfering "+ ic.getImageName() +" Response Code : " + response.getStatus());
 	   
 	  });
