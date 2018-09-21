@@ -862,6 +862,12 @@ public class Peer {
 	 * @param mergeNeighbour
 	 */
 	public void mergeZones(Peer mergeNeighbour) {
+		
+		// This Peer transfers its Pairs to its mergeNeighbour
+				ArrayList<ImageContainer> imagesToTransfer = findImagesToTransfer();
+				transferPairs(mergeNeighbour.getIp_adresse(), imagesToTransfer);
+				deletePairs(imagesToTransfer);
+				
 		// sets valid merged Zone
 		if(mergeNeighbour.getOwnZone().getUpperRight().getX() > ownZone.getUpperRight().getX() ||
 				mergeNeighbour.getOwnZone().getUpperRight().getY() > ownZone.getUpperRight().getY()) { 
@@ -872,11 +878,6 @@ public class Peer {
 				new PeerClient().setZone(mergeNeighbour,
 						mergeNeighbour.getOwnZone().getBottomLeft(), ownZone.getUpperRight());
 			}
-		
-		// This Peer transfers its Pairs to its mergeNeighbour
-		ArrayList<ImageContainer> imagesToTransfer = findImagesToTransfer();
-		transferPairs(mergeNeighbour.getIp_adresse(), imagesToTransfer);
-		deletePairs(imagesToTransfer);
 				
 		
 		//Adds leaving Peer's neighbors to routingTable if absent
