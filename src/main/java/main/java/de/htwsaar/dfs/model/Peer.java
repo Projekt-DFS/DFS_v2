@@ -652,6 +652,49 @@ public class Peer {
 	}
 	
 	
+	
+	private ArrayList<ImageContainer> transferAllImages() {
+		File directory = new File("images/");
+		File[] userList = directory.listFiles();
+		String userName, imageName;
+		String[] tmpArray;
+		ArrayList<ImageContainer> transferList = new ArrayList<>();
+		if(!directory.exists()) {
+			return new ArrayList<ImageContainer>();
+		}
+		//for each user-folder
+		for (File userFile : userList) {
+			
+			//for each image File in user folder
+			for(File imageFile : userFile.listFiles()) {
+				//Search for Meta-Data file
+				if(imageFile.toString().endsWith(".data")) {
+					userName = userFile.getName();
+					try {
+						ObjectInputStream in= new ObjectInputStream(
+								new BufferedInputStream(
+										new FileInputStream(imageFile)));
+						ImageContainer tmpIc= (ImageContainer)in.readObject();
+						in.close();
+						tmpArray = imageFile.getName().split(".data");
+						imageName = tmpArray[0] + tmpIc.getEnding();
+						
+						ImageContainer ic = this.loadImageContainer(userName, imageName);
+						
+						transferList.add(ic);
+						
+					} catch (IOException | ClassNotFoundException e) {
+						System.out.println("File not Found");
+					}	
+				}
+			}		
+		}
+		return transferList;
+	
+			
+	}
+	
+	
 	/**
 	 * @author Raphaela Wagner
 	 * @return
@@ -856,6 +899,9 @@ public class Peer {
 			}	
 		}
 	
+	
+	
+	
 	/**
 	 * Merges two zones into one
 	 * @author Raphaela Wagner 12.08.2018
@@ -864,7 +910,7 @@ public class Peer {
 	public void mergeZones(Peer mergeNeighbour) {
 		
 		// This Peer transfers its Pairs to its mergeNeighbour
-				ArrayList<ImageContainer> imagesToTransfer = findImagesToTransfer();
+				ArrayList<ImageContainer> imagesToTransfer = transferAllImages();
 				transferPairs(mergeNeighbour.getIp_adresse(), imagesToTransfer);
 				deletePairs(imagesToTransfer);
 				
