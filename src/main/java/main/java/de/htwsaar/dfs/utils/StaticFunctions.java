@@ -281,7 +281,7 @@ public class StaticFunctions {
 	}
 
 
-	public static String chekApi(String Ip) {
+	public static String checkApi(String Ip) {
 		if(Ip.equals(loadBootstrapIp())) {
 			return "bootstrap";
 		}

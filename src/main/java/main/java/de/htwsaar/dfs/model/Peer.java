@@ -227,7 +227,7 @@ public class Peer {
 	
 	public void checkNeighboursOldPeer() {
 		for(Peer neighbour : routingTable) {
-			String api =  StaticFunctions.chekApi(neighbour.getIp_adresse());
+			String api =  StaticFunctions.checkApi(neighbour.getIp_adresse());
 			Peer tmpPeer = new Peer(this);
 			tmpPeer.dumpRoutingTable();
 			if(!isNeighbour(neighbour)) {
@@ -931,7 +931,7 @@ public class Peer {
 		
 		//removes leaving Peer's from the routingTable of it's mergeNeighbour
 		new PeerClient().deleteNeighbor(mergeNeighbour.getIp_adresse(), 
-                StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()), this);
+                StaticFunctions.checkApi(mergeNeighbour.getIp_adresse()), this);
 		
 		//get the mergeNeighbour with the new configuration
 		mergeNeighbour =  new PeerClient().getPeer(mergeNeighbour);
@@ -939,7 +939,7 @@ public class Peer {
 		//Checks whether mergeNeighbour's routingTable contains mergeNeighbour
 	    if(mergeNeighbour.getRoutingTable().contains(mergeNeighbour))
 	    	new PeerClient().deleteNeighbor(mergeNeighbour.getIp_adresse(), 
-		            StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()), mergeNeighbour);
+		            StaticFunctions.checkApi(mergeNeighbour.getIp_adresse()), mergeNeighbour);
 	  
 	    
 		//Leaving Peer gets removed from routingTables and mergeNeighbour's newly set zone 
@@ -947,16 +947,16 @@ public class Peer {
 		
 	    if(mergeNeighbour.getRoutingTable().size() == 0) {
 	        new PeerClient().deleteNeighbor(mergeNeighbour.getIp_adresse(), 
-	            StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()), this);
+	            StaticFunctions.checkApi(mergeNeighbour.getIp_adresse()), this);
 	        
 	    } else {
 	    	 
 	        for(Peer p : mergeNeighbour.getRoutingTable()) {
 	          
 	        	new PeerClient().deleteNeighbor(p.getIp_adresse(), 
-	              StaticFunctions.chekApi(p.getIp_adresse()), mergeNeighbour);
+	              StaticFunctions.checkApi(p.getIp_adresse()), mergeNeighbour);
 	        	new PeerClient().addNeighbor(p.getIp_adresse(), 
-	              StaticFunctions.chekApi(p.getIp_adresse()), mergeNeighbour);
+	              StaticFunctions.checkApi(p.getIp_adresse()), mergeNeighbour);
 	        }  
 	        
 	          }
@@ -964,7 +964,7 @@ public class Peer {
 	    //remove leaving peer from routingTable of the mergeNeighbor neighbor
 	    for(Peer p : mergeNeighbour.getRoutingTable()) {
 	    	new PeerClient().deleteNeighbor(p.getIp_adresse(), 
-		                StaticFunctions.chekApi(p.getIp_adresse()), this);
+		                StaticFunctions.checkApi(p.getIp_adresse()), this);
 		          
 	    }
 		
@@ -1004,13 +1004,13 @@ public class Peer {
 		// Removes this leaving Peer from its neighbour's routingTables
 		for(Peer p : routingTable) {
 			new PeerClient().deleteNeighbor(p.getIp_adresse(),
-					StaticFunctions.chekApi(p.getIp_adresse()), this);
+					StaticFunctions.checkApi(p.getIp_adresse()), this);
 		}
 		CopyOnWriteArrayList<Peer> routingTablePTSW = new PeerClient().getNeigbours(peerToSwapWith);
 		// Removes peerToSwapWith from its neighbour's routingTables
 		for(Peer p : routingTablePTSW) {
 			new PeerClient().deleteNeighbor(p.getIp_adresse(),
-					StaticFunctions.chekApi(p.getIp_adresse()), peerToSwapWith);
+					StaticFunctions.checkApi(p.getIp_adresse()), peerToSwapWith);
 		}
 		// dumps this leaving Peer's routingTable and replaces it with peerToSwapWith's routingTable
 		this.dumpRoutingTable();
@@ -1031,14 +1031,14 @@ public class Peer {
 		for(Peer p : routingTable) {
 			// Kommunikation über REST
 			new PeerClient().addNeighbor(p.getIp_adresse(), 
-					StaticFunctions.chekApi(p.getIp_adresse()), this);
+					StaticFunctions.checkApi(p.getIp_adresse()), this);
 		}
 		
 		//peerToSwapWith is added to its new neighbours' routingTables
 		for(Peer p : peerToSwapWith.getRoutingTable()) {
 			// Kommunikation über REST
 			new PeerClient().addNeighbor(p.getIp_adresse(), 
-					StaticFunctions.chekApi(p.getIp_adresse())
+					StaticFunctions.checkApi(p.getIp_adresse())
 					, peerToSwapWith);
 		}
 		System.out.println("new Zone PeerTSW: " + peerToSwapWith.getOwnZone());

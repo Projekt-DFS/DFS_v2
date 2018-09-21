@@ -124,7 +124,8 @@ public class PeerClient {
 		System.out.println("---------------Start routing---------------- " );
 		System.out.println(destinationCoordinate + "to "+ destinationPeer.getIp_adresse() );
 		
-		String URL ="http://"+ destinationPeer.getIp_adresse()+":4434/p2p/v1/routing";
+		String URL ="http://"+ destinationPeer.getIp_adresse()+":4434/" + 
+				StaticFunctions.checkApi(destinationPeer.getIp_adresse()) +"/v1/routing";
 		
 	    response = client.target( URL ).request(MediaType.APPLICATION_JSON).post(Entity.entity(destinationCoordinate, MediaType.APPLICATION_JSON));
 	    System.out.println("Response:" + response.getStatus());
@@ -153,7 +154,7 @@ public class PeerClient {
 		Peer result = null ;
 		
 		final String URL ="http://" + peerWithSmallestZoneVolume.getIp_adresse() + ":4434/"+ 
-				StaticFunctions.chekApi(peerWithSmallestZoneVolume.getIp_adresse()) +"/v1/findPeerForZoneSwapping/";	
+				StaticFunctions.checkApi(peerWithSmallestZoneVolume.getIp_adresse()) +"/v1/findPeerForZoneSwapping/";	
 		System.out.println("===>> Search peer to swap with : Destination: " + URL );
 		response = client.target( URL ).
 				request(MediaType.APPLICATION_JSON).
@@ -186,7 +187,7 @@ public class PeerClient {
 		newZone.setZone(bottomLeft, upperRight);
 	
 		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ 
-				StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/ownzone";	
+				StaticFunctions.checkApi(mergeNeighbour.getIp_adresse()) +"/v1/ownzone";	
 		System.out.println("==>> Update the zone of peer " + mergeNeighbour.getIp_adresse() );	
 		System.out.println("Destination: " + URL );
 		response = client.target( URL ).
@@ -214,7 +215,7 @@ public class PeerClient {
 	
 		for(Peer p: routingTable) {
 			final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ 
-					StaticFunctions.chekApi(mergeNeighbour.getIp_adresse()) +"/v1/addallabsent/";	
+					StaticFunctions.checkApi(mergeNeighbour.getIp_adresse()) +"/v1/addallabsent/";	
 			System.out.println("==>> Add peer "+ p.getIp_adresse() +" as neighnor of peer" + mergeNeighbour.getIp_adresse());
 			System.out.println("Destination: " + URL );
 			response = client.target( URL ).
@@ -236,7 +237,9 @@ public class PeerClient {
 
 		List<Peer> results = new ArrayList<>();
 		
-		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ StaticFunctions.chekApi(mergeNeighbour.getIp_adresse())+"/v1/neighbors/";	
+		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+
+				StaticFunctions.checkApi(mergeNeighbour.getIp_adresse())+"/v1/neighbors/";	
+		
 		System.out.println("==>> Get neighbors of peer : " + mergeNeighbour.getIp_adresse() );	
 		System.out.println("Destination: " + URL );
 		response = client.target( URL ).
@@ -265,7 +268,7 @@ public class PeerClient {
 		Peer result = null;	
 		
 		final String URL ="http://" + mergeNeighbour.getIp_adresse() + ":4434/"+ 
-				StaticFunctions.chekApi(mergeNeighbour.getIp_adresse())+"/v1/";	
+				StaticFunctions.checkApi(mergeNeighbour.getIp_adresse())+"/v1/";	
 		response = client.target( URL ).
 				request(MediaType.APPLICATION_JSON).get();
 		
@@ -290,7 +293,8 @@ public class PeerClient {
 		Peer result = null;
 		
 		final String URL ="http://" + peerToSwapWith.getIp_adresse() + ":4434/"+ 
-		 StaticFunctions.chekApi(peerToSwapWith.getIp_adresse())+"/v1/update";
+				StaticFunctions.checkApi(peerToSwapWith.getIp_adresse())+"/v1/update";
+		
 		System.out.println("-->> Update peer " + peerToSwapWith.getIp_adresse() + " with new Zone and new neighbors" );
 		System.out.println("Destination: " + URL );
 		response = client.target( URL ).
@@ -421,8 +425,7 @@ public class PeerClient {
 	  
 	  images.forEach( ic -> {
 	   final String URL ="http://" + destinationIp + ":4434/" + 
-			   StaticFunctions.chekApi(destinationIp) +"/v1/images/"+ic.getUsername();
-	   
+			   StaticFunctions.checkApi(destinationIp) +"/v1/images/"+ic.getUsername();
 	   //build an Image from imageContainer
 	   Image image =  new Image(ic.getImageName(), 
 	     new Metadata(ic.getUsername(),
@@ -431,22 +434,9 @@ public class PeerClient {
 	       ic.getTagList()),
 	     RestUtils.encodeToString(ic.getImage(), "jpg"),
 	     null);
-	   
-	   //Authentication is needed when image resource of bootstrap 
-	   if(StaticFunctions.chekApi(destinationIp).equals("bootstrap")) {
-		    final String usernameAndPassword = ic.getUser().getName() + ":" + ic.getUser().getPassword();
-		    final String authorizationHeaderValue = "Basic " + java.util.Base64.getEncoder().encodeToString( usernameAndPassword.getBytes() );
-		    
-		    response = client.target( URL ).
-		    request(MediaType.APPLICATION_JSON).
-		    header("Authorization", authorizationHeaderValue).
-		    post(Entity.entity(image, MediaType.APPLICATION_JSON));  
-	   } else {
-		   response = client.target( URL ).
-				    request(MediaType.APPLICATION_JSON).
-				    post(Entity.entity(image, MediaType.APPLICATION_JSON));  
-	   }
-	   
+	   response = client.target( URL ).
+	     request(MediaType.APPLICATION_JSON).
+	     post(Entity.entity(image, MediaType.APPLICATION_JSON));
 	   System.out.println("Tranfering "+ ic.getImageName() +" Response Code : " + response.getStatus());
 	   
 	  });
@@ -468,7 +458,7 @@ public class PeerClient {
 		 System.out.println("---------------------Start deleteImage------------------- ");
 		 
 		 final String URL ="http://" + destinationIP + ":4434/" + 
-				   StaticFunctions.chekApi(destinationIP) +"/images/"+username+ "/"+imageName;
+				   StaticFunctions.checkApi(destinationIP) +"/images/"+username+ "/"+imageName;
 		 System.out.println("URL: " + URL);
 			
 		 response = client.target( URL ).request(MediaType.APPLICATION_JSON).delete();
