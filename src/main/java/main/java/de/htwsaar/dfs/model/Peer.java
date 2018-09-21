@@ -800,7 +800,7 @@ public class Peer {
 	public boolean isValidZone(Zone neighboursZone) {
 		if(ownZone.getZoneVolume() == neighboursZone.getZoneVolume() && neighboursZone.isSquare() && this.ownZone.getUpperRight().getY() != neighboursZone.getUpperRight().getY() && zoneHasValidPlaceInSpace(neighboursZone)) {
 			return true;
-		} else if(ownZone.getZoneVolume() == neighboursZone.getZoneVolume() && neighboursZone.getUpperRight().getX() != ownZone.getUpperRight().getX() && zoneHasValidPlaceInSpace(neighboursZone)) {
+		} else if(ownZone.getZoneVolume() == neighboursZone.getZoneVolume() && !neighboursZone.isSquare() && neighboursZone.getUpperRight().getX() != ownZone.getUpperRight().getX() && zoneHasValidPlaceInSpace(neighboursZone)) {
 			return true;
 		} else {
 			return false;

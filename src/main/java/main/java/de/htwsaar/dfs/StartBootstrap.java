@@ -53,34 +53,6 @@ public class StartBootstrap {
         return GrizzlyHttpServerFactory.createHttpServer(URI.create("http://"+ Dialogue.ip +":" + Peer.port+ "/bootstrap/v1/"), rc);
     }
     
-    //just let full the database
-    private static void putInDb() {
-    	
-    	
-	      //users
-	      bootstrap.createUser("user", "user");
-	      bootstrap.createUser("user2", "password");
-	    
-	      //images
-	      BufferedImage img = null;
-	    
-	    for(int i = 0; i <= -1; i++) {
-	      try {
-	        img = ImageIO.read(new File("./dummyBilder/"+i+".jpg"));
-	        LinkedList<String> tagList = new LinkedList<String>();  
-	        bootstrap.createImage(img, "user2", "test"+ i + ".jpg", "Milan",new Date(), tagList);
-	        
-	        img = ImageIO.read(new File("./dummyBilder/"+i+".jpg"));
-	        bootstrap.createImage(img, "user2", "name"+ i + ".jpg", "Milan",new Date(), tagList);
-	        
-	      } catch (IOException e) {
-	        e.printStackTrace();
-	      }
-
-	    } 
-	   
-	}
-
     
     /**
      * read the IP address automatically
@@ -97,7 +69,6 @@ public class StartBootstrap {
      * @throws IOException
      */
     public static void start() throws IOException {
-    	putInDb();
         startServer();
         System.in.read();
        

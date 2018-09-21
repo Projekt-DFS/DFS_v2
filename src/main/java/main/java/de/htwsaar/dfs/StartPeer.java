@@ -64,8 +64,7 @@ public class StartPeer {
      * @throws IOException
      */
     private static void joinPeer(String ip, String api) throws ClientProtocolException, IOException {
-    	//Point p = Peer.generateRandomPoint();
-    	Point p = new Point(0.1,0.1 );
+    	Point p = Peer.generateRandomPoint();
     	//every join request commes to the bootstrap first
 		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer/" +p.getX() + "-" + p.getY();
 		
