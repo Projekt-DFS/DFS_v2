@@ -38,7 +38,6 @@ public class StartBootstrap {
         // in de.htwsaar.dfs.iosbootstrap package
         final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.bootstrap.resource");
         rc.register(MultiPartFeature.class);
-        rc.register(LoggingFilter.class);
         rc.register(SecurityFilter.class);
 
                
