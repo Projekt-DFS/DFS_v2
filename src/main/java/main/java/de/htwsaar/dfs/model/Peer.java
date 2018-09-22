@@ -302,44 +302,6 @@ public class Peer {
 	    }
 	
 	
-	 /**
-	 * updates routingTables of all Peers affected
-	 * @param newPeer
-	 * @deprecated
-	 */
-	public Peer updateRoutingTables(Peer newPeer) {
-		Peer peer2= new Peer(newPeer);
-		Peer peer3 =new Peer(this);
-		newPeer.mergeRoutingTableWithList(routingTable);
-		newPeer.mergeRoutingTableSinglePeer(peer3);
-	
-		this.mergeRoutingTableSinglePeer(peer2);
-		
-		// newPeer gets the routingTable from oldPeer
-		//			     newPeer becomes neighbour of oldPeer
-		/*
-		 * each Peer of oldPeer's routingTable gets newPeer as a temporary neighbour
-		 * Peers from oldPeer's old routingTable check if oldPeer and newPeer are neighbours	
-		 * if not, they are removed from the routingTable
-		 */
-	    for (Peer p : routingTable) {
-	    	p.mergeRoutingTableSinglePeer(newPeer);
-	    	if (p.isNeighbour(this) == false) {
-	    		p.getRoutingTable().remove(this);
-	    	}
-	    	if (p.isNeighbour(newPeer) == false) {
-	    		p.getRoutingTable().remove(newPeer);
-	    	}
-	    }
-	    eliminateNeighbours(this);
-	    eliminateNeighbours(newPeer);
-	    return newPeer;
-	}
-	
-	
-	
-	
-	
 	//Create Peer
 	/**
 	 * Splits the Peer's Zone and transfers one half to the new Peer
@@ -360,25 +322,6 @@ public class Peer {
 	    return newZone;
 	}
 	
-	
-	/**
-	 * @deprecated
-	 * Splits the Peer's Zone and transfers one half to the new Peer
-	 * @param newPeer
-	 */
-	public Peer splitZone(Peer newPeer) {
-	    if (ownZone.isSquare()) {
-	    	newPeer.createZone(new Point(ownZone.calculateCentrePoint().getX(), ownZone.getBottomRight().getY()), ownZone.getUpperRight());
-	    	ownZone.setZone(ownZone.getBottomLeft(), new Point(ownZone.calculateCentrePoint().getX(), ownZone.getUpperLeft().getY()));    
-	    } else {
-	    	newPeer.createZone(ownZone.getBottomLeft(), (new Point(ownZone.getBottomRight().getX(), ownZone.calculateCentrePoint().getY())));
-	        ownZone.setZone(new Point(ownZone.getUpperLeft().getX(), ownZone.calculateCentrePoint().getY()), ownZone.getUpperRight());    
-	    }
-	    newPeer = updateRoutingTables(newPeer);
-	    return newPeer;
-	}
-	
-		
 		
 	/**
 	 * @author Raphaela Wagner 27.06.2018
@@ -1037,6 +980,7 @@ public class Peer {
 	/**
 	 * @author Raphaela Wagner 12.09.2018
 	 * @param peerToSwapWith
+	 * @TODO REST communication to be implemented
 	 */
 	public void swapPairs(Peer peerToSwapWith) {
 		ArrayList<ImageContainer> myImagesToTransfer = findImagesToTransfer();
