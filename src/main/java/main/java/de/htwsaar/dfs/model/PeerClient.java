@@ -469,7 +469,7 @@ public class PeerClient {
 		   response = client.target( URL ).
 		     request(MediaType.APPLICATION_JSON).
 		     put(Entity.entity(metadata, MediaType.APPLICATION_JSON));
-		   System.out.println("Updaze Metadata of" + imagename + " : "+ StaticFunctions.checkResponse(response.getStatus()));
+		   System.out.println("Update Metadata of" + imagename + " : "+ StaticFunctions.checkResponse(response.getStatus()));
 			
 		   
 		   if(response.getStatus()==200 || response.getStatus()==201) {
