@@ -15,7 +15,6 @@ import javax.ws.rs.core.Response;
 import org.apache.http.client.ClientProtocolException;
 
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -64,7 +63,7 @@ public class StartPeer {
     	
     	Point p = Peer.generateRandomPoint();
     	//every join request comes at the bootstrap first
-		final String bootstrapURL ="http://" +ip + ":4434/"+api+"/v1/createPeer/" +p.getX() + "-" + p.getY();
+		final String bootstrapURL = "http://" + ip + ":4434/" + api + "/v1/createPeer/" + p.getX() + "-" + p.getY();
 		
 		//Build a Peer only with IP. The Bootstrap will give him a zone.
 		peer = new Peer(StaticFunctions.loadPeerIp());

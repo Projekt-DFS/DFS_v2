@@ -31,8 +31,8 @@ public class ImageResource {
 	
 	/**
 	 * this method returns all images of the current user
-	 * that are actually in the database as objects
-	 * @param username
+	 * that are actually in the network as objects
+	 * @param username as String
 	 * @return Images as list
 	 * @throws IOException 
 	 * @throws ClassNotFoundException 
@@ -41,11 +41,12 @@ public class ImageResource {
 	@Produces(MediaType.APPLICATION_JSON) 
 	public List<Image> getListOfImages(@PathParam("username") String username) 
 			throws ClassNotFoundException, IOException{
+		System.out.println("GetAllImages of " + username);
 		return imageService.getAllImages(username);
 	}
 	
 	/**
-	 * this method allows to add a picture in the database 
+	 * this method allows to add a picture in the network 
 	 * @param username as String
 	 * @param image as String
 	 * @return image that has been added
@@ -54,7 +55,7 @@ public class ImageResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON )
 	public Image addImage(@PathParam("username") String username, Image image) {
-		System.out.println("AddImage request");
+		System.out.println("AddImage request ...");
 		return imageService.addImage(username, image);
 		
 	}
@@ -130,7 +131,7 @@ public class ImageResource {
 	}
 	
 	/**
-	 * this method deletes a picture in the database
+	 * this method deletes a picture in the network
 	 * @param username as string
 	 * @param imageName as String
 	 */

@@ -12,9 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Point implements Serializable {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 6442638317382009531L;
 	double x;
 	double y;

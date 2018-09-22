@@ -366,17 +366,17 @@ public class Bootstrap extends Peer {
 
 	/**
 	 * This method forwards the createImage Request to another peer 
-	 * @param destinationPeerIP
-	 * @param username
-	 * @param imageContainer
+	 * @param destinationPeerIP as String
+	 * @param username as String
+	 * @param imageContainer 
 	 * @return image that has been created
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 * @author Aude Nana 28.07.2017
 	 */
-	private Image forwardCreateImage(String destinationPeerIP, String username, ImageContainer imageContainer) throws ClientProtocolException, IOException {
-		
-		final String SUCCEED = "New image successfully added!";
+	private Image forwardCreateImage(String destinationPeerIP, 
+			String username,ImageContainer imageContainer) 
+			throws ClientProtocolException, IOException {
 		
 		//build an Image from imageContainer
 		Image image =  new Image(imageContainer.getImageName(), 
@@ -390,13 +390,11 @@ public class Bootstrap extends Peer {
 		//if the Peer of destination is the actually peer, save the image here  
 		if ( this.getIp_adresse().equals(destinationPeerIP)) {
 			saveImageContainer(imageContainer);
-			System.out.println(SUCCEED);
 		}
 		
 		//if not , make a post request to the peer of destination and save the image there
 		else {
 			image = new PeerClient().createImage(destinationPeerIP, username, image);
-			System.out.println(SUCCEED);
 		}
 		return image;
 	}

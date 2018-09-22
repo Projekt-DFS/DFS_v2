@@ -1,7 +1,6 @@
 package main.java.de.htwsaar.dfs;
 
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -64,7 +63,7 @@ public class StartBootstrap {
     public static void start() throws IOException {
         startServer();
         System.in.read();
-        System.out.println("New network is started");
+        System.out.println("New network have started");
   
     }
 }

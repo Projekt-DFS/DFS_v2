@@ -41,8 +41,7 @@ public class PeerResource {
 	}
 	
 	/**
-	 * This method returns all neighbors of the peer
-	 * @return
+	 * @return all neighbors of the peer
 	 */
 	@GET
 	@Path("neighbors")
@@ -53,8 +52,8 @@ public class PeerResource {
 	
 	/**
 	 * This method allows to add a new peer in the neighbor list of the peer
-	 * @param peer
-	 * @return
+	 * @param peer : new neighbor
+	 * @return the new neighbor
 	 */
 	@POST
 	@Path("neighbors")
@@ -67,8 +66,8 @@ public class PeerResource {
 
 	/**
 	 * This method returns a special peer from the neighbors 
-	 * @param pid
-	 * @return
+	 * @param ip : IP-address of the needed peer 
+	 * @return peer
 	 */
 	@GET
 	@Path("/neighbors/{neighborIp}")
@@ -78,9 +77,9 @@ public class PeerResource {
 	}
 	
 	/**
-	 * This method removes a Peer from the neighbor list
-	 * @param ip
-	 * @return
+	 * This method removes a Peer from the neighbor list 
+	 * @param ip : IP-address of the peer to remove 
+	 * @return peer 
 	 */
 
 	@DELETE
@@ -92,8 +91,7 @@ public class PeerResource {
 	
 	/**
 	 * this method returns the own zone related to the peer
-	 * @param pid
-	 * @return
+	 * @return Zone
 	 */
 	@GET
 	@Path("/ownzone")
@@ -105,7 +103,7 @@ public class PeerResource {
 	/**
 	 * this method allows to update the own zone of the peer
 	 * @param zone
-	 * @return
+	 * @return new zone
 	 */
 	@PUT
 	@Path("/ownzone")
@@ -133,7 +131,7 @@ public class PeerResource {
 	 * This method allows to update the peer . 
 	 * The peer will take the Value of the parameter peer
 	 * @param peer
-	 * @return
+	 * @return new peer
 	 */
 	@PUT
 	@Path("/update")
@@ -156,12 +154,12 @@ public class PeerResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Peer createPeer(@PathParam("point") String point ,Peer peer ) throws ClientProtocolException, IOException{
+		
+		//read the coordinate
 		String[] coordinate = point.split("-");
 		Point p = new Point(Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]));
 		Peer nP= ps.createPeer(peer.getIp_adresse(), p);
-		System.out.println("new Peer successfully created :" + nP);
-		if(nP.getIp_adresse().equals("10.9.40.33"))
-			nP= new Peer(nP);
+		System.out.println("New Peer successfully created :" + nP);
 		return nP;
 	}
 	
@@ -179,7 +177,7 @@ public class PeerResource {
 	
 	/**
 	 * 
-	 * @return peer mirt der er die Zone umtauschen wird
+	 * @return peer 
 	 */
 	@POST
 	@Path("/findPeerForZoneSwapping")
@@ -189,6 +187,10 @@ public class PeerResource {
 		return ps.findPeerForZoneSwapping();
 	}
 	
+	/**
+	 * Adds new neighbor if not exists
+	 * @param peer : new neighbor
+	 */
 	@POST
 	@Path("/addallabsent")
 	@Produces(MediaType.APPLICATION_JSON)

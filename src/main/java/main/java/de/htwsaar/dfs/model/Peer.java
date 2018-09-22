@@ -187,12 +187,11 @@ public class Peer {
 	 * @return
 	 */
 	public Peer routing(Point destinationCoordinate) {
-		// Temporärer Peer zur Zwischenspeicherung
-		System.out.println("Routing auf Peer: " + getIp_adresse());
 		if (lookup(destinationCoordinate)) {
+			System.out.println("lookup for point " + destinationCoordinate + " : SUCCESSFUL");
 			return this;
 		} else {
-
+			System.out.println("lookup for point " + destinationCoordinate + " : FAILURE");
 			Peer tmpPeer = shortestPath(destinationCoordinate);
 			Peer routingPeer = new PeerClient().routing(tmpPeer, destinationCoordinate);
 			return routingPeer.routing(destinationCoordinate);
@@ -410,7 +409,6 @@ public class Peer {
 		} else {
 			if(lookup(p)) {
 				newPeer = new Peer(newPeerAdress);
-				System.out.println("Fall Bootstrap splittet sich");
 				newPeer.setOwnZone(splitZone());
 				
 				transferImagesAfterSplit(newPeerAdress);
@@ -419,19 +417,13 @@ public class Peer {
 				checkNeighboursOldPeer();
 				newPeer.checkNeighboursNewPeer();
 				mergeRoutingTableSinglePeer(newPeer);
-				
-				System.out.println("Bootstrap nach createPeer(): "+ this);
-				System.out.println("New Peer nach createPeer(): "+ newPeer);
 				return newPeer;
 				
 			} else {
-				System.out.println("Fall anderer Peer splittet sich");
+			
 				Peer zielP = routing(p);
-				System.out.println("ZielPeer: " + zielP);
 				newPeer = new PeerClient().createPeer(zielP.getIp_adresse(), p, "p2p", new Peer(newPeerAdress)); 
-				
-				System.out.println("Bootstrap nach createPeer(): "+ this);
-				System.out.println("New Peer nach createPeer(): "+ newPeer);
+			
 				return newPeer;
 			}
 			
@@ -519,6 +511,8 @@ public class Peer {
 		//Save thumbnail
 		outputFile = new File(ic.getPath() + "_thumbnail" + ic.getEnding());
 		ImageIO.write(ic.getThumbnail(), "jpg", outputFile);	
+		
+		System.out.println("Add new image : SUCCESSFUL");
 	}
 		
 		
@@ -635,6 +629,7 @@ public class Peer {
 			String destinationPeerIP = routing(p).getIp_adresse();
 			new PeerClient().updateMetadata(destinationPeerIP, username, imageName, new Metadata(username, null, location, tagList));
 		}
+		System.out.println("Metadata of " + imageName + "have changed");
 	}
 	
 	/**

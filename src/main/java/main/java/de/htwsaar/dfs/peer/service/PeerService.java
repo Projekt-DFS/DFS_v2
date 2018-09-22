@@ -55,8 +55,8 @@ public class PeerService {
 
 	public String deletePeer(String ip) {
 		if(peer.getRoutingTable().removeIf(peer -> peer.getIp_adresse().equals(ip)))
-			return "Peer successfully removed!";
-		return "Peer doesn't exist";
+			return "Neighbor " + ip + " successfully removed!";
+		return "Neighbor " + ip + " doesn't exist";
 		
 	}
 	
@@ -86,7 +86,7 @@ public class PeerService {
 		CopyOnWriteArrayList< Peer> neighbors = peer.getRoutingTable();
 		if(!peer.getIp_adresse().equals(this.peer.getIp_adresse())) {
 			if(neighbors.addIfAbsent(peer))
-				System.out.println("new neighbor :" + peer.getIp_adresse());
+				System.out.println("new neighbor added :" + peer.getIp_adresse());
 			else
 				System.out.println("Neighbor allready exist !");
 			peer.setRoutingTable(neighbors);

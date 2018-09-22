@@ -296,10 +296,10 @@ public class StaticFunctions {
 	 */
 	public static String checkResponse(int code) {
 		if(code == 200 || code == 201 || code == 204 ) 
-			return "SUCCEED";
+			return "SUCCESSFUL";
 		if (code == 401)
-			return "FAILED - unauthorized ";
-		return "FAILED";
+			return "FAILURE - unauthorized ";
+		return "FAILURE";
 		
 	}
 	

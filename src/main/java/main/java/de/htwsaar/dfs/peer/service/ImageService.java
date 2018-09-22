@@ -26,16 +26,19 @@ import main.java.de.htwsaar.dfs.utils.RestUtils;
  */
 public class ImageService {
 	
+	//this peer object
 	Peer peer = StartPeer.peer;
 	
-	//Dies muss weg !!!
 	private Bootstrap bootstrap = new Bootstrap();
+	
 	//URI for Image
 	private String baseUri = "http://" + peer.getIp_adresse() + ":" + Peer.port +"/p2p/v1/";
 	
 	public ImageService(){	}
 	
-	public List<Image> getAllImages( String username) throws ClassNotFoundException, IOException{
+	public List<Image> getAllImages( String username) 
+			throws ClassNotFoundException, IOException{
+		
 		List<Image> result = new ArrayList<>();
 		//check if folder exist
 		File userFolder = new File("images/" + username);
@@ -52,7 +55,10 @@ public class ImageService {
 		ImageContainer ic = null;
 		try {
 			ic = bootstrap.loadImageContainer(username, imageName);
+			System.out.println("Get image " + imageName + " : SUCCESSFUL");
+			
 		} catch (ClassNotFoundException | IOException e) {
+			System.out.println("Get image " + imageName + " : FAILURE");
 			e.printStackTrace();
 		}
 		return RestUtils.convertIcToImg("", ic, username);
@@ -67,7 +73,6 @@ public class ImageService {
 				username, image.getImageName(), image.getMetaData().getLocation(), new Date(),
 				image.getMetaData().getTagList()
 				));
-		System.out.println("New image successfully added!");
 		return getImage(username, image.getImageName());
 	}
 	
@@ -104,16 +109,6 @@ public class ImageService {
 		return metadata;
 	}
 
-
-	/**
-	 * this method returns the Picture als BufferedImage
-	 * @param username
-	 * @param imagename
-	 * @return
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 * @throws FileNotFoundException 
-	 */
 	public BufferedImage getBufferedImage(String username, String imageName) 
 			throws FileNotFoundException, ClassNotFoundException, IOException {
 		

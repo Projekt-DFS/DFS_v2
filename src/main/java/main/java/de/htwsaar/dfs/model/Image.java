@@ -18,7 +18,13 @@ public class Image {
 
 	public Image() {}
 
-	//constructor with values
+	/**
+	 * constructor
+	 * @param imageName
+	 * @param metadata
+	 * @param imageSource
+	 * @param thumbnailSource
+	 */
 	public Image(String imageName, 
 			Metadata metadata, String imageSource, String thumbnailSource) {
 		this.imageName = imageName;
@@ -61,17 +67,17 @@ public class Image {
 	
 	public String getPeerIp() {
 		  return peerIp;
-		 }
+	}
 
-		 public void setPeerIp(String peerIp) {
-		  this.peerIp = peerIp;
-		 }
+	 public void setPeerIp(String peerIp) {
+	  this.peerIp = peerIp;
+	 }
 	
 
 	@Override
 	public String toString() {
 		return "Image [imageName=" + imageName + ", metaData=" + metaData + ", imageSource=" + imageSource
-				+ ", thumbnail=" + thumbnail + "]";
+				+ "]";
 	}
 	
 	

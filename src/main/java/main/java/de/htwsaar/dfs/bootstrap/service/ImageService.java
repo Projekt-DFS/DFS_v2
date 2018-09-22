@@ -27,7 +27,8 @@ import main.java.de.htwsaar.dfs.utils.RestUtils;
 public class ImageService {
 	
 	Bootstrap bootstrap = StartBootstrap.bootstrap;
-	//URI for Image's link
+	
+	//URI for Image's link 
 	private String baseUri = "http://" + bootstrap.getIp_adresse() + ":" + Bootstrap.port +"/bootstrap/v1/";
 	
 	public ImageService(){	}
@@ -35,7 +36,6 @@ public class ImageService {
 	public List<Image> getAllImages( String username) throws ClassNotFoundException, IOException{
 		List<Image> result = new ArrayList<>();
 		
-	
 		bootstrap.getAllImageContainers(username)
 				.forEach( (ImageContainer ic)-> 
 					result.add(RestUtils.convertIcToImg(baseUri, ic, username)));
@@ -67,6 +67,7 @@ public class ImageService {
 	}
 	
 	public void deleteImage(String username, String imageName) {
+		System.out.println("Delete image :" + imageName);
 		 bootstrap.deleteImage(username, imageName);
 		
 	}
@@ -96,20 +97,9 @@ public class ImageService {
 		return metadata;
 	}
 
-
-	/**
-	 * this method returns the Picture als BufferedImage
-	 * @param username
-	 * @param imagename
-	 * @return
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 * @throws FileNotFoundException 
-	 */
 	public BufferedImage getBufferedImage(String username, String imageName) 
 			throws FileNotFoundException, ClassNotFoundException, IOException {
-//		String dest = bootstrap.routing( StaticFunctions.hashToPoint(username, imageName)).ip_adresse;
-//		if (dest.equals(bootstrap.ip_adresse))
+		
 		String fileSrc = "images/"+ username + "/" + imageName;
 		
 		BufferedImage img = null;
