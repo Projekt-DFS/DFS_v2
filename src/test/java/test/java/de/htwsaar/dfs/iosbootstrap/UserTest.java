@@ -4,7 +4,6 @@
 package test.java.de.htwsaar.dfs.iosbootstrap;
 
 import static org.junit.Assert.*;
-import java.io.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,28 +34,12 @@ public class UserTest {
 	
 	@Test
 	public void testAuthenticate() {
-		System.out.println(bt.getAllUsers());
-		assertEquals(true, bt.authenticateUser("Tommi", "TS"));
-		assertEquals(false, bt.authenticateUser("Thomas", "Pw"));
-		assertEquals(true, bt.authenticateUser("Thomas", "pw"));
+		assertEquals(true, Bootstrap.authenticateUser("Tommi", "TS"));
+		assertEquals(false, Bootstrap.authenticateUser("Thomas", "Pw"));
+		assertEquals(true, Bootstrap.authenticateUser("Thomas", "pw"));
 	}
 
-	@Test
-	public void testSerialize() throws IOException, ClassNotFoundException{
-		bt.exportUserList();
 		
-		Bootstrap newBT = new Bootstrap();
-		newBT.importUserList();
-		assertEquals(true, newBT.authenticateUser("Tommi", "TS"));
-	}
 	
-	@Test
-	public void testDelete() {
-		bt.deleteUser("Thomas");
-		//assertEquals(1, bt.getUserCount());
-		
-		bt.deleteUser("Thomi");
-		//assertEquals(1, bt.getUserCount());
-	}
 	
 }

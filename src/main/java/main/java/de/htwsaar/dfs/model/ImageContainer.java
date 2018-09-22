@@ -32,20 +32,7 @@ public class ImageContainer implements Serializable {
 	private Point coordinate;
 	private String peerIp;
 	
-	public String getPeerIp() {
-		return peerIp;
-	}
-
-
-
-
-	public void setPeerIp(String peerIp) {
-		this.peerIp = peerIp;
-	}
-
-
-
-
+	
 	//Meta-Data
 	private User user;
 	private String username;
@@ -57,7 +44,7 @@ public class ImageContainer implements Serializable {
 		
 	/**
 	 * Constructor
-	 * Sets image object
+	 * Sets imageContainer object
 	 * @author Thomas Spanier
 	 */
 	public ImageContainer(BufferedImage img, String username, String imageName, 
@@ -101,9 +88,14 @@ public class ImageContainer implements Serializable {
 	}
 	
 	public String getThumbnailPath() {
-		//TODO
 		return path + "_thumbnail" ;
 	}
+
+	
+	public String getPeerIp() {
+		return peerIp;
+	}
+
 	
 	// get-methods meta
 	public User getUser() {
@@ -128,14 +120,7 @@ public class ImageContainer implements Serializable {
 	}
 	
 	
-	public String getTags() {
-		
-		return tagList.toString();
-	}
-
-
-
-		//set-methods
+	//set-methods
 	public void setImage(BufferedImage img) {
 		this.img = img;
 		
@@ -182,6 +167,10 @@ public class ImageContainer implements Serializable {
 	}
 	
 	
+	public void setPeerIp(String peerIp) {
+		this.peerIp = peerIp;
+	}
+	
 	
 	//set-methods meta
 	public void setLocation(String location) {
@@ -210,87 +199,79 @@ public class ImageContainer implements Serializable {
 		
 		
 		
-		//Tag-editing-methods 
-		/**
-		 * adds a new Tag
-		 * @param newtag
-		 * @author Thomas Spanier
-		 */
-		public void addTag(String newtag) {
-			//Deny empty tags
-			if (newtag.trim().isEmpty()) {
-				throw new EmptyStringException();
-			}
-			//If tag already present, skip
-			for(String tag : tagList) {
-				if(tag.equals(newtag)) {
-					return;
-				}
-			}
-			tagList.add(newtag);
+	//Tag-editing-methods 
+	/**
+	 * adds a new Tag
+	 * @param newtag
+	 * @author Thomas Spanier
+	 */
+	public void addTag(String newtag) {
+		//Deny empty tags
+		if (newtag.trim().isEmpty()) {
+			throw new EmptyStringException();
 		}
-		
-		/**
-		 * Deletes a tag
-		 * @param deletetag
-		 * @author Thomas Spanier
-		 */
-		public void deleteTag(String deletetag) {
-			//TODO Exception tag not found
-			for(String tag : tagList) {
-				if(tag.equals(deletetag)) {
-					tagList.remove(tag);
-					return;
-				}
+		//If tag already present, skip
+		for(String tag : tagList) {
+			if(tag.equals(newtag)) {
+				return;
 			}
 		}
-		
-		/**
-		 * Edits a tag
-		 * @param oldTag
-		 * @param newTag
-		 * @author Thomas Spanier
-		 */
-		public void editTag(String oldTag, String newTag) {
-			//Deny empty tags
-			if (newTag.trim().isEmpty()) {
-				throw new EmptyStringException();
-			}
-			//Search for tag
-			for(String tag : tagList) {
-				if(tag.equals(oldTag)) {
-					tagList.remove(tag);
-					tagList.add(newTag);
-					return;
-				}
+		tagList.add(newtag);
+	}
+	
+	/**
+	 * Deletes a tag
+	 * @param deletetag
+	 * @author Thomas Spanier
+	 */
+	public void deleteTag(String deletetag) {
+		for(String tag : tagList) {
+			if(tag.equals(deletetag)) {
+				tagList.remove(tag);
+				return;
 			}
 		}
-
-
-		//Thumbnails
-		/**
-		 * creates a Thumbnail and saves it in this object
-		 * @param img the original image
-		 * @author Thomas Spanier
-		 */
-		private void createThumbnail(BufferedImage img) {
-			Image temp = img.getScaledInstance(img.getWidth() / 4, img.getHeight() / 4, BufferedImage.SCALE_SMOOTH);
-			thumbnail = StaticFunctions.toBufferedImage(temp);
+	}
+	
+	/**
+	 * Edits a tag
+	 * @param oldTag
+	 * @param newTag
+	 * @author Thomas Spanier
+	 */
+	public void editTag(String oldTag, String newTag) {
+		//Deny empty tags
+		if (newTag.trim().isEmpty()) {
+			throw new EmptyStringException();
 		}
-
-
-
-
-		public String getEnding() {
-			return ending;
+		//Search for tag
+		for(String tag : tagList) {
+			if(tag.equals(oldTag)) {
+				tagList.remove(tag);
+				tagList.add(newTag);
+				return;
+			}
 		}
+	}
 
 
+	//Thumbnails
+	/**
+	 * creates a Thumbnail and saves it in this object
+	 * @param img the original image
+	 * @author Thomas Spanier
+	 */
+	private void createThumbnail(BufferedImage img) {
+		Image temp = img.getScaledInstance(img.getWidth() / 4, img.getHeight() / 4, BufferedImage.SCALE_SMOOTH);
+		thumbnail = StaticFunctions.toBufferedImage(temp);
+	}
 
+	public String getEnding() {
+		return ending;
+	}
 
-		public void setEnding(String ending) {
-			this.ending = ending;
-		}
-		
+	public void setEnding(String ending) {
+		this.ending = ending;
+	}
 	
 }

@@ -103,11 +103,10 @@ public class ImageTest {
 			
 			//Are the paths correct
 			assertEquals("images/imageTestUser1/coins", ic.getPath());
-			assertEquals("images/imageTestUser1/coins_thumbnail.jpg", ic.getThumbnailPath());
+			assertEquals("images/imageTestUser1/coins_thumbnail", ic.getThumbnailPath());
 			
 			
 		} catch (ClassNotFoundException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -135,7 +134,6 @@ public class ImageTest {
 			assertEquals(p.getX(), bt.loadImageContainer("imageTestUser1", "coins0.jpg").getCoordinate().getX(), 0.001);
 			assertEquals(p.getY(), bt.loadImageContainer("imageTestUser1", "coins0.jpg").getCoordinate().getY(), 0.001);
 		} catch (IOException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -161,7 +159,6 @@ public class ImageTest {
 			tagList.add("money");
 			assertEquals(true, ics.get(1).getTagList().containsAll(tagList));
 		} catch (ClassNotFoundException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -187,7 +184,6 @@ public class ImageTest {
 			ics = bt.getAllImageContainers("imageTestUser1");
 			assertEquals(1, ics.size());
 		} catch (ClassNotFoundException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -199,7 +199,6 @@ public class StaticFunctions {
 			input.close();
 			return line;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -219,7 +218,6 @@ public class StaticFunctions {
 			input.close();
 			return line;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -229,14 +227,12 @@ public class StaticFunctions {
 		File file= new File("ip.csv");
 		try {
 			BufferedWriter input=new BufferedWriter(new FileWriter(file));
-			String line;
 			input.write(peerIp);
 			input.newLine();
 			input.write(bootstrapIp);
 			
 			input.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

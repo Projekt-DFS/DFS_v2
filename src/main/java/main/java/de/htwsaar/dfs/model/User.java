@@ -23,12 +23,10 @@ public class User implements Serializable {
 	private String name;
 	private String password;
 	private CopyOnWriteArrayList<String> imageList;
-	//imageList?
 	
 	
 	/**
 	 * Constructor
-	 * @param id
 	 * @param name
 	 * @param password
 	 */

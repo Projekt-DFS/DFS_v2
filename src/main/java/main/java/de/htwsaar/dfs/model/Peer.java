@@ -17,8 +17,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.imageio.ImageIO;
 
-import java.net.InetAddress;
-
 import java.net.UnknownHostException;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -46,7 +44,6 @@ public class Peer {
 	@XmlTransient
 	public String ip_adresse;
 	//Liste alle Nachbarn
-	
 	private CopyOnWriteArrayList<Peer> routingTable = new CopyOnWriteArrayList<>();
 	
 	
@@ -102,13 +99,7 @@ public class Peer {
 	 * @throws UnknownHostException 
 	 */
 	public String getIP() {
-//		return StaticFunctions.loadPeerIp();
-		try {
-			ip_adresse = InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ip_adresse = StaticFunctions.loadPeerIp();
 		return ip_adresse;
 	}
 	
@@ -197,7 +188,6 @@ public class Peer {
 	 */
 	public Peer routing(Point destinationCoordinate) {
 		// Temporärer Peer zur Zwischenspeicherung
-		//Peer tmpPeer = new Peer();
 		System.out.println("Routing auf Peer: " + getIp_adresse());
 		if (lookup(destinationCoordinate)) {
 			return this;
@@ -438,11 +428,7 @@ public class Peer {
 				System.out.println("Fall anderer Peer splittet sich");
 				Peer zielP = routing(p);
 				System.out.println("ZielPeer: " + zielP);
-				//TODO: REST-Aufruf CreatePeer von zielP aus
-				
 				newPeer = new PeerClient().createPeer(zielP.getIp_adresse(), p, "p2p", new Peer(newPeerAdress)); 
-				//newPeer = zielP.createPeer(newPeerAdress); //ueber REST
-				
 				
 				System.out.println("Bootstrap nach createPeer(): "+ this);
 				System.out.println("New Peer nach createPeer(): "+ newPeer);
@@ -536,12 +522,15 @@ public class Peer {
 	}
 		
 		
+
 	/**
 	 * Deserialize imageContainer  
-	 * @param canCoordinate
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 * @throws ClassNotFoundException 
+	 * @param username the imageContainer's username
+	 * @param imageName the imageContainer's imageName
+	 * @return the imageContainer
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
 	 * @author Thomas Spanier
 	 */
 	public ImageContainer loadImageContainer(String username, String imageName) throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -553,9 +542,7 @@ public class Peer {
 		for(int i=1; i < nameArray.length - 2; i++) {
 			imageNameWithoutEnding.append("." + nameArray[i]);
 		}
-		
-		
-		
+
 		StringBuffer fileName = new StringBuffer();
 		fileName.append("images/").append(username).append("/")
 				.append(imageNameWithoutEnding.toString());
@@ -644,14 +631,16 @@ public class Peer {
 			ic.setTagList(tagList);
 			saveImageContainer(ic);
 		} else {
+			//Start routing to destinationPeer and call editMeta again
 			String destinationPeerIP = routing(p).getIp_adresse();
 			new PeerClient().updateMetadata(destinationPeerIP, username, imageName, new Metadata(username, null, location, tagList));
 		}
-		
 	}
 	
-	
-	
+	/**
+	 * Adds all imageContainers to the transferList
+	 * @return an ArrayList with all ImageContainers from the peer
+	 */
 	private ArrayList<ImageContainer> transferAllImages() {
 		File directory = new File("images/");
 		File[] userList = directory.listFiles();
@@ -670,6 +659,7 @@ public class Peer {
 				if(imageFile.toString().endsWith(".data")) {
 					userName = userFile.getName();
 					try {
+						//Load the imageContainer
 						ObjectInputStream in= new ObjectInputStream(
 								new BufferedInputStream(
 										new FileInputStream(imageFile)));
@@ -677,9 +667,9 @@ public class Peer {
 						in.close();
 						tmpArray = imageFile.getName().split(".data");
 						imageName = tmpArray[0] + tmpIc.getEnding();
-						
 						ImageContainer ic = this.loadImageContainer(userName, imageName);
 						
+						//Add the imageContainer to the transferList
 						transferList.add(ic);
 						
 					} catch (IOException | ClassNotFoundException e) {
@@ -716,6 +706,7 @@ public class Peer {
 				if(imageFile.toString().endsWith(".data")) {
 					userName = userFile.getName();
 					try {
+						//Load the imageContainer
 						ObjectInputStream in= new ObjectInputStream(
 								new BufferedInputStream(
 										new FileInputStream(imageFile)));
@@ -723,9 +714,9 @@ public class Peer {
 						in.close();
 						tmpArray = imageFile.getName().split(".data");
 						imageName = tmpArray[0] + tmpIc.getEnding();
-						
 						ImageContainer ic = this.loadImageContainer(userName, imageName);
 						
+						//If ImageContainer is no more in peer's zone, then add ist to transferList
 						if(!containsPoint(ic.getCoordinate())) {
 							System.out.println("To TransferList: " + userName + ", " + imageName);
 							transferList.add(ic);

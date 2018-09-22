@@ -23,7 +23,7 @@ import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 public class Bootstrap extends Peer {
 
 	//Variables
-	private static CopyOnWriteArrayList<User> userList;
+	private static CopyOnWriteArrayList<User> userList;			//List that contains all users
 	
 	
 	/**
@@ -41,10 +41,10 @@ public class Bootstrap extends Peer {
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		this.ip_adresse = StaticFunctions.loadPeerIp();
+		this.ip_adresse = StaticFunctions.loadPeerIp();			//Load ip-address
 		
 		//Create a new Zone
-		createZone(new Point(0.0, 0.0), new Point(1.0, 1.0));
+		createZone(new Point(0.0, 0.0), new Point(1.0, 1.0));	//initialize zone
 	}
 	
 
@@ -56,13 +56,12 @@ public class Bootstrap extends Peer {
 
 	
 	/**
-	 * 
+	 * Returns user with this username
 	 * @param username
 	 * @return
 	 * @author Thomas Spanier
 	 */
 	public static User getUser(String username) {
-		//TODO: what, if username does not exist?
 		for(User user : userList) {
 			if(user.getName().equals(username)) {
 				return user;
@@ -71,20 +70,7 @@ public class Bootstrap extends Peer {
 		throw new IllegalArgumentException("User does not exist");
 	}
 	
-	/**
-	 * returns a List with all Users
-	 * @return a List with all Users
-	 * @author Thomas Spanier
-	 */
-	public String getAllUsers() {
-		StringBuffer sb = new StringBuffer();
-		for (User user : userList) {
-			sb.append(user.toString()).append(" | ");
-		}
-		return sb.toString();
-	}
-	
-	
+		
 	//set methods
 	/**
 	 * 
@@ -93,7 +79,6 @@ public class Bootstrap extends Peer {
 	 */
 	public void setUserList(CopyOnWriteArrayList<User> userList) {
 		Bootstrap.userList = userList;
-		//Bootstrap.userList = userList;
 	}
 
 	
@@ -102,7 +87,6 @@ public class Bootstrap extends Peer {
 	//User management
 	/**
 	 * Creates a new User
-	 * @param id identifier
 	 * @param name of the new User
 	 * @param password of the new User
 	 * @return success or fail message
@@ -111,15 +95,16 @@ public class Bootstrap extends Peer {
 	public String createUser(String name, String password) {
 		User newUser;
 		newUser = new User(name, password);
+		//Check, if username already present
 		for(User user : userList) {
 			if(user.getName().equals(name)) {
 				return ("User already exists");
 			}
 		}
 		userList.add(newUser);
+		//Export userList
 		try {
 			exportUserList();
-			//saveUserCount();
 		} catch (Exception e ) {
 			e.printStackTrace();
 		}
@@ -127,7 +112,7 @@ public class Bootstrap extends Peer {
 	}
 
 	/**
-	 * Deletes the User
+	 * Deletes the User including all images
 	 * @param name of the deleting User
 	 * @author Thomas Spanier
 	 */
@@ -139,9 +124,6 @@ public class Bootstrap extends Peer {
 			deleteImage(username, imageName);
 		}
 		
-		
-		
-		
 		userList.remove(user);
 		try {
 			exportUserList();
@@ -151,6 +133,7 @@ public class Bootstrap extends Peer {
 		}
 	}
 
+	
 	/**
 	 * Check, if Username and Password are correct
 	 * @param name
@@ -167,23 +150,18 @@ public class Bootstrap extends Peer {
 		return false;
 	}
 
-	
-
-	
 
 	/**
-	 * Delete all Users
+	 * Deletes all Users
 	 * @author Thomas Spanier
 	 */
 	public void dumpUsers() {
 		userList.removeAll(userList);
 		try {
 			exportUserList();
-			//saveUserCount();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 
@@ -220,52 +198,18 @@ public class Bootstrap extends Peer {
 		return tmpUserList;
 	}
 	
-//	/**
-//	 * Deserializes the UserCount
-//	 * @return
-//	 * @throws FileNotFoundException
-//	 * @throws ClassNotFoundException
-//	 * @throws IOException
-//	 * @author Thomas Spanier
-//	 */
-//	private long loadUserCount() throws FileNotFoundException, ClassNotFoundException, IOException {
-//		ObjectInputStream in;
-//		in= new ObjectInputStream(
-//				new BufferedInputStream(
-//						new FileInputStream("userCount.dat")));
-//		long userCount= (long)in.readObject();
-//		
-//		in.close();
-//		return userCount;
-//	}
-//	
-//	/**
-//	 * Serializes the UserCount
-//	 * @throws FileNotFoundException
-//	 * @throws ClassNotFoundException
-//	 * @throws IOException
-//	 * @author Thomas Spanier
-//	 */
-//	private void saveUserCount() throws FileNotFoundException, ClassNotFoundException, IOException {
-//		ObjectOutputStream out = new ObjectOutputStream(
-//				new BufferedOutputStream(
-//						new FileOutputStream("userCount.dat")));
-//		out.writeObject(userCount);
-//		out.close();
-//	}
-	
 	
 	
 	//Image functions iOS -> Bootstrap
 	/**
 	 * Creates an ImageContainer and sends it into the network
 	 * @param img the image to be saved
-	 * @param canCoordinate the calculated coordinate in the network
-	 * @param photographer the image's photographer 
-	 * @param user the user who uploaded the image
-	 * @param date the date when the image was shot
-	 * @param tagList a list of tags
-	 * @author Thomas Spanier
+	 * @param username The username who uploaded the image
+	 * @param imageName Image's name
+	 * @param location Where the image was taken
+	 * @param date when the image was uploaded
+	 * @param tagList list of images's tags
+	 * @return the Image
 	 */
 	public Image createImage(BufferedImage img, String username, String imageName, 
 			String location, Date date, LinkedList<String> tagList) {
@@ -273,12 +217,10 @@ public class Bootstrap extends Peer {
 		int i = 0, j = 0;
 		User user = getUser(username);
 		String[] tmpArray;
-		
 		String ending;
 		
 		//Check for double names
 		CopyOnWriteArrayList<String> imageNames = getListOfImages(username);
-		
 		for(@SuppressWarnings("unused") String name : imageNames) {
 			while(imageNames.contains(imageName)) {
 				String imageNameWithoutEnding = "";
@@ -287,8 +229,6 @@ public class Bootstrap extends Peer {
 					imageNameWithoutEnding = imageNameWithoutEnding + tmpArray[k];
 				}
 				ending = "." + tmpArray[tmpArray.length - 1]; 
-				
-				
 				if(i>0) {
 					j= (int)Math.log10(i);
 					imageName = imageNameWithoutEnding.substring(0, imageNameWithoutEnding.length() - j - 1) + i++ + ending;
@@ -298,12 +238,11 @@ public class Bootstrap extends Peer {
 			}
 		}
 		
-		
-		
+		//Create the imageContainer
 		ImageContainer ic = new ImageContainer(img, username, imageName, location, date, tagList);
 		Image image = null;
-		
 		try {
+			//Hash the coordinate and forward the image to the destination Peer
 			Point p = StaticFunctions.hashToPoint(username, imageName);
 			System.out.println("Destination Coordinate: " + StaticFunctions.hashTester(username, imageName));
 			String destinationPeerIP = routing(p).getIp_adresse();
@@ -317,21 +256,21 @@ public class Bootstrap extends Peer {
 	}
 	
 	
+	/**
+	 * loads an imageContainer
+	 * @param username The username who uploaded the image
+	 * @param imageName Image's name
+	 * @return the ImageContainer
+	 */
 	public ImageContainer getImage(String username, String imageName) {
 		ImageContainer ic;
 		Point p = StaticFunctions.hashToPoint(username, imageName);
+		//If the image is saved on the bootstrap, loadImageContainer, otherwise start routing to the destinationPeer 
 		if(lookup(p)) {
 			try {
 				ic = loadImageContainer(username, imageName);
 				return ic;
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+			} catch (ClassNotFoundException | IOException e) {
 				e.printStackTrace();
 			}
 		} else {
@@ -341,10 +280,7 @@ public class Bootstrap extends Peer {
 		    	 ic = RestUtils.convertImgToIc(img);
 		    	 return ic;
 		     }
-			
-			
 		}
-		
 		return null;
 		
 	}
@@ -372,12 +308,10 @@ public class Bootstrap extends Peer {
 			} else {
 				//delete the files on remote Peer
 				destinationPeerIP = routing(p).getIp_adresse();
-				//REST Aufruf deleteImageContainer
 				new PeerClient().deleteImage(destinationPeerIP, username, imageName);
 			}
 			user.deleteFromImageList(imageName);
 			exportUserList();
-			
 		} catch (Exception e) {
 			return "Some errors have occured.";
 		}
@@ -392,17 +326,14 @@ public class Bootstrap extends Peer {
 	 * @author Thomas Spanier
 	 */
 	private static CopyOnWriteArrayList<String> getListOfImages(String username){
-		/*List<String> paths = imageList.stream().
-				filter(s -> s.startsWith(username+ "|")).collect(Collectors.toList());
-		*/
 		return getUser(username).getImageList();
 	}
 	
 
 	/**
 	 * returns an User's ArrayList with all imageContainers 
-	 * @param username
-	 * @return
+	 * @param username 
+	 * @return a List with all ImageContainers
 	 * @throws IOException 
 	 * @throws ClassNotFoundException 
 	 * @author Thomas Spanier
@@ -419,25 +350,22 @@ public class Bootstrap extends Peer {
 					ics.add(loadImageContainer(username, imageName));
 				} else {
 					destinationPeerIp = routing(p).getIp_adresse();
-					//REST-Aufruf zum Laden des ImageContainers von peer
+					//Load image from destinationPeer
 					Image img =new PeerClient().getImage(destinationPeerIp, username , imageName);
 					if(img != null) {
 						ics.add(RestUtils.convertImgToIc(img));	
 					}
 				}
-				
 			} catch (IOException e) {
 				System.out.println(imageName + " nicht gefunden");
 			}
-			
 		}
-		
 		return ics;
 	}
 	
 
 	/**
-	 * This method forward the createImage Request to another peer 
+	 * This method forwards the createImage Request to another peer 
 	 * @param destinationPeerIP
 	 * @param username
 	 * @param imageContainer
@@ -503,8 +431,6 @@ public class Bootstrap extends Peer {
 		for(User user : userList) {
 			sb.append(listImageNames(user.getName()) + "\n");
 		}
-		
-		
 		return sb.toString();
 	}
 	
