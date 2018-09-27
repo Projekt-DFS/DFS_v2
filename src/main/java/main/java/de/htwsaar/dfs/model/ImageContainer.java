@@ -12,7 +12,10 @@ import main.java.de.htwsaar.dfs.exceptions.EmptyStringException;
 import main.java.de.htwsaar.dfs.model.User;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
-
+/**
+ * Container object that includes the image, the thumbnail and the metadata
+ *
+ */
 public class ImageContainer implements Serializable {
 
 	private static final long serialVersionUID = 4903375720434123881L;
@@ -134,7 +137,7 @@ public class ImageContainer implements Serializable {
 	
 	/**
 	 * Sets the Path where the image will be stored
-	 * The image will be stored in /images/<username>/<imagename>.<ending> 
+	 * The image will be stored in /images/"username"/"imagename"."ending" 
 	 * e.g. images/testuser1/testimage01.jpg
 	 */
 	public void setPath() {

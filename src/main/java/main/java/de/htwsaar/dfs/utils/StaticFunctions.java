@@ -17,6 +17,10 @@ import java.util.Enumeration;
 import java.awt.*;
 import main.java.de.htwsaar.dfs.model.Point;
 
+/**
+ * Collection of some useful static functions
+ * 
+ */
 public class StaticFunctions {
 
 	/**
@@ -253,7 +257,7 @@ public class StaticFunctions {
 	
 	/**
 	 * Convert a IP-Address(String) to long
-	 * @param i IP-Address as String 
+	 * @param ipAddress IP-Address as String 
 	 * @return IP-Adress as long
 	 */	
 	public static long ipToLong(String ipAddress) {

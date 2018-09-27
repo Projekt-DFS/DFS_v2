@@ -25,7 +25,10 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.apache.http.client.ClientProtocolException;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
-
+/**
+ * A Peer Object to enter the CAN network and manage images
+ * 
+ */
 @XmlRootElement
 public class Peer {
 	
@@ -88,9 +91,8 @@ public class Peer {
 	}
 	
 	/**
-	 * 
+	 * Loads and returns the ip address from ip.csv
 	 * @return the local ip-address of the peer
-	 * @throws UnknownHostException 
 	 */
 	public String getIP() {
 		ip_adresse = StaticFunctions.loadPeerIp();
@@ -198,8 +200,8 @@ public class Peer {
 	
 	// Methods for routingTable updating
 	/**
-	 * Wird auf altem Peer aufgerufen um RT von neuem Peer zu initialisieren
-	 * @return
+	 * Old peer initializes the new peer's routing table
+	 * @param newPeer the new peer that will be created
 	 */
 	public void initializeRoutingTable(Peer newPeer) {
 		newPeer.mergeRoutingTableWithList(routingTable);
@@ -666,8 +668,7 @@ public class Peer {
 	/**
 	 * @author Raphaela Wagner 03.08.2018
 	 * @param transferList
-	 * @param newPeer
-	 * @throws IOException 
+	 * @param destinationIP
 	 */
 	public void transferPairs(String destinationIP, ArrayList<ImageContainer> transferList) {
 		new PeerClient().transferImage(transferList, destinationIP);
@@ -973,7 +974,7 @@ public class Peer {
 	/**
 	 * @author Raphaela Wagner 12.09.2018
 	 * @param peerToSwapWith
-	 * @TODO REST communication to be implemented
+	 * TODO REST communication to be implemented
 	 */
 	public void swapPairs(Peer peerToSwapWith) {
 		ArrayList<ImageContainer> myImagesToTransfer = findImagesToTransfer();

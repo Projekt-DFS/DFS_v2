@@ -13,10 +13,8 @@ import java.net.URI;
 import java.net.UnknownHostException;
 
 /**
- * Main Class
  * Starts the Bootstrap Server
- * @author Aude Nana
- *
+ * 
  */
 public class StartBootstrap {
 	
@@ -57,7 +55,6 @@ public class StartBootstrap {
     
     /**
      * Main method.
-     * @param args
      * @throws IOException
      */
     public static void start() throws IOException {

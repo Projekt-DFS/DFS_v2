@@ -22,8 +22,6 @@ import main.java.de.htwsaar.dfs.bootstrap.service.PeerService;
 
 /**
  * 
- * @author Aude Nana
- *
  */
 
 @Path("/")
@@ -165,7 +163,7 @@ public class PeerResource {
 	
 	/**
 	 * This method returns a Peer Object witch is near to the coordinates
-	 * @ return peer Object
+	 * @return peer Object
 	 */
 	@POST
 	@Path("/routing")

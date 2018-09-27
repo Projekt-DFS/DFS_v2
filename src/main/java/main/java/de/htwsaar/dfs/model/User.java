@@ -6,6 +6,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import main.java.de.htwsaar.dfs.exceptions.*;
 
 
+/**
+ * An User get get access to the iOS app and save images
+ * Is saved in userList on Bootstrap
+ */
 @XmlRootElement
 public class User implements Serializable {
 

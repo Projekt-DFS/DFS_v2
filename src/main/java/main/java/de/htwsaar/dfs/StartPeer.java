@@ -24,9 +24,7 @@ import main.java.de.htwsaar.dfs.model.Point;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
- * Main Class
  * Starts a PeerToPeer API
- * @author Aude Nana
  *
  */
 public class StartPeer {
@@ -94,7 +92,6 @@ public class StartPeer {
     
     /**
      * Main method.
-     * @param args
      * @throws IOException
      */
     public static void start() throws IOException {

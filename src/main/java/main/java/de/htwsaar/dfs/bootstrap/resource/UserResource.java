@@ -13,7 +13,6 @@ import main.java.de.htwsaar.dfs.model.User;
 
 /**
  * This class give access to users Resource
- * @author Aude Nana
  *
  */
 @Path("users")
@@ -32,8 +31,8 @@ public class UserResource {
 	}
 	
 	/**
-	 * this method returns a special user 
-	 * @param id
+	 * this method returns a special user
+	 * @param username
 	 * @return
 	 */
 	@GET

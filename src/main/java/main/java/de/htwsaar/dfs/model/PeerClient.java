@@ -19,7 +19,6 @@ import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
  * This Class represent a Peer as Client
- * @author Aude Nana
  *
  */
 public class PeerClient {
@@ -60,7 +59,6 @@ public class PeerClient {
 	 * @param destinationIp : the peer where the operation will be done
 	 * @param api : the web context Path 
 	 * @param peerToAdd : the peer that should be added
-	 * @return true if done
 	 */
 	public void addNeighbor(String destinationIp , String api, Peer peerToAdd) {
 		
@@ -82,8 +80,7 @@ public class PeerClient {
 	 * This method deletes a neighbor entry in the routing table of a peer
 	 * @param destinationIp : the peer where the operation will be done
 	 * @param api : the web context Path 
-	 * @param peerToDeleteIP : the peer that should be delete
-	 * @return true if done
+	 * @param peerToDelete the peer that should be deleted
 	 */
 	public void deleteNeighbor(String destinationIp , String api, Peer peerToDelete) {
 		
@@ -310,8 +307,8 @@ public class PeerClient {
 	 * This method forward the createImage Request to another peer 
 	 * @param destinationPeerIP
 	 * @param username
-	 * @param imageContainer
-	 * @return image that has been created
+	 * @param image
+	 * @return the image to be sent
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
@@ -399,7 +396,6 @@ public class PeerClient {
 	  * All images that belong to the zone of the new peer should be transfer .
 	  * @param images
 	  * @param destinationIp
-	  * @return
 	  */
 	 public void  transferImage(List<ImageContainer> images , String destinationIp ) {
 
@@ -434,7 +430,6 @@ public class PeerClient {
 	  * @param destinationIP
 	  * @param username
 	  * @param imageName
-	  * @return
 	  */
 	 public void deleteImage( String destinationIP, String username , String imageName) {
 		 

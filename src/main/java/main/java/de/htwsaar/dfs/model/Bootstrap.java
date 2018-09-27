@@ -19,7 +19,10 @@ import main.java.de.htwsaar.dfs.model.User;
 import main.java.de.htwsaar.dfs.utils.RestUtils;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
-
+/**
+ * Special peer who is the interface between the iOS app and the CAN network 
+ *
+ */
 public class Bootstrap extends Peer {
 
 	//Variables
@@ -113,7 +116,7 @@ public class Bootstrap extends Peer {
 	/**
 	 * Deletes the User including all his images.
 	 * Exports the userList afterwards
-	 * @param name of the deleting User
+	 * @param username of the deleting User
 	 * @return success or fail message
 	 */
 	public String deleteUser(String username) {
@@ -138,7 +141,7 @@ public class Bootstrap extends Peer {
 	 * Check, if Username and Password are correct
 	 * @param name
 	 * @param password
-	 * @return true, if User & Password are correct, otherwise false
+	 * @return true, if User and Password are correct, otherwise false
 	 */
 	public static boolean authenticateUser(String name, String password) {
 		for(User user : userList) {

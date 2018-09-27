@@ -14,8 +14,6 @@ import main.java.de.htwsaar.dfs.model.Metadata;
 
 /**
  * 
- * @author Aude Nana
- *
  */
 public class RestUtils {
 
@@ -45,8 +43,8 @@ public class RestUtils {
 
 	/**
 	 * This method convert a String to a BufferedImage
-	 * @param image
-	 * @return
+	 * @param imageString the Base64 decoded imagString
+	 * @return a BufferedImage decoded from the imageString
 	 */
 	public static BufferedImage decodeToImage(String imageString) {
 
@@ -64,12 +62,13 @@ public class RestUtils {
     }
 
 
+
 	/**
-	 * 
 	 * This method convert an ImageContainer to Image with link
+	 * @param baseUri
 	 * @param ic
 	 * @param username
-	 * @return
+	 * @return the Base64 coded imageString
 	 */
 	public static Image convertIcToImg(String baseUri, ImageContainer ic , String username) {
 		Image img = new Image();

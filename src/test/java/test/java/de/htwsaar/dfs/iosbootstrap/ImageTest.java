@@ -17,6 +17,10 @@ import org.junit.Test;
 import main.java.de.htwsaar.dfs.model.*;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
+/**
+ * JUnit tests for images
+ * Before start make sure that there is an image named "classdiagram.jpg" in project folder
+ */
 public class ImageTest {
 
 	private Bootstrap bt;
@@ -52,20 +56,13 @@ public class ImageTest {
 		tagList.add("diagram");
 		bt.createImage(img, Bootstrap.getUser("imageTestUser2").getName(), "Classdiagram.jpg", photographer, date, tagList);
 		
-		
-		
-		
 		img = ImageIO.read(new File("Classdiagram.jpg"));
 		photographer = "amazon";
 		tagList.removeIf(s -> true);
 		tagList.add("Kaufbelege");
 		tagList.add("money");
 		bt.createImage(img, Bootstrap.getUser("imageTestUser1").getName(), "coins.jpg", photographer, date, tagList);
-		
-		
-		
-		
-		
+			
 	}
 
 	@After
@@ -74,8 +71,6 @@ public class ImageTest {
 		bt.deleteUser("imageTestUser2");
 	}
 
-	
-	
 	
 	@Test
 	public void testGetImage() {
