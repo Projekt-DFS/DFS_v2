@@ -37,7 +37,6 @@ public class StaticFunctions {
 	 * @param imageName
 	 * @param userName
 	 * @return coordinatePoint
-	 * @author Thomas Spanier & Raphaela Wagner
 	 */
 	public static Point hashToPoint(String userName, String imageName) {
 		final double multiplier = 1.0 / 2147483648.0;
@@ -50,14 +49,12 @@ public class StaticFunctions {
 		x = Math.abs(xPointHashString.hashCode() * multiplier);
 		y = Math.abs(yPointHashString.hashCode() * multiplier);
 		coordinatePoint = new Point(x, y);
-		
-		//System.out.println("Das Bild "+ imageName + " Hat die Koordinaten: "+ coordinatePoint);
 		return coordinatePoint;
 	}
 	
 	
 	/**
-	 * Returns the hashed Coordinates that were genereated in hashToPoint
+	 * Returns the hashed Coordinates that were generated in hashToPoint
 	 * @param userName
 	 * @param imageName
 	 * @return
@@ -69,21 +66,13 @@ public class StaticFunctions {
 	}
 	
 	
-	
-	
-	
-	
-	
 	/**
 	 * Creates a BufferedImage out of an Image
 	 * @param img the Image to Change
 	 * @return the BufferedImage
-	 * @author Thomas Spanier
 	 */
-	public static BufferedImage toBufferedImage(Image img)
-	{
-	    if (img instanceof BufferedImage)
-	    {
+	public static BufferedImage toBufferedImage(Image img)	{
+	    if (img instanceof BufferedImage) {
 	        return (BufferedImage) img;
 	    }
 
@@ -103,7 +92,6 @@ public class StaticFunctions {
 	/**
 	 * returns a non-loopback IP-Address
 	 * @return a non-loopback IP-Address
-	 * @author Thomas Spanier
 	 */
 	public static String getRightIP() {
 		String[] tmpArray;
@@ -157,6 +145,11 @@ public class StaticFunctions {
 		return "no IP-Address found";
 	} 
 	
+	
+	/**
+	 * Returns a List with all non-loopback ip addresses
+	 * @return a List with all non-loopback ip addresses
+	 */
 	public static ArrayList<String> getAllIPs () {
 		ArrayList<String> ips = new ArrayList<String>();
 		String[] tmpArray;
@@ -186,6 +179,13 @@ public class StaticFunctions {
 		return ips;
 	}
 	
+	
+	
+	/**
+	 * Loads the peer ip address from ip.csv
+	 * The ip.csv file is filled in Dialogue
+	 * @return the peer ip address
+	 */
 	public static String loadPeerIp() {
 		File file= new File("ip.csv");
         if (!(file.exists() && file.isFile()&& file.canRead())) {
@@ -205,6 +205,12 @@ public class StaticFunctions {
         
 	}
 	
+	
+	/**
+	 * Loads the bootstrap's ip address from ip.csv
+	 * The ip.csv file is filled in Dialogue
+	 * @return the bootstrap's ip address
+	 */
 	public static String loadBootstrapIp() {
 		File file= new File("ip.csv");
         if (!(file.exists() && file.isFile()&& file.canRead())) {
@@ -223,6 +229,12 @@ public class StaticFunctions {
 		}
 	}
 	
+	
+	/**
+	 * Saves the peer's and bootstrap's ip address in ip.csv
+	 * @param peerIp
+	 * @param bootstrapIp
+	 */
 	public static void saveIps(String peerIp, String bootstrapIp) {
 		File file= new File("ip.csv");
 		try {

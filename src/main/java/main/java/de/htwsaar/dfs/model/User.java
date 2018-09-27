@@ -1,19 +1,11 @@
 package main.java.de.htwsaar.dfs.model;
+
 import java.io.Serializable;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.xml.bind.annotation.XmlRootElement;
-
 import main.java.de.htwsaar.dfs.exceptions.*;
 
-/**
- * 
- */
 
-/**
- * @author Thomas Spanier
- *
- */
 @XmlRootElement
 public class User implements Serializable {
 
@@ -54,6 +46,11 @@ public class User implements Serializable {
 	
 	
 	//set-methods
+	/**
+	 * sets the userName
+	 * throws EmptyStringException if name is empty
+	 * @param name
+	 */
 	public void setName(String name) {
 		if (name.trim().isEmpty()) {
 			throw new EmptyStringException();
@@ -62,6 +59,11 @@ public class User implements Serializable {
 		
 	}
 	
+	/**
+	 * Sets the password
+	 * throws EmptyStringException if password is empty
+	 * @param password
+	 */
 	public void setPassword(String password) {
 		if (password.trim().isEmpty()) {
 			throw new EmptyStringException();
@@ -69,10 +71,18 @@ public class User implements Serializable {
 		this.password=password;
 	}
 	
+	/**
+	 * Adds the imageName to the imageList
+	 * @param imageName
+	 */
 	public void insertIntoImageList(String imageName) {
 		imageList.add(imageName);
 	}
 	
+	/**
+	 * Deletes the imageName from imageList
+	 * @param imageName
+	 */
 	public void deleteFromImageList(String imageName) {
 		imageList.removeIf(s -> s.equals(imageName));
 	}

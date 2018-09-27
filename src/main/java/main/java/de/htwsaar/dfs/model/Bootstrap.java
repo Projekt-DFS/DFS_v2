@@ -28,8 +28,9 @@ public class Bootstrap extends Peer {
 	
 	/**
 	 * Constructor
+	 * Creates a new Zone.
+	 * Loads the ip address
 	 * If a userList is already present, this list will be deserialized and be used
-	 * @author Thomas Spanier
 	 */
 	public Bootstrap() {
 		//Create or load UserList
@@ -56,10 +57,9 @@ public class Bootstrap extends Peer {
 
 	
 	/**
-	 * Returns user with this username
-	 * @param username
-	 * @return
-	 * @author Thomas Spanier
+	 * Returns user with the given username
+	 * @param username the user's username
+	 * @return the User
 	 */
 	public static User getUser(String username) {
 		for(User user : userList) {
@@ -73,9 +73,8 @@ public class Bootstrap extends Peer {
 		
 	//set methods
 	/**
-	 * 
+	 * Sets the imageList
 	 * @param userList
-	 * @author Thomas Spanier
 	 */
 	public void setUserList(CopyOnWriteArrayList<User> userList) {
 		Bootstrap.userList = userList;
@@ -86,11 +85,11 @@ public class Bootstrap extends Peer {
 	
 	//User management
 	/**
-	 * Creates a new User
+	 * Creates a new User.
+	 * Exports the userList afterwards
 	 * @param name of the new User
 	 * @param password of the new User
 	 * @return success or fail message
-	 * @author Thomas Spanier
 	 */
 	public String createUser(String name, String password) {
 		User newUser;
@@ -112,9 +111,10 @@ public class Bootstrap extends Peer {
 	}
 
 	/**
-	 * Deletes the User including all images
+	 * Deletes the User including all his images.
+	 * Exports the userList afterwards
 	 * @param name of the deleting User
-	 * @author Thomas Spanier
+	 * @return success or fail message
 	 */
 	public String deleteUser(String username) {
 		User user = getUser(username);
@@ -139,7 +139,6 @@ public class Bootstrap extends Peer {
 	 * @param name
 	 * @param password
 	 * @return true, if User & Password are correct, otherwise false
-	 * @author Thomas Spanier
 	 */
 	public static boolean authenticateUser(String name, String password) {
 		for(User user : userList) {
@@ -152,8 +151,8 @@ public class Bootstrap extends Peer {
 
 
 	/**
-	 * Deletes all Users
-	 * @author Thomas Spanier
+	 * Deletes all Users and all images
+	 * Exports userList afterwards
 	 */
 	public void dumpUsers() {
 		userList.removeAll(userList);
@@ -168,7 +167,6 @@ public class Bootstrap extends Peer {
 	/**
 	 * Serialize the UserList in "userList.dat"
 	 * @throws IOException
-	 * @author Thomas Spanier
 	 */
 	public static void exportUserList() throws IOException {
 		ObjectOutputStream out = new ObjectOutputStream(
@@ -184,7 +182,6 @@ public class Bootstrap extends Peer {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 * @throws FileNotFoundException if userList.dat does not exist
-	 * @author Thomas Spanier
 	 */
 	@SuppressWarnings("unchecked")
 	public CopyOnWriteArrayList<User> importUserList() throws IOException, ClassNotFoundException, FileNotFoundException {
@@ -203,6 +200,7 @@ public class Bootstrap extends Peer {
 	//Image functions iOS -> Bootstrap
 	/**
 	 * Creates an ImageContainer and sends it into the network
+	 * Updates and exports the userList afterwards
 	 * @param img the image to be saved
 	 * @param username The username who uploaded the image
 	 * @param imageName Image's name
@@ -257,10 +255,10 @@ public class Bootstrap extends Peer {
 	
 	
 	/**
-	 * loads an imageContainer
+	 * Loads an imageContainer from the network
 	 * @param username The username who uploaded the image
 	 * @param imageName Image's name
-	 * @return the ImageContainer
+	 * @return the ImageContainer or null, if the imageContainer cannot be found
 	 */
 	public ImageContainer getImage(String username, String imageName) {
 		ImageContainer ic;
@@ -288,11 +286,11 @@ public class Bootstrap extends Peer {
 	
 	
 	/**
-	 * Function to delete an image, incl Metadata and Thumbnail. Is called by Bootstrap
+	 * Deletes an image, incl Metadata and Thumbnail from the network.
+	 * Updates and exports the userList afterwards
 	 * @param username
 	 * @param imageName
 	 * @return Message, if image is deleted, or not
-	 * @author Thomas Spanier
 	 */
 	public String deleteImage(String username, String imageName) {
 		User user = getUser(username);
@@ -320,10 +318,9 @@ public class Bootstrap extends Peer {
 
 
 	/**
-	 * Uses the User's imageList to search and filter all images in network
-	 * @param username the image's owner
-	 * @return a List with paths of all images of an user
-	 * @author Thomas Spanier
+	 * Returns a user's imageList
+	 * @param username the images' owner
+	 * @return the user's imageList
 	 */
 	private static CopyOnWriteArrayList<String> getListOfImages(String username){
 		return getUser(username).getImageList();
@@ -331,12 +328,11 @@ public class Bootstrap extends Peer {
 	
 
 	/**
-	 * returns an User's ArrayList with all imageContainers 
+	 * returns an ArrayList with all imageContainers of an user
 	 * @param username 
 	 * @return a List with all ImageContainers
 	 * @throws IOException 
 	 * @throws ClassNotFoundException 
-	 * @author Thomas Spanier
 	 */
 	public ArrayList<ImageContainer> getAllImageContainers(String username) throws ClassNotFoundException, IOException {
 		ArrayList<ImageContainer> ics = new ArrayList<ImageContainer>();
@@ -372,7 +368,6 @@ public class Bootstrap extends Peer {
 	 * @return image that has been created
 	 * @throws ClientProtocolException
 	 * @throws IOException
-	 * @author Aude Nana 28.07.2017
 	 */
 	private Image forwardCreateImage(String destinationPeerIP, 
 			String username,ImageContainer imageContainer) 
@@ -404,7 +399,7 @@ public class Bootstrap extends Peer {
 	/**
 	 * Returns a String that contains all imagenames of an user
 	 * @param username
-	 * @return 
+	 * @return a String that contains all imagenames of an user
 	 */
 	public String listImageNames(String username) {
 		StringBuffer sb = new StringBuffer();
@@ -421,8 +416,8 @@ public class Bootstrap extends Peer {
 	}
 	
 	/**
-	 * Returns all Images of all users
-	 * @return
+	 * Returns a String that contains all imagenames of all users
+	 * @return a String that contains all imagenames of all users
 	 */
 	public String listImageNames() {
 		StringBuffer sb = new StringBuffer();

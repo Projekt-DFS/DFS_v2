@@ -13,13 +13,9 @@ import main.java.de.htwsaar.dfs.model.User;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 
-/**
- * @author Thomas Spanier
- *
- */
 public class ImageContainer implements Serializable {
 
-	private static final long serialVersionUID = 4903375720434123881L;	//TODO was ist das?
+	private static final long serialVersionUID = 4903375720434123881L;
 	//Liste mit keys von Bildern
 	
 	//Variables
@@ -39,13 +35,11 @@ public class ImageContainer implements Serializable {
 	private Date date;
 	private String location;
 	private LinkedList<String> tagList;
-	//TODO Location implementieren
 
-		
+	
 	/**
 	 * Constructor
 	 * Sets imageContainer object
-	 * @author Thomas Spanier
 	 */
 	public ImageContainer(BufferedImage img, String username, String imageName, 
 			String location, Date date, LinkedList<String> tagList) {
@@ -142,7 +136,6 @@ public class ImageContainer implements Serializable {
 	 * Sets the Path where the image will be stored
 	 * The image will be stored in /images/<username>/<imagename>.<ending> 
 	 * e.g. images/testuser1/testimage01.jpg
-	 * @author Thomas Spanier
 	 */
 	public void setPath() {
 		StringBuffer imageNameWithoutEnding = new StringBuffer();
@@ -203,7 +196,6 @@ public class ImageContainer implements Serializable {
 	/**
 	 * adds a new Tag
 	 * @param newtag
-	 * @author Thomas Spanier
 	 */
 	public void addTag(String newtag) {
 		//Deny empty tags
@@ -222,7 +214,6 @@ public class ImageContainer implements Serializable {
 	/**
 	 * Deletes a tag
 	 * @param deletetag
-	 * @author Thomas Spanier
 	 */
 	public void deleteTag(String deletetag) {
 		for(String tag : tagList) {
@@ -237,7 +228,6 @@ public class ImageContainer implements Serializable {
 	 * Edits a tag
 	 * @param oldTag
 	 * @param newTag
-	 * @author Thomas Spanier
 	 */
 	public void editTag(String oldTag, String newTag) {
 		//Deny empty tags
@@ -259,7 +249,6 @@ public class ImageContainer implements Serializable {
 	/**
 	 * creates a Thumbnail and saves it in this object
 	 * @param img the original image
-	 * @author Thomas Spanier
 	 */
 	private void createThumbnail(BufferedImage img) {
 		Image temp = img.getScaledInstance(img.getWidth() / 4, img.getHeight() / 4, BufferedImage.SCALE_SMOOTH);

@@ -25,13 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.apache.http.client.ClientProtocolException;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
-/**
- * @author Thomas Spanier
- * @author Raphaela Wagner
- * @author Aude Nana
- * @author Mario Anklam
- *
- */
+
 @XmlRootElement
 public class Peer {
 	
@@ -130,7 +124,6 @@ public class Peer {
 	
 	//Routing
 	/**
-	 * @author Raphaela Wagner 27.06.2018
 	 * Recursive method that returns the destinationPeer which holds the destinationCoordinate
 	 * @param destinationCoordinate
 	 * @return 
@@ -147,7 +140,7 @@ public class Peer {
 			}
 		}
 		System.out.println("Naechster Nachbar: " + closestNeighbour.getIp_adresse());
-		return closestNeighbour;//.routing(destinationCoordinate);
+		return closestNeighbour;
 	}
 	
 	
@@ -181,7 +174,6 @@ public class Peer {
 	
 
 	/**
-	 * @ author Raphaela Wagner 27.06.2018
 	 * routing method 
 	 * @param destinationCoordinate
 	 * @return
@@ -305,7 +297,6 @@ public class Peer {
 	//Create Peer
 	/**
 	 * Splits the Peer's Zone and transfers one half to the new Peer
-	 * @author Thomas Spanier & Raphaela Wagner
 	 * @return new Zone for the new Peer
 	 */
 	public Zone splitZone() {
@@ -420,12 +411,11 @@ public class Peer {
 	
 	//Image functions P2P
 	/**
-	 * Saves an ImageContainer including the image and the thumbnail on the hdd
+	 * Saves an ImageContainer including the image and the thumbnail on this peer
 	 * @param ic the imageContainer to be saved
-	 * @author Thomas Spanier
+	 * @throws IOException
 	 */
 	public static void saveImageContainer(ImageContainer ic) throws IOException {
-		
 		ic.setPeerIp(StaticFunctions.loadPeerIp());
 		
 		//Create folders if they do not already exist
@@ -461,14 +451,13 @@ public class Peer {
 		
 
 	/**
-	 * Deserialize imageContainer  
+	 * Deserialize and load an imageContainer from the peer
 	 * @param username the imageContainer's username
 	 * @param imageName the imageContainer's imageName
 	 * @return the imageContainer
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws ClassNotFoundException
-	 * @author Thomas Spanier
 	 */
 	public ImageContainer loadImageContainer(String username, String imageName) throws FileNotFoundException, IOException, ClassNotFoundException {
 		//Get location
@@ -501,10 +490,9 @@ public class Peer {
 	}
 		
 	/**
-	 * Deletes the imageContainer
+	 * Deletes the imageContainer incl the image and thumbnail from the peer
 	 * @param username
 	 * @param imageName
-	 * @author Thomas Spanier
 	 */
 	public void deleteImageContainer(String username, String imageName) {
 		StringBuffer imageNameWithoutEnding = new StringBuffer();
@@ -554,11 +542,14 @@ public class Peer {
 	
 
 	/**
-	 * Edits the image's meta data
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 * @throws FileNotFoundException 
-	 * @author Thomas Spanier
+	 * Overrides the image's meta data
+	 * @param username
+	 * @param imageName
+	 * @param location
+	 * @param tagList
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
 	 */
 	public void editMeta(String username, String imageName, String location, LinkedList<String> tagList) throws FileNotFoundException, ClassNotFoundException, IOException {
 		Point p = StaticFunctions.hashToPoint(username, imageName);
@@ -576,7 +567,8 @@ public class Peer {
 	}
 	
 	/**
-	 * Adds all imageContainers to the transferList
+	 * Adds all imageContainers saved on the peer to the transferList
+	 * Used for deletePeer
 	 * @return an ArrayList with all ImageContainers from the peer
 	 */
 	private ArrayList<ImageContainer> transferAllImages() {
@@ -623,8 +615,9 @@ public class Peer {
 	
 	
 	/**
-	 * @author Raphaela Wagner
-	 * @return
+	 * Adds all imageContainers saved on the peer that are not in peer's zone anymore to the transferList
+	 * Used for CreatePeer
+	 * @return an ArrayList with all ImageContainers that are not in peer's zone anymore from the peer
 	 */
 	public ArrayList<ImageContainer> findImagesToTransfer()  {
 		File directory = new File("images/");
