@@ -1,24 +1,38 @@
+/**
+ * The main part of the webclient is written in this file.
+ * @author Julian Einspenner
+ */
+
+//Links
 	var getImageInfoLink;
 	var uploadLink;
 	var deletionLink;
 	var setMetaDataLink;
 	var graphicsLink;
 
+//User data and authentication
 	var userName;
 	var password;
 	var ip;
     var auth = "";
     
+//login status
     var loggedIn = false;
 
+//JSON-Array for images
     var json = new Array();
 
+//Current page
 	var page = 0;
 
+//Image array for images converted from json	
 	var images = new Array();
 
 
-	//Image-Objekt
+	/**
+	 * This function will generate an Image-object from a json-file
+	 * @param json is the json-file
+	 */
 	function Image(json){
 		this.created = json.created,
 		this.location = json.location,
@@ -33,7 +47,12 @@
 	} 
 
 
-//---------------Funktionen---------------//	
+//---------------Logic---------------//	
+	
+	/**
+	 * The links to communicate with the REST-Api will be set.
+	 * For having correct links, the username und password from index.html will be used.
+	 */
 	function updateLinks(){
 		ip = window.location.hostname;
 		getImageInfoLink = "http://" + ip + ":4434/bootstrap/v1/images/" + userName;
@@ -45,12 +64,25 @@
 	}
 
 
+	/**
+	 * The authentication Base64 string is generated here. It will be stored
+	 * to every HTTP-Requests header.
+	 * @returns
+	 */
 	function updateAuthentication(){
 		var userNameAndPwBase64 = userName + ":" + password;
 		userNameAndPwBase64 = btoa(userNameAndPwBase64);
 		auth = "Basic " + userNameAndPwBase64;
 	}
 
+	/**
+	 * This function performs three logical steps:
+	 * First, the links for communication will be updated.
+	 * Secondly, the authentication header will be updated.
+	 * Finally, the login-request will be executed.
+	 * -> Success: Navigation bar and images will be load
+	 * -> Fail: Nothing happens and an alert with information will pop up.
+	 */
 	function getImageInfo(){
 		
 		if(!loggedIn){
@@ -86,6 +118,13 @@
         request.send();
 	}
 
+	/**
+	 * Generates a navigation bar to handle the webclient.
+	 * Components are:
+	 * -> Logout-, Upload-, Delete- and Refresh-Buttons
+	 * -> Containers for displaying images
+	 * -> A page menu with to arrows (images as buttons) to change the current page (Per page there are 16 images)
+	 */
 	function createNavi(){
 		if(json == null || !loggedIn || document.getElementById("upload") != null){
 			return;
@@ -149,9 +188,12 @@
 		document.getElementById("LoginButton").innerHTML="Logout";
 		document.getElementById("LoginButton").setAttribute("onClick", "logout()");
 		document.getElementById("LoginButton").setAttribute("class", "logout");
-		
 	}
 
+	/**
+	 * This function creates the containers for the images. The inner HTML of them will be filled with information
+	 * about the image source. Furthermore it allows to mark images for deletion.
+	 */
 	function createImages(){
 
         if(!document.contains(document.getElementById("pictureDiv"))){
@@ -179,6 +221,10 @@
 		dataSourceToBlobUrl();		
 	}
 
+	/**
+	 * Because <img src="link"> won't work with HTTP-Header authentification the datasource has to be converted
+	 * into Data Blob URL's to reach the binary data of images.
+	 */
 	function dataSourceToBlobUrl(){
 		var elements = document.getElementsByClassName("picture");
 		var dataSources = new Array();
@@ -195,7 +241,11 @@
 		}
 	}
 
-
+	/**
+	 * Converts the binary data to a data blob. This function is called for every image
+	 * @param linkToImage is the link to the image source
+	 * @param i is the ID of the image container which loads its image
+	 */
 	function setDataSourcesToBlob(linkToImage, i){
         var request = new XMLHttpRequest();
 		
@@ -221,6 +271,11 @@
 		request.send();
 	} 
 
+	/**
+	 * This function is called if the upload button is clicked. A filechooser will appear.
+	 * It stores images to upload in an array. For every image the function
+	 * readAndUpload() is called
+	 */
 	var uploads = 0;
 	var files;
 	function uploadImage() {
@@ -232,7 +287,11 @@
 		}	
 	}
 
-
+	/**
+	 * Generates an JSON-String to communicate with the REST-API.
+	 * The image source and image name will be written in it.
+	 * @param file is the next image from the image array formed with the filechooser
+	 */
 	function readAndUpload(file) {
 		var name = file.name;
 
@@ -270,6 +329,10 @@
 		reader.readAsDataURL(file);
 	}
 
+	/**
+	 * Allows to mark an image. Marked images can be deleted with the delete button
+	 * @param i is the ID of the marked image
+	 */
 	function markImage(i){
 		var img = document.getElementById("img_" + i);
 		img.setAttribute("class", "picture marked");
@@ -277,6 +340,10 @@
 		img.setAttribute("value", i);
 	}
 
+	/**
+	 * Allows to unmark an image so it won't be deleted if the delete button is clicked
+	 * @param i is the ID of the marked image
+	 */
 	function unmarkImage(i){
 		var img = document.getElementById("img_" + i);
 		img.setAttribute("class", "picture");
@@ -284,6 +351,11 @@
 		img.removeAttribute("value");
 	}
 
+	/**
+	 * This function is called if the delete button is clicked.
+	 * It generates a REST-Call with queryparameter "imageName" to tell the CAN which 
+	 * images have to be deleted. Marked images clear out from the backend and certainly from the webclients view
+	 */
 	function deleteMarkedImages(){
 		var markedImages = document.getElementsByClassName("picture marked");
 		if(markedImages.length == 0) return;
@@ -322,6 +394,9 @@
 		request.send();
 	}
 
+	/**
+	 * Decreasing of the current page value. 16 images per page are possible
+	 */
 	function goLeft(){
         if(page==0){
             return;
@@ -330,6 +405,9 @@
         getImageInfo();
     }
 
+	/**
+	 * Increasing of the current page value. 16 images per page are possible
+	 */
     function goRight(){
         if(page >= json.length / 16 -1){
             return;
@@ -338,6 +416,9 @@
         getImageInfo();
 	}
 	
+    /**
+     * Function to log out from backend. The startpage index.html is called and the user could relog.
+     */
     function logout(){
 		loggedIn = false;
 		page = 0;
