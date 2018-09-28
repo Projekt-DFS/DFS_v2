@@ -3,29 +3,29 @@
  * @author Julian Einspenner
  */
 
-//Links
+    //Links
 	var getImageInfoLink;
 	var uploadLink;
 	var deletionLink;
 	var setMetaDataLink;
 	var graphicsLink;
 
-//User data and authentication
+    //User data and authentication
 	var userName;
 	var password;
 	var ip;
     var auth = "";
     
-//login status
+    //login status
     var loggedIn = false;
 
-//JSON-Array for images
+    //JSON-Array for images
     var json = new Array();
 
-//Current page
+    //Current page
 	var page = 0;
 
-//Image array for images converted from json	
+    //Image array for images converted from json	
 	var images = new Array();
 
 
@@ -67,7 +67,6 @@
 	/**
 	 * The authentication Base64 string is generated here. It will be stored
 	 * to every HTTP-Requests header.
-	 * @returns
 	 */
 	function updateAuthentication(){
 		var userNameAndPwBase64 = userName + ":" + password;
