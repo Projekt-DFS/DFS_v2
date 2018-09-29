@@ -6,11 +6,6 @@ import main.java.de.htwsaar.dfs.StartBootstrap;
 import main.java.de.htwsaar.dfs.model.*;
 
 
-/**
- * 
- * @author Aude Nana
- *
- */
 public class UserService {
 
 	private Bootstrap bootstrap = StartBootstrap.bootstrap;
@@ -20,8 +15,8 @@ public class UserService {
 	}
 
 	/**
-	 * This Method return all the users 
-	 * that are in the bootstrap
+	 * This Method returns all the users 
+	 * that are saved in the bootstrap
 	 * @return
 	 */
 	public List<User> getAllUsers(){
@@ -30,7 +25,7 @@ public class UserService {
 	}
 	
 	/**
-	 * This Method return a special user in the bootstrap
+	 * This Method return a specified user from the bootstrap
 	 * @param username
 	 * @return
 	 */
