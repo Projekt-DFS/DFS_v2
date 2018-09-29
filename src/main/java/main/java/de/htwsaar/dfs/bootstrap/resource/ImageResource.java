@@ -21,8 +21,6 @@ import main.java.de.htwsaar.dfs.model.Metadata;
 import main.java.de.htwsaar.dfs.bootstrap.service.ImageService;
 /**
  * 
- * @author Aude Nana
- *
  */
 @Path("images/{username}")
 public class ImageResource {
@@ -62,7 +60,7 @@ public class ImageResource {
 
 	
 	/**
-	 * This method allows the user to delete many pictures at the same time
+	 * This method allows the user to delete several pictures at the same time
 	 * @param username as String
 	 * @param imageName as String 
 	 */
@@ -79,7 +77,7 @@ public class ImageResource {
 	}
 
 	/**
-	 * this method returns a special image object 
+	 * this method returns a certain image object 
 	 * @param username as String
 	 * @param imageName as String
 	 * @return Image 
@@ -115,7 +113,7 @@ public class ImageResource {
 	}
 	
 	/**
-	 * this method allows to update a image object in the database
+	 * this method allows to update an image object in the database
 	 * @param username as String 
 	 * @param imageName as String 
 	 * @param image to be updated as Image
