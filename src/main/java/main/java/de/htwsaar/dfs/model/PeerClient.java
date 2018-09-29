@@ -18,7 +18,7 @@ import main.java.de.htwsaar.dfs.utils.RestUtils;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
- * This Class represent a Peer as Client
+ * This Class represents a Peer as Client
  *
  */
 public class PeerClient {
@@ -31,9 +31,9 @@ public class PeerClient {
 	
 	
 	/**
-	 * This method sent a joinRequest to a peer
-     * @param destinationIp : the IP of the destination peer
-     * @param api : the API that is install on the destinationPeer
+	 * This method sents a joinRequest to a peer
+         * @param destinationIp : the IP of the destination peer
+         * @param api : the API that is installed on the destinationPeer
 	 * @param newPeer
 	 */
 	public Peer createPeer(String destinationIp, Point p, String api, Peer newPeer) {
@@ -55,10 +55,10 @@ public class PeerClient {
 	
 	
 	/**
-	 *  This method adds a neighbor in the routing table of a peer
-	 * @param destinationIp : the peer where the operation will be done
+	 * This method adds a neighbor to the routingTable of a peer
+	 * @param destinationIp : the peer on which the operation will be performed
 	 * @param api : the web context Path 
-	 * @param peerToAdd : the peer that should be added
+	 * @param peerToAdd : the peer to be added
 	 */
 	public void addNeighbor(String destinationIp , String api, Peer peerToAdd) {
 		
@@ -77,10 +77,10 @@ public class PeerClient {
 	
 	
 	/**
-	 * This method deletes a neighbor entry in the routing table of a peer
-	 * @param destinationIp : the peer where the operation will be done
+	 * This method deletes a neighbor entry in the routingTable of a peer
+	 * @param destinationIp : the peer on which the operation will be performed
 	 * @param api : the web context Path 
-	 * @param peerToDelete the peer that should be deleted
+	 * @param peerToDelete the peer to be deleted
 	 */
 	public void deleteNeighbor(String destinationIp , String api, Peer peerToDelete) {
 		
@@ -99,10 +99,10 @@ public class PeerClient {
 	
 	
 	/**
-	 * This method forward a point to another Peer
+	 * This method forwards a point to another Peer
 	 * @param destinationPeer
-	 * @param destinationCoordinate : the Point that should be send
-	 * @return the peer that have the point in his zone.
+	 * @param destinationCoordinate : the Point to be send
+	 * @return the peer that has the point in its zone.
 	 */
 	public Peer routing(Peer destinationPeer , Point destinationCoordinate) {
 		
@@ -157,7 +157,7 @@ public class PeerClient {
 
 
 	/**
-	 * This method updates the zone a peer
+	 * This method updates the zone of a peer
 	 * @param mergeNeighbour
 	 * @param bottomLeft
 	 * @param upperRight
@@ -189,7 +189,7 @@ public class PeerClient {
 
 
 	/**
-	 * This method copy the neighbors of a peer to the neigbor's list of another peer
+	 * This method copies the neighbors of one peer to the routingTable of another peer
 	 * @param mergeNeighbour
 	 * @param routingTable
 	 */
@@ -211,7 +211,7 @@ public class PeerClient {
 
 
 	/**
-	 * this method returns the neighbor's list of a peer
+	 * this method returns the routingTable of a peer
 	 * @param mergeNeighbour
 	 * @return
 	 */
@@ -241,7 +241,7 @@ public class PeerClient {
 	}
 	
 	/**
-	 * This method returns a peer with his locals informations
+	 * This method returns a peer with his local informations
 	 * @param mergeNeighbour
 	 * @return
 	 */
@@ -298,13 +298,13 @@ public class PeerClient {
 	
 
 	
-	/*------------------------------Images's administration ----------------------------   */
+	/*------------------------------Images' administration ----------------------------   */
 	
 	
 	
 	
 	/**
-	 * This method forward the createImage Request to another peer 
+	 * This method forwards the createImage request to another peer 
 	 * @param destinationPeerIP
 	 * @param username
 	 * @param image
@@ -335,7 +335,7 @@ public class PeerClient {
 	}
 	
 	/**
-	 * This method forwarded the get Image request to all neighbors peers
+	 * This method forwardes the getImage request to all neighboring peers
 	 * @param neighborIP
 	 * @param username
 	 * @return
@@ -366,7 +366,7 @@ public class PeerClient {
 	}
 	
 	/**
-	 * This method returns an ImageConatiner Object saved in a special peer
+	 * This method returns an ImageConatiner Object saved on a certain peer
 	 * @param destinationIP
 	 * @param username
 	 * @param imageName
@@ -392,8 +392,8 @@ public class PeerClient {
 	}
 	
 	/**
-	  * This method is called when a peer entry to the  network. 
-	  * All images that belong to the zone of the new peer should be transfer .
+	  * This method is called when a peer enters the  network. 
+	  * All images that now belong to the zone of the new peer will be transfered.
 	  * @param images
 	  * @param destinationIp
 	  */
@@ -426,7 +426,7 @@ public class PeerClient {
 	 }
 	 
 	 /**
-	  * This method deletes an image stored in a special peer
+	  * This method deletes an image stored on a certain peer
 	  * @param destinationIP
 	  * @param username
 	  * @param imageName
@@ -447,7 +447,7 @@ public class PeerClient {
 	 }
 	
 	 /**
-	  * This method returns update the metadata of an image stored in a special peer
+	  * This method returns updated metadata of an image stored on a certain peer
 	  * @param destinationPeerIP
 	  * @param username
 	  * @param imagename
