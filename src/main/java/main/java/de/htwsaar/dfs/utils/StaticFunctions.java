@@ -24,7 +24,7 @@ import main.java.de.htwsaar.dfs.model.Point;
 public class StaticFunctions {
 
 	/**
-	 * Creates a String out of the Coordinate. Form: X,Y
+	 * Creates a String out of a Coordinate. Form: X,Y
 	 * @param coordinate the Coordinate to transform 
 	 * @return the String
 	 */
@@ -256,7 +256,7 @@ public class StaticFunctions {
 	
 	
 	/**
-	 * Convert a IP-Address(String) to long
+	 * Converts an IP-Address(String) to long
 	 * @param ipAddress IP-Address as String 
 	 * @return IP-Adress as long
 	 */	
@@ -284,9 +284,9 @@ public class StaticFunctions {
 	}
 	
 	/**
-	 * Convert a IP-Address(Long) to String
+	 * Converts an IP-Address(Long) to String
 	 * @param i IP-Address as Long 
-	 * @return IP-Adress as String
+	 * @return IP-Address as String
 	 */
 	public String longToIp(long i) {
 		return ((i >> 24) & 0xFF) + "." + ((i >> 16) & 0xFF) + "." + ((i >> 8) & 0xFF) + "." + (i & 0xFF);
@@ -294,7 +294,7 @@ public class StaticFunctions {
 
 
 	/**
-	 * Check which API is installed on an address
+	 * Checks which API is installed on an address
 	 * @param Ip IP-address as String
 	 * @return "bootstrap" oder "p2p"
 	 */
