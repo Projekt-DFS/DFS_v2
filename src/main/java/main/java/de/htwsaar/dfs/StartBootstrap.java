@@ -31,7 +31,7 @@ public class StartBootstrap {
      */
 	
     public static HttpServer startServer() throws UnknownHostException {
-        // create a resource config that scans for JAX-RS resources and providers
+        // creates a resource configuration that scans for JAX-RS resources and providers
         // in de.htwsaar.dfs.iosbootstrap package
         final ResourceConfig rc = new ResourceConfig().packages("main.java.de.htwsaar.dfs.bootstrap.resource");
         rc.register(MultiPartFeature.class);
