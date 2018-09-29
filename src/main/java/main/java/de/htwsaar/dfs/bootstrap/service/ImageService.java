@@ -21,7 +21,6 @@ import main.java.de.htwsaar.dfs.utils.RestUtils;
 
 /**
  * 
- * @author Aude Nana
  *
  */
 public class ImageService {
@@ -40,7 +39,7 @@ public class ImageService {
 				.forEach( (ImageContainer ic)-> 
 					result.add(RestUtils.convertIcToImg(baseUri, ic, username)));
 		
-		//return all images sorted 
+		//return all images sorted by Date
 		return result.stream()
 				.sorted((x,y)-> y.getMetaData().getCreated().compareTo(x.getMetaData().getCreated()) )
 				.collect(Collectors.toList()); 
@@ -62,7 +61,7 @@ public class ImageService {
 	}
 	
 	public Image updateImage(String username, String imageName, Image image) {
-		//pruefen ob image existiert
+		//check if image exists
 		return addImage(username, image);
 	}
 	
@@ -86,7 +85,7 @@ public class ImageService {
 		String m = "" ;
 		LinkedList<String> t = new LinkedList<>();
 		
-		//update the data only when the fields are full
+		//update data only when the fields are full
 		if(metadata.getLocation() != null)
 			m = metadata.getLocation();
 		if(metadata.getTagList() != null)
