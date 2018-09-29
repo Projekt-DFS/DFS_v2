@@ -19,7 +19,7 @@ import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 public class ImageContainer implements Serializable {
 
 	private static final long serialVersionUID = 4903375720434123881L;
-	//Liste mit keys von Bildern
+	//list with keys of images Liste mit keys von Bildern
 	
 	//Variables
 	transient private BufferedImage img;
@@ -32,7 +32,7 @@ public class ImageContainer implements Serializable {
 	private String peerIp;
 	
 	
-	//Meta-Data
+	//meta data
 	private User user;
 	private String username;
 	private Date date;
@@ -94,7 +94,7 @@ public class ImageContainer implements Serializable {
 	}
 
 	
-	// get-methods meta
+	// get methods meta
 	public User getUser() {
 		return user;
 	}
@@ -117,7 +117,7 @@ public class ImageContainer implements Serializable {
 	}
 	
 	
-	//set-methods
+	//set methods
 	public void setImage(BufferedImage img) {
 		this.img = img;
 		
@@ -195,7 +195,7 @@ public class ImageContainer implements Serializable {
 		
 		
 		
-	//Tag-editing-methods 
+	//Tag editing methods 
 	/**
 	 * adds a new Tag
 	 * @param newtag
