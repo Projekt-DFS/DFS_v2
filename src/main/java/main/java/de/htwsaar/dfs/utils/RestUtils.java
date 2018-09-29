@@ -18,10 +18,10 @@ import main.java.de.htwsaar.dfs.model.Metadata;
 public class RestUtils {
 
 	/**
-	 * This method convert a BufferedImage to a Base64 String
+	 * This method converts a BufferedImage to a Base64 String
 	 * @param image
-	 * @param type specify which format the Image has example: png , jpg , gif
-	 * @return
+	 * @param type specifies which format the Image has, example: png , jpg , gif
+	 * @return imageString
 	 */
 	public static String encodeToString(BufferedImage image, String type) {
         String imageString = null;
@@ -42,8 +42,8 @@ public class RestUtils {
     }
 
 	/**
-	 * This method convert a String to a BufferedImage
-	 * @param imageString the Base64 decoded imagString
+	 * This method converts a String to a BufferedImage
+	 * @param imageString the Base64 decoded imageString
 	 * @return a BufferedImage decoded from the imageString
 	 */
 	public static BufferedImage decodeToImage(String imageString) {
@@ -64,7 +64,7 @@ public class RestUtils {
 
 
 	/**
-	 * This method convert an ImageContainer to Image with link
+	 * This method converts an ImageContainer to an Image with link
 	 * @param baseUri
 	 * @param ic
 	 * @param username
@@ -93,7 +93,7 @@ public class RestUtils {
 	}
 
 	/**
-	 * This method tests the image's fied 
+	 * This method tests the image's fields
 	 * @param image
 	 * @return
 	 */
@@ -104,7 +104,7 @@ public class RestUtils {
 	}
 	
 	/**
-	 * this method converts a image to ImageContainer
+	 * this method converts an image to an ImageContainer
 	 * @param image
 	 * @return
 	 */
