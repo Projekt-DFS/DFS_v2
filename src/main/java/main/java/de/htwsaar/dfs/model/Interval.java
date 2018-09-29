@@ -2,17 +2,29 @@ package main.java.de.htwsaar.dfs.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-
+/**
+ * A class that helps to interpret a Zones defining points as borders 
+ * and provides methods for checking whether borders overlap etc.
+ */
 @XmlRootElement
 public class Interval {
+	// attributes
 	private double min;
 	private double max;
 	private double anchor;
 	
+	// constructor
 	public Interval() {
 		
 	}
 	
+	/**
+	 * sets an interval
+	 * throws an exception if illegal interval was to be set
+	 * @param min
+	 * @param max
+	 * @param anchor
+	 */
 	public void setInterval(double min, double max, double anchor) {
 		if (min < max) {
 			this.min = min;
@@ -23,6 +35,11 @@ public class Interval {
 		}
 	}
 	
+	/**
+	 * checks whether two intervals intersect
+	 * @param interval
+	 * return true if interval intersects and false if it doesn't
+	 */
 	public boolean intersects(Interval interval) {
 		if (checkAnchor(interval.getAnchor()) == false) 
 			return false;
@@ -37,6 +54,11 @@ public class Interval {
 		return true;
 	}
 	
+	/**
+	 * checks whether a value lies within an interval
+	 * @param value
+	 * returns true if value lies within interval and false if it doesn't
+	 */
 	public boolean containsValue(double value) {
 		if ((min <= value) && (max >= value))
 			return true;
@@ -48,6 +70,9 @@ public class Interval {
 		return max - min;
 	}
 	
+	/**
+	 * checks whether two anchors are the same
+	 */
 	public boolean checkAnchor(double otherAnchor) {
 		return anchor == otherAnchor;
 	}
