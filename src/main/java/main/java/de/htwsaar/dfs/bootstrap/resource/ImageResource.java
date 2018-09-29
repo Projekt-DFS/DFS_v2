@@ -44,7 +44,7 @@ public class ImageResource {
 	}
 	
 	/**
-	 * this method allows to add a picture in the network 
+	 * this method allows to add a picture to the network 
 	 * @param username as String
 	 * @param image as String
 	 * @return image that has been added
@@ -77,7 +77,7 @@ public class ImageResource {
 	}
 
 	/**
-	 * this method returns a certain image object 
+	 * this method returns a specified image object 
 	 * @param username as String
 	 * @param imageName as String
 	 * @return Image 
@@ -129,7 +129,7 @@ public class ImageResource {
 	}
 	
 	/**
-	 * this method deletes a picture in the network
+	 * this method deletes a picture from the network
 	 * @param username as string
 	 * @param imageName as String
 	 */
