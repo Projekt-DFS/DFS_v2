@@ -11,7 +11,6 @@ import java.io.IOException;
 /**
  * Main Class
  * Starts the user dialogue to manage the CAN
- * @author Phillip Persch *
  */
 public class Dialogue {
 	
@@ -20,13 +19,13 @@ public class Dialogue {
 	private boolean bootstrapExists = false;
 	private boolean peerExists = false;
 	
-     // Main menue
+     // Main menu
     private static final int I_AM_A_BOOTSTRAP     = 1;
     private static final int I_AM_A_PEER	      = 2;
     private static final int PRINT_CAN			  = 3;
     private static final int END                  = 0;
     
-     // Submenue 1 (i_am_a_bootstrap)
+     // Submenu 1 (i_am_a_bootstrap)
     private static final int START_NEW_CAN_AS_BOOTSTRAP     = 1;
     private static final int STOP_CAN_AND_BOOTSTRAP	 	    = 2;
     private static final int ADD_USER           			= 3;
@@ -36,7 +35,7 @@ public class Dialogue {
     private static final int LIST_USER_IMAGES				= 7;
     
     
-    // Submenue 2 (i_am_a_peer)
+    // Submenu 2 (i_am_a_peer)
     private static final int JOIN_CAN_AS_PEER  				= 1;
     private static final int LEAVE_CAN_AS_PEER          	= 2;
     
@@ -63,7 +62,7 @@ public class Dialogue {
      
  //-----------------------------Take user input---------------------------------------
     
-    // Read input from main menue
+    // Read input from main menu
     private int readFunctionMainMenue() {
         int readInput;
          System.out.print(I_AM_A_BOOTSTRAP   	 + ": I'm the bootstrap\n" +
@@ -78,7 +77,7 @@ public class Dialogue {
         return readInput;
     }
     
-    // Read input from bootstrap submenue
+    // Read input from bootstrap submenu
     private int readFunctionBootstrapMenue() {
     	
         int readInput;
@@ -99,7 +98,7 @@ public class Dialogue {
         return readInput;
     }
     
-    // Read input from peer submenue
+    // Read input from peer submenu
     private int readFunctionPeerMenue() {
         int readInput;
          System.out.print(
@@ -122,7 +121,7 @@ public class Dialogue {
     
 //-----------------------------Execute the selected option---------------------------------------
     
-    // Execute option in main menue
+    // Execute option in main menu
     private void executeFunctionMainMenue(int func) throws IOException {
      	int submenue;
     	
@@ -161,7 +160,7 @@ public class Dialogue {
          }
      }    
  
-    // Execute option in bootstrap submenue
+    // Execute option in bootstrap submenu
     private void executeFunctionBootstrapMenue(int func) throws IOException {
      	String username;
         switch (func) {
@@ -262,7 +261,7 @@ public class Dialogue {
          }
     }    
     
-    // Execute option in peer submenue
+    // Execute option in peer submenu
     private void executeFunctionPeerMenue(int func) {
          switch (func) {            
             
@@ -352,7 +351,6 @@ public class Dialogue {
 /** 
  * Own Thread class for bootstrap, to allow bootstrap and dialogue to run simultaneously.
  * Only starts a bootstrap.
- * @author Phillip Persch *
  */ 
 class BootstrapThread extends Thread {
 	@Override
@@ -368,7 +366,6 @@ class BootstrapThread extends Thread {
 /** 
  * Own Thread class for peer, to allow peer and dialogue to run simultaneously.
  * Only starts a peer.
- * @author Phillip Persch *
  */
 class PeerThread extends Thread {
 	@Override
