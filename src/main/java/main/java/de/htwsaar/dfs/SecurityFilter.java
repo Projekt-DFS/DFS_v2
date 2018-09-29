@@ -16,7 +16,7 @@ import main.java.de.htwsaar.dfs.model.*;
 
 /**
  * SecurityFilter class.
- * this class filters all access to Images resources from a client. 
+ * this class filters all access to Image resources from a client. 
  * @author Aude Nana
  *
  */
@@ -37,7 +37,7 @@ public class SecurityFilter implements ContainerRequestFilter {
 			//get authentication header of the request
 			List<String> authHeader = requestContext.getHeaders().get(AUTHENTICATION_HEADER_KEY);
 			
-			//authenticate the user only when the authentication header has informations 
+			//authenticate the user only if the authentication header has information 
 			if(authHeader != null && authHeader.size() > 0) {
 				//header
 				String authToken = authHeader.get(0);
