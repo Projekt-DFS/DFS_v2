@@ -14,8 +14,7 @@ import main.java.de.htwsaar.dfs.model.Zone;
 
 /**
  * 
- * @author Aude Nana
- *
+ * 
  */
 public class PeerService {
 	
