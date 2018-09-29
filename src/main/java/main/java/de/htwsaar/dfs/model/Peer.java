@@ -17,8 +17,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.imageio.ImageIO;
 
-import java.net.UnknownHostException;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -209,12 +207,18 @@ public class Peer {
 		newPeer.mergeRoutingTableSinglePeer(this);	
 	}
 	
+	/**
+	 * Refreshes the old peer's and all his neighbours' routingTable
+	 */
 	public void checkNeighboursOldPeer() {
+		//Check all peers in routingTable
 		for(Peer neighbour : routingTable) {
 			String api =  StaticFunctions.checkApi(neighbour.getIp_adresse());
 			Peer tmpPeer = new Peer(this);
 			tmpPeer.dumpRoutingTable();
+			//Check if still neighbor
 			if(!isNeighbour(neighbour)) {
+				//Remove from RoutingTable
 				routingTable.remove(neighbour);
 				new PeerClient().deleteNeighbor(neighbour.getIp_adresse(), api, tmpPeer);
 			} else {
@@ -226,12 +230,18 @@ public class Peer {
 	}
 		
 	
+	/**
+	 * Refreshes the new peer's and all his neighbours' routingTables
+	 */
 	public void checkNeighboursNewPeer() {
+		//Check all peers in routingTable
 		for(Peer neighbour : routingTable) {
+			//Check if still neighbour
 			if(!neighbour.isNeighbour(this)) {
 				this.routingTable.remove(neighbour);
 				
 			} else {
+				//Check api and add newPeer to neighbour's routingTable
 				if(!neighbour.getIp_adresse().equals(StaticFunctions.loadBootstrapIp())) {
 					new PeerClient().addNeighbor(neighbour.getIp_adresse(), "p2p", this);
 				} else {
