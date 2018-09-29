@@ -20,9 +20,7 @@ import main.java.de.htwsaar.dfs.model.Image;
 import main.java.de.htwsaar.dfs.model.Metadata;
 import main.java.de.htwsaar.dfs.peer.service.ImageService;
 /**
- * 
- * @author Aude Nana
- *
+ * ImageResource Class
  */
 @Path("images/{username}")
 public class ImageResource {
@@ -31,7 +29,7 @@ public class ImageResource {
 
 	/**
 	 * this method returns all images of the current user
-	 * that are actually in this peer as objects
+	 * that are saved at this peer as objects
 	 * @param username as String
 	 * @return Images as list
 	 * @throws IOException 
@@ -45,7 +43,7 @@ public class ImageResource {
 	}
 	
 	/**
-	 * this method allows to save a picture in a peer 
+	 * this method allows to save a picture on a peer 
 	 * @param username as String
 	 * @param image as String
 	 * @return image that has been added
@@ -63,7 +61,7 @@ public class ImageResource {
 
 	
 	/**
-	 * This method allows the user to delete many pictures at the same time
+	 * This method allows the user to delete several pictures at the same time
 	 * @param username as String
 	 * @param imageName as String 
 	 */
@@ -79,7 +77,7 @@ public class ImageResource {
 	}
 
 	/**
-	 * this method returns a special image object 
+	 * this method returns a certain image object 
 	 * @param username as String
 	 * @param imageName as String
 	 * @return Image 
@@ -97,7 +95,7 @@ public class ImageResource {
 	}
 	
 	/**
-	 * this method returns a picture as BufferedImage
+	 * this method returns an image as BufferedImage
 	 * @param username as String
 	 * @param imageName as String
 	 * @return BufferedImage 
@@ -115,7 +113,7 @@ public class ImageResource {
 	}
 	
 	/**
-	 * this method allows to update a image object in the database
+	 * this method allows to update an image object in the database
 	 * @param username as String 
 	 * @param imageName as String 
 	 * @param image to be updated as Image
@@ -131,7 +129,7 @@ public class ImageResource {
 	}
 	
 	/**
-	 * this method deletes a picture in a peer
+	 * this method deletes an image saved on a peer
 	 * @param username as string
 	 * @param imageName as String
 	 */
@@ -145,7 +143,7 @@ public class ImageResource {
 	
 	
 	/**
-	 * This method returns the metadata of a picture
+	 * This method returns the metadata of an image
 	 * @param username as string
 	 * @param imageName as String 
 	 * @return all meatadata assigned to a picture
@@ -163,7 +161,7 @@ public class ImageResource {
 	}
 	
 	/**
-	 * This method allows to update the metadata of a picture
+	 * This method allows to update the metadata of an image
 	 * @param username as string
 	 * @param imageName as String 
 	 * @param metadata : new metadata
