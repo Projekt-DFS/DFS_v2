@@ -50,7 +50,7 @@ public class StartPeer {
     }
     
     /**
-     * This method sent a joinRequest to a peer. Once a peer is started , the request 
+     * This method sents a joinRequest to a peer. Once a peer is started the request 
      * will be sent to the bootstrap first
      * @param ip : is the IP address of the destination's peer
      * @param api : is the API that is installed on the destination's peer
@@ -60,10 +60,10 @@ public class StartPeer {
     private static void joinPeer(String ip, String api) throws ClientProtocolException, IOException {
     	
     	Point p = Peer.generateRandomPoint();
-    	//every join request comes at the bootstrap first
+    	//every join request reaches the bootstrap first
 		final String bootstrapURL = "http://" + ip + ":4434/" + api + "/v1/createPeer/" + p.getX() + "-" + p.getY();
 		
-		//Build a Peer only with IP. The Bootstrap will give him a zone.
+		//Builds a Peer with an IP only. The Bootstrap will assign a zone to it.
 		peer = new Peer(StaticFunctions.loadPeerIp());
 		
 		Client client = ClientBuilder.newClient();
@@ -81,7 +81,7 @@ public class StartPeer {
     
 
     /**
-     * read the IP address automatically
+     * reads the IP address automatically
      * @return
      * @throws UnknownHostException
      */
