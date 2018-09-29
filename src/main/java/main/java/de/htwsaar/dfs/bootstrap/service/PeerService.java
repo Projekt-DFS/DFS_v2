@@ -91,7 +91,7 @@ public class PeerService {
 			if(neighbors.addIfAbsent(peer) )
 				System.out.println("new neighbor added:" + peer.getIp_adresse());
 			else
-				System.out.println("Neighbor allready exist !");
+				System.out.println("Neighbor allready exists !");
 			bootstrap.setRoutingTable(neighbors);
 		}
 	}
