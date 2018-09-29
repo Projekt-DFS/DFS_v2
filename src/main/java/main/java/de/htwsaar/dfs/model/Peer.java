@@ -754,7 +754,7 @@ public class Peer {
 	/**
 	 * Method that enables a peer to leave the network
 	 * if there's a neighbouring peer with which the zones can be merged this is done
-	 * else a peer in the network is found that could validly merge with on of its neighbouring peers
+	 * else a peer in the network is found that could validly merge with one of its neighbouring peers
 	 *     this found peer then swaps places with the peer that wants to leave the network so that the
 	 *     leaving peer can merge validly with a peer in order to leave the network	
 	 */
@@ -770,7 +770,7 @@ public class Peer {
 	}
 	
 	/**
-	 * skimms through the routingTable locally to determine whether there is a neighbouring peer 
+	 * skims through the routingTable locally to determine whether there is a neighbouring peer 
 	 * with which the leaving peer can merge validly
 	 * @return neighbour if there is a neighbour to merge with
 	 * @return null if there is no valdi neighbour available
@@ -804,6 +804,7 @@ public class Peer {
 	/**
 	 * checks whether the zone created by merging this peer's zone with neighboursZone has a valid place in the coordinate space
 	 * @param neighboursZone
+	 * the resulting zone cannot intercut any of the sections (Half, quarter, eighth, ...) of the coordinate space because this is how zones are split/created.
 	 * @return true or false
 	 */
 	public boolean zoneHasValidPlaceInSpace(Zone neighboursZone) {
