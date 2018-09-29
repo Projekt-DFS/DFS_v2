@@ -7,8 +7,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Metadata class 
- * This class describe metadata of a Picture
- * @author Aude Nana
+ * This class provides metadata associated with an image
+ * 
  *
  */
 @XmlRootElement
