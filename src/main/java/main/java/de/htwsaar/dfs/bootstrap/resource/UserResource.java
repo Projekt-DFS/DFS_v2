@@ -12,7 +12,7 @@ import main.java.de.htwsaar.dfs.bootstrap.service.UserService;
 import main.java.de.htwsaar.dfs.model.User;
 
 /**
- * This class give access to users Resource
+ * This class gives access to user Resource
  *
  */
 @Path("users")
@@ -31,7 +31,7 @@ public class UserResource {
 	}
 	
 	/**
-	 * this method returns a special user
+	 * this method returns a specified user
 	 * @param username
 	 * @return
 	 */
@@ -43,7 +43,7 @@ public class UserResource {
 	}
 	
 	/**
-	 * This method returns all the pictures of a special user
+	 * This method returns all the pictures of a specified user
 	 * @return
 	 */
 	@Path("/{username}/images")
