@@ -14,9 +14,9 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * The webclient resource class of Projekt-DFS backend.
- * It makes possible to load the login-screen via browser, does not matter
+ * Makes it possible to load the login-screen via browser, regardless of
  * which device you are using
- * @author Julian Einspenner
+ * 
  *
  */
 @Path("/")
@@ -47,7 +47,7 @@ public class WebclientResource {
 	}
 	
 	/**
-	 * Loads the css file to make the webclient more beauty
+	 * Loads the css file to make the webclient more beautiful
 	 * @return the css-file as a string
 	 */
 	@GET
@@ -71,8 +71,8 @@ public class WebclientResource {
 	
 	
 	/**
-	 * Reads a file and gives it back to the client as a string.
-	 * Necessary for having an exported jar-file of the server.
+	 * Reads a file and returns it to the client as a string.
+	 * Necessary for getting an exported jar-file of the server.
 	 * @param name is the name of the file which is going to be read
 	 * @return the file content as a string
 	 */
@@ -95,8 +95,8 @@ public class WebclientResource {
 	}
 	
 	/**
-	 * Reads an image and gives it back to the client.
-	 * Necessary for having an exported jar-file of the server.
+	 * Reads an image and returns it to the client.
+	 * Necessary for getting an exported jar-file of the server.
 	 * @param name is the name of the image which is going to be read
 	 * @return the image
 	 */
