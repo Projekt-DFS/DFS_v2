@@ -20,8 +20,7 @@ import main.java.de.htwsaar.dfs.utils.RestUtils;
 import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 
 /**
- * Special peer who is the interface between the iOS app and the CAN network 
- *
+ * Special peer that functions as an interface between the iOS app and the CAN
  */
 public class Bootstrap extends Peer {
 
@@ -33,7 +32,7 @@ public class Bootstrap extends Peer {
 	 * Constructor
 	 * Creates a new Zone.
 	 * Loads the ip address
-	 * If a userList is already present, this list will be deserialized and be used
+	 * If a userList is already present this list will be deserialized and used
 	 */
 	public Bootstrap() {
 		//Create or load UserList
@@ -116,7 +115,7 @@ public class Bootstrap extends Peer {
 	/**
 	 * Deletes the User including all his images.
 	 * Exports the userList afterwards
-	 * @param username of the deleting User
+	 * @param username of the User to be deleted
 	 * @return success or fail message
 	 */
 	public String deleteUser(String username) {
@@ -138,7 +137,7 @@ public class Bootstrap extends Peer {
 
 	
 	/**
-	 * Check, if Username and Password are correct
+	 * Checks if Username and Password are correct
 	 * @param name
 	 * @param password
 	 * @return true, if User and Password are correct, otherwise false
@@ -168,7 +167,7 @@ public class Bootstrap extends Peer {
 
 
 	/**
-	 * Serialize the UserList in "userList.dat"
+	 * Serializes the UserList in "userList.dat"
 	 * @throws IOException
 	 */
 	public static void exportUserList() throws IOException {
@@ -181,7 +180,7 @@ public class Bootstrap extends Peer {
 
 
 	/**
-	 * Deserialize the UserList from "userList.dat"
+	 * Deserializes the UserList from "userList.dat"
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 * @throws FileNotFoundException if userList.dat does not exist
@@ -205,7 +204,7 @@ public class Bootstrap extends Peer {
 	 * Creates an ImageContainer and sends it into the network
 	 * Updates and exports the userList afterwards
 	 * @param img the image to be saved
-	 * @param username The username who uploaded the image
+	 * @param username The username of the user who uploaded the image
 	 * @param imageName Image's name
 	 * @param location Where the image was taken
 	 * @param date when the image was uploaded
@@ -259,7 +258,7 @@ public class Bootstrap extends Peer {
 	
 	/**
 	 * Loads an imageContainer from the network
-	 * @param username The username who uploaded the image
+	 * @param username The username of the user who uploaded the image
 	 * @param imageName Image's name
 	 * @return the ImageContainer or null, if the imageContainer cannot be found
 	 */
@@ -293,7 +292,7 @@ public class Bootstrap extends Peer {
 	 * Updates and exports the userList afterwards
 	 * @param username
 	 * @param imageName
-	 * @return Message, if image is deleted, or not
+	 * @return Message, whether image is deleted or not
 	 */
 	public String deleteImage(String username, String imageName) {
 		User user = getUser(username);
@@ -364,7 +363,7 @@ public class Bootstrap extends Peer {
 	
 
 	/**
-	 * This method forwards the createImage Request to another peer 
+	 * forwards the createImage request to another peer 
 	 * @param destinationPeerIP as String
 	 * @param username as String
 	 * @param imageContainer 
@@ -376,7 +375,7 @@ public class Bootstrap extends Peer {
 			String username,ImageContainer imageContainer) 
 			throws ClientProtocolException, IOException {
 		
-		//build an Image from imageContainer
+		//builds an Image from imageContainer
 		Image image =  new Image(imageContainer.getImageName(), 
 				new Metadata(imageContainer.getUsername(),
 						imageContainer.getDate(), 
@@ -385,12 +384,12 @@ public class Bootstrap extends Peer {
 				RestUtils.encodeToString(imageContainer.getImage(), "jpg"),
 				null);
 		  
-		//if the Peer of destination is the actually peer, save the image here  
+		//if the destinationPeer is the actual peer the image is saved here  
 		if ( this.getIp_adresse().equals(destinationPeerIP)) {
 			saveImageContainer(imageContainer);
 		}
 		
-		//if not , make a post request to the peer of destination and save the image there
+		//if not makes a post request to the destinationPeer and saves the image there
 		else {
 			image = new PeerClient().createImage(destinationPeerIP, username, image);
 		}
@@ -400,9 +399,9 @@ public class Bootstrap extends Peer {
 	
 	
 	/**
-	 * Returns a String that contains all imagenames of an user
+	 * Returns a String that contains all imageNames of an user
 	 * @param username
-	 * @return a String that contains all imagenames of an user
+	 * @return a String that contains all imageNames of an user
 	 */
 	public String listImageNames(String username) {
 		StringBuffer sb = new StringBuffer();
@@ -419,8 +418,8 @@ public class Bootstrap extends Peer {
 	}
 	
 	/**
-	 * Returns a String that contains all imagenames of all users
-	 * @return a String that contains all imagenames of all users
+	 * Returns a String that contains all imageNames of all users
+	 * @return a String that contains all imageNames of all users
 	 */
 	public String listImageNames() {
 		StringBuffer sb = new StringBuffer();
