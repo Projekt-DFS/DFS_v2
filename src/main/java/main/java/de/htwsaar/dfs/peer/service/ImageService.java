@@ -21,8 +21,6 @@ import main.java.de.htwsaar.dfs.utils.RestUtils;
 
 /**
  * 
- * @author Aude Nana
- *
  */
 public class ImageService {
 	
