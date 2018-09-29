@@ -50,7 +50,7 @@ public class StartPeer {
     }
     
     /**
-     * This method sents a joinRequest to a peer. Once a peer is started the request 
+     * This method sends a joinRequest to a peer. Once a peer is started the request 
      * will be sent to the bootstrap first
      * @param ip : is the IP address of the destination's peer
      * @param api : is the API that is installed on the destination's peer
