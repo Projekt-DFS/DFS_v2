@@ -5,9 +5,7 @@ import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * This class represent the coordinate of a point
- * @author Aude Nana
- *
+ * This class represents a point in the coordinate space and is used to define a peer's zone  
  */
 @XmlRootElement
 public class Point implements Serializable {
@@ -46,6 +44,11 @@ public class Point implements Serializable {
 		this.y = y;
 	}
 	
+	/**
+	 * this method computes the square root of the distance between two points
+	 * @param point
+	 * @return square root of the distance between two points
+	 */
 	public double distanceSq(Point point) {
 		return Math.pow(this.x - point.getX(), 2) + Math.pow(this.y - point.getY(), 2);
 	}
