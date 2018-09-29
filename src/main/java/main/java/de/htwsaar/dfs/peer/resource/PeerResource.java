@@ -33,7 +33,7 @@ public class PeerResource {
 	private PeerService ps = new PeerService();
 	
 	/**
-	 * This method returns all informations about the peer
+	 * This method returns all information about the peer
 	 * @return
 	 */
 	@GET
@@ -53,7 +53,7 @@ public class PeerResource {
 	}
 	
 	/**
-	 * This method allows to add a new peer in the neighbor list of the peer
+	 * This method allows to add a new peer to the neighbors of a peer
 	 * @param peer : new neighbor
 	 * @return the new neighbor
 	 */
@@ -67,7 +67,7 @@ public class PeerResource {
 	}
 
 	/**
-	 * This method returns a special peer from the neighbors 
+	 * This method returns a certain peer from the neighbors 
 	 * @param ip : IP-address of the needed peer 
 	 * @return peer
 	 */
@@ -79,7 +79,7 @@ public class PeerResource {
 	}
 	
 	/**
-	 * this method returns the own zone related to the peer
+	 * this method returns the zone associated with the peer
 	 * @return Zone
 	 */
 	
@@ -118,7 +118,7 @@ public class PeerResource {
 	
 	/**
 	 * This method returns the Image resource of the peer.
-	 * It Allows clients to read, update and delete Images that are save in the peer
+	 * It allows clients to read, update and delete Images that are saved on the peer
 	 * @return
 	 */
 	@GET
@@ -146,7 +146,7 @@ public class PeerResource {
 
 	/**
 	 * This method gives another peer a zone. 
-	 * @param peer: this Peer only have an IP address
+	 * @param peer: this Peer only has an IP address
 	 * @return a Peer with his new Zone 
 	 * @throws ClientProtocolException
 	 * @throws IOException
@@ -165,7 +165,7 @@ public class PeerResource {
 	}
 	
 	/**
-	 * This method returns a Peer Object witch is near to the coordinates
+	 * This method returns a Peer Object witch is close to the destinationPoint
 	 * @return peer Object
 	 */
 	@POST
@@ -186,7 +186,7 @@ public class PeerResource {
 	}
 	
 	/**
-	 * Adds new neighbor if not exists
+	 * Adds new neighbor if it doesn't exist
 	 * @param peer : new neighbor
 	 */
 	@POST
