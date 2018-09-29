@@ -3,6 +3,9 @@ import java.awt.geom.Point2D;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * A class that represents a peer's zone through usage of four points
+ */
 @XmlRootElement
 public class Zone {
     private Point bottomLeft, bottomRight, upperLeft, upperRight, center;
@@ -43,7 +46,7 @@ public class Zone {
     }
     
     /**
-     * Calculate the distance between the middle of one zone to a another point
+     * Calculates the distance between the middle point of one zone to another point
      * @param x1 x point of the middle of the zone
      * @param y1 y point of the middle of the zone
      * @param x2 x point of request point
@@ -58,6 +61,11 @@ public class Zone {
 		return "bottomLeft: " + bottomLeft + " upperRight: " + upperRight;
 	}
     
+    /**
+     * Calculates axis
+     * @param bottomLeft
+     * @param upperRight
+     */
     public void calculateAxis(Point bottomLeft, Point upperRight) {
     	leftY = new Interval();
     	leftY.setInterval(bottomLeft.getY(), upperRight.getY(), bottomLeft.getX());
