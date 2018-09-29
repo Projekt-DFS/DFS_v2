@@ -32,15 +32,15 @@ import main.java.de.htwsaar.dfs.utils.StaticFunctions;
 @XmlRootElement
 public class Peer {
 	
-	//konstante
+	//Constant
 	public static final int port = 4434;
 	
-	//Attribute
+	//Attributes
 	private Zone ownZone;
-	// Aktuelle IP-Adresse des Servers
+	// current ip address of server
 	@XmlTransient
 	public String ip_adresse;
-	//Liste alle Nachbarn
+	//routingTable which holds Neighbours' ip addresses and their zones
 	private CopyOnWriteArrayList<Peer> routingTable = new CopyOnWriteArrayList<>();
 	
 	
@@ -92,7 +92,7 @@ public class Peer {
 	
 	/**
 	 * Loads and returns the ip address from ip.csv
-	 * @return the local ip-address of the peer
+	 * @return the local ip address of the peer
 	 */
 	public String getIP() {
 		ip_adresse = StaticFunctions.loadPeerIp();
@@ -128,7 +128,7 @@ public class Peer {
 	/**
 	 * Recursive method that returns the destinationPeer which holds the destinationCoordinate
 	 * @param destinationCoordinate
-	 * @return 
+	 * @return closestNeighbour
 	 */
 	public Peer shortestPath(Point destinationCoordinate) {
 		
@@ -146,11 +146,10 @@ public class Peer {
 	}
 	
 	
-	/**
-	 * @author Raphaela Wagner 27.06.2018
+	/*
 	 * looks up whether destinationCoordinate lies in this Peer's zone
 	 * @param destinationCoordinate
-	 * @return
+	 * @return true or false
 	 */
 	public boolean lookup(Point destinationCoordinate) {
 		if (this.getOwnZone().getBottomLeft().getX() <= destinationCoordinate.getX() 
@@ -165,9 +164,8 @@ public class Peer {
 	
 	
 	/**
-	 * @author Raphaela Wagner 03.08.2018
 	 * @param p
-	 * @return
+	 * @return true or false
 	 */
 	public boolean containsPoint(Point p) {
 		return ownZone.getBottomRight().getX() > p.getX() && p.getX() > ownZone.getUpperLeft().getX() 
@@ -177,15 +175,18 @@ public class Peer {
 
 	/**
 	 * routing method 
+	 * if current Peer holds the destinationCoordinate, current Peer is returned
+	 * else shortestPath() finds neighbour that is closest to destinationCoordinate and
+	 * routing() is invoked on Peer found through shortestPath() 
 	 * @param destinationCoordinate
-	 * @return
+	 * @return Peer which contains detinationCoordinate
 	 */
 	public Peer routing(Point destinationCoordinate) {
 		if (lookup(destinationCoordinate)) {
-			System.out.println("lookup for point " + destinationCoordinate + " : SUCCESSFUL");
+			System.out.println("lookup for point " + destinationCoordinate + " : TRUE");
 			return this;
 		} else {
-			System.out.println("lookup for point " + destinationCoordinate + " : FAILURE");
+			System.out.println("lookup for point " + destinationCoordinate + " : FALSE");
 			Peer tmpPeer = shortestPath(destinationCoordinate);
 			Peer routingPeer = new PeerClient().routing(tmpPeer, destinationCoordinate);
 			return routingPeer.routing(destinationCoordinate);
@@ -200,8 +201,8 @@ public class Peer {
 	
 	// Methods for routingTable updating
 	/**
-	 * Old peer initializes the new peer's routing table
-	 * @param newPeer the new peer that will be created
+	 * Old peer initializes the new peer's routingTable
+	 * @param newPeer new peer that is going to be created
 	 */
 	public void initializeRoutingTable(Peer newPeer) {
 		newPeer.mergeRoutingTableWithList(routingTable);
@@ -243,7 +244,7 @@ public class Peer {
 	
 	
 	/**
-	 * a single Peer is put into the routingTable
+	 * Method for adding a single Peer to the routingTable
 	 * @param potentialNeighbour
 	 */
 	public void mergeRoutingTableSinglePeer(Peer potentialNeighbour) {
@@ -266,6 +267,9 @@ public class Peer {
 		routingTable.addAll(neighboursRoutingTable);
 	}
 	
+	/**
+	 * A method to clear the routingTable
+	 */
 	private void dumpRoutingTable() {
 		routingTable.clear();
 	}
@@ -283,6 +287,11 @@ public class Peer {
 		});
 	}
 	
+	/**
+	 * Method which checks whether potentialNeighbour is a valid neighbour
+	 * @param potentialNeighbour
+	 * @return true or false
+	 */
 	 public boolean isNeighbour(Peer potentialNeighbour) {
 	    	
 	    	if (ownZone.getLeftY().intersects(potentialNeighbour.ownZone.getRightY()) 
@@ -317,9 +326,9 @@ public class Peer {
 	
 		
 	/**
-	 * @author Raphaela Wagner 27.06.2018
-	 * creates a new Peer and invokes joinRequest for joining the coordinate space
-	 * @return
+         * creates a new Peer and invokes joinRequest for joining the coordinate space
+	 * @param newPeerAdress, p
+	 * @return newPeer
 	 * @throws IOException 
 	 * @throws ClientProtocolException 
 	 */
@@ -388,8 +397,8 @@ public class Peer {
     
    
     /**
-     * Generates a random Point in the Coordinate system
-     * @return randomPoint in the coordinate space
+     * Generates a random Point in the coordinate space
+     * @return randomPoint 
      */
     public static Point generateRandomPoint() {
     	Point randomPoint = new Point(Math.random(), Math.random());
@@ -453,7 +462,7 @@ public class Peer {
 		
 
 	/**
-	 * Deserialize and load an imageContainer from the peer
+	 * Deserializes and loads an imageContainer from the peer
 	 * @param username the imageContainer's username
 	 * @param imageName the imageContainer's imageName
 	 * @return the imageContainer
@@ -492,7 +501,7 @@ public class Peer {
 	}
 		
 	/**
-	 * Deletes the imageContainer incl the image and thumbnail from the peer
+	 * Deletes the imageContainer including the image and thumbnail from the peer
 	 * @param username
 	 * @param imageName
 	 */
@@ -666,7 +675,7 @@ public class Peer {
 	
 		
 	/**
-	 * @author Raphaela Wagner 03.08.2018
+	 * transfers all (k, v) pairs from this Peer to the Peer denoted through destinationIP
 	 * @param transferList
 	 * @param destinationIP
 	 */
@@ -675,7 +684,7 @@ public class Peer {
 	}
 	
 	/**
-	 * @author Raphaela Wagner 03.08.2018
+	 * deletes all (k, v) pairs associated with the transferList from this Peer 
 	 * @param transferList
 	 */
 	public void deletePairs(ArrayList<ImageContainer> transferList) {
@@ -707,7 +716,11 @@ public class Peer {
 	
 	
 
-	
+	/**
+	 * States criteria for two Peers to be considered as equal
+	 * @param o
+	 * @return true or false wheter ip address of this peer equals ip address of second peer
+	 */
 	@Override
 	public boolean equals(Object o) {
 		Peer p = (Peer) o;
@@ -729,7 +742,11 @@ public class Peer {
 	}
 	
 	/**
-	 * @author Raphaela Wagner 12.09.2018
+	 * Method that enables a peer to leave the network
+	 * if there's a neighbouring peer with which the zones can be merged this is done
+	 * else a peer in the network is found that could validly merge with on of its neighbouring peers
+	 *     this found peer then swaps places with the peer that wants to leave the network so that the
+	 *     leaving peer can merge validly with a peer in order to leave the network	
 	 */
 	public void leaveNetwork() {
 		if(findNeighbourToMergeWith() != null) {
@@ -743,8 +760,10 @@ public class Peer {
 	}
 	
 	/**
-	 * @author Raphaela Wagner 12.09.2018
-	 * @return 
+	 * skimms through the routingTable locally to determine whether there is a neighbouring peer 
+	 * with which the leaving peer can merge validly
+	 * @return neighbour if there is a neighbour to merge with
+	 * @return null if there is no valdi neighbour available
 	 */
 	
 	public Peer findNeighbourToMergeWith() {
@@ -758,9 +777,9 @@ public class Peer {
 	}
 	
 	/**
-	 * @author Raphaela Wagner 12.09.2018
+	 * checks whether the zone of this peer can merge with neighboursZone to form a valid zone
 	 * @param neighboursZone
-	 * @return
+	 * @return true or false
 	 */
 	public boolean isValidZone(Zone neighboursZone) {
 		if(ownZone.getZoneVolume() == neighboursZone.getZoneVolume() && neighboursZone.isSquare() && this.ownZone.getUpperRight().getY() != neighboursZone.getUpperRight().getY() && zoneHasValidPlaceInSpace(neighboursZone)) {
@@ -773,9 +792,9 @@ public class Peer {
 	}
 	
 	/**
-	 * @author Raphaela Wagner 12.09.2018
+	 * checks whether the zone created by merging this peer's zone with neighboursZone has a valid place in the coordinate space
 	 * @param neighboursZone
-	 * @return
+	 * @return true or false
 	 */
 	public boolean zoneHasValidPlaceInSpace(Zone neighboursZone) {
 		double sh, sl;
@@ -825,8 +844,8 @@ public class Peer {
 	
 	
 	/**
-	 * Merges two zones into one
-	 * @author Raphaela Wagner 12.08.2018
+	 * Merges two zones into one, correctly updates the routingTables of all peers involved 
+	 * and transfers all (k, v) pairs of the leaving peer to its mergeNeighbour
 	 * @param mergeNeighbour
 	 */
 	public void mergeZones(Peer mergeNeighbour) {
@@ -864,7 +883,7 @@ public class Peer {
 		            StaticFunctions.checkApi(mergeNeighbour.getIp_adresse()), mergeNeighbour);
 	  
 	    
-		//Leaving Peer gets removed from routingTables and mergeNeighbour's newly set zone 
+	    //Leaving Peer gets removed from routingTables and mergeNeighbour's newly set zone 
 	    //is conveyed to its neighbours
 		
 	    if(mergeNeighbour.getRoutingTable().size() == 0) {
@@ -893,8 +912,10 @@ public class Peer {
 	}
 	
 	/**
-	 * @author Raphaela Wagner 12.09.2018
-	 * @return
+	 * either finds and returns a neighbour with which the leaving peer can form a valid zone
+	 * or else finds the neighbour with the smallest zoneVolume to invoke this method on
+	 * to route through the network in order to find a peer to swap zones with
+	 * @return 
 	 */
 	public Peer findPeerForZoneSwapping() {
 		if(findNeighbourToMergeWith() != null) {
@@ -912,7 +933,7 @@ public class Peer {
 	}
 	
 	/**
-	 * @author Raphaela Wagner 12.09.2018
+	 * swaps two Peers by swapping their zones, their neighbours and their (k, v) pairs
 	 * @param peerToSwapWith
 	 */
 	public void swapPeers(Peer peerToSwapWith) {
@@ -972,7 +993,7 @@ public class Peer {
 	}
 	
 	/**
-	 * @author Raphaela Wagner 12.09.2018
+	 * swaps the (k, v) pairs of two peers 
 	 * @param peerToSwapWith
 	 * TODO REST communication to be implemented
 	 */
