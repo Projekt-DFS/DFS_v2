@@ -7,7 +7,7 @@ import main.java.de.htwsaar.dfs.exceptions.*;
 
 
 /**
- * An User get get access to the iOS app and save images
+ * creates an user object associated with an actual user using the iOS app 
  * Is saved in userList on Bootstrap
  */
 @XmlRootElement
